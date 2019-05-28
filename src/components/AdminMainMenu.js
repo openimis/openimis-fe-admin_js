@@ -34,35 +34,35 @@ class AdminMainMenu extends Component {
           {
             text: "Medical Services Price List",
             icon: <HealingOutlined />,
-            route: "adminb/medicalServicesPriceList"
+            route: "/admin/medicalServicesPriceList"
           },
           {
             text: "Medical Items Price List",
             icon: <LocalPharmacyOutlined />,
-            route: "adminb/medicalItemsPriceList",
+            route: "/admin/medicalItemsPriceList",
             withDivider: true
           },
           {
             text: "Medical Services",
             icon: <Healing />,
-            route: "admin/medilcalServices"
+            route: "/admin/medilcalServices"
           },
           {
             text: "Medical Items",
             icon: <LocalPharmacy />,
-            route: "admin/medilcalItems",
+            route: "/admin/medilcalItems",
             withDivider: true
           },
           { text: "Users", icon: <Person />, route: "admin/users" },
           {
             text: "User Profiles",
             icon: <AccountBox />,
-            route: "admin/userProfiles"
+            route: "/admin/userProfiles"
           },
           {
             text: "Enrolment Officers",
             icon: <SupervisorAccount />,
-            route: "admin/enrolmentOfficers"
+            route: "/admin/enrolmentOfficers"
           },
           {
             text: "Claim Administrators",

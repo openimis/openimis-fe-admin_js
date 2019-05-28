@@ -18,8 +18,8 @@ const AdminModule = {
   "core.Router": [
     { path: "admin/products", component: ProductsPage },
     { path: "admin/healthFacilities", component: HealthFacilitiesPage },
-    { path: "adminb/medicalServicesPriceList", component: MedicalServicesPriceListPage },
-    { path: "adminb/medicalItemsPriceList", component: MedicalItemsPriceListPage },
+    { path: "admin/medicalServicesPriceList", component: MedicalServicesPriceListPage },
+    { path: "admin/medicalItemsPriceList", component: MedicalItemsPriceListPage },
     { path: "admin/medilcalServices", component: MedicalServicesPage },
     { path: "admin/medilcalItems", component: MedicalItemsPage },
     { path: "admin/users", component: UsersPage },
