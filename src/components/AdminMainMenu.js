@@ -53,7 +53,7 @@ class AdminMainMenu extends Component {
             route: "/admin/medilcalItems",
             withDivider: true
           },
-          { text: "Users", icon: <Person />, route: "admin/users" },
+          { text: "Users", icon: <Person />, route: "/admin/users" },
           {
             text: "User Profiles",
             icon: <AccountBox />,
@@ -67,10 +67,10 @@ class AdminMainMenu extends Component {
           {
             text: "Claim Administrators",
             icon: <PersonOutlined />,
-            route: "admin/claimAdministrators"
+            route: "/admin/claimAdministrators"
           },
-          { text: "Payers", icon: <AccountBalance />, route: "admin/payers" },
-          { text: "Locations", icon: <PinDrop />, route: "admin/locations" }
+          { text: "Payers", icon: <AccountBalance />, route: "/admin/payers" },
+          { text: "Locations", icon: <PinDrop />, route: "/admin/locations" }
         ]}
       />
     );
