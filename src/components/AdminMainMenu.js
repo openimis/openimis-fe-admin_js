@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { injectIntl } from 'react-intl';
 import {
   AccountBalance,
   AccountBox,
@@ -14,66 +15,82 @@ import {
   SupervisorAccount,
   Tune
 } from "@material-ui/icons";
-import { MainMenuContribution } from "@openimis/fe-core";
+import { formatMessage, MainMenuContribution } from "@openimis/fe-core";
 
 class AdminMainMenu extends Component {
   render() {
     return (
       <MainMenuContribution
         {...this.props}
-        header="Administration"
+        header={formatMessage(this.props.intl, "admin", "mainMenu")}
         icon={<LocationCity />}
         entries={[
-          { text: "Products", icon: <Tune />, route: "/admin/products" },
           {
-            text: "Health Facilities",
+            text: formatMessage(this.props.intl, "admin", "menu.products"),
+            icon: <Tune />,
+            route: "/admin/products"
+          },
+          {
+            text: formatMessage(this.props.intl, "admin", "menu.healthFacilities"),
             icon: <LocalHospital />,
             route: "/admin/healthFacilities",
             withDivider: true
           },
           {
-            text: "Medical Services Price List",
+            text: formatMessage(this.props.intl, "admin", "menu.medicalServicesPrices"),
             icon: <HealingOutlined />,
             route: "/admin/medicalServicesPriceList"
           },
           {
-            text: "Medical Items Price List",
+            text: formatMessage(this.props.intl, "admin", "menu.medicalItemsPrices"),
             icon: <LocalPharmacyOutlined />,
             route: "/admin/medicalItemsPriceList",
             withDivider: true
           },
           {
-            text: "Medical Services",
+            text: formatMessage(this.props.intl, "admin", "menu.medicalServices"),
             icon: <Healing />,
             route: "/admin/medilcalServices"
           },
           {
-            text: "Medical Items",
+            text: formatMessage(this.props.intl, "admin", "menu.medicalItems"),
             icon: <LocalPharmacy />,
             route: "/admin/medilcalItems",
             withDivider: true
           },
-          { text: "Users", icon: <Person />, route: "/admin/users" },
           {
-            text: "User Profiles",
+            text: formatMessage(this.props.intl, "admin", "menu.users"),
+            icon: <Person />,
+            route: "/admin/users"
+          },
+          {
+            text: formatMessage(this.props.intl, "admin", "menu.usersProfiles"),
             icon: <AccountBox />,
             route: "/admin/userProfiles"
           },
           {
-            text: "Enrolment Officers",
+            text: formatMessage(this.props.intl, "admin", "menu.enrolmentOfficers"),
             icon: <SupervisorAccount />,
             route: "/admin/enrolmentOfficers"
           },
           {
-            text: "Claim Administrators",
+            text: formatMessage(this.props.intl, "admin", "menu.claimAdministrators"),
             icon: <PersonOutlined />,
             route: "/admin/claimAdministrators"
           },
-          { text: "Payers", icon: <AccountBalance />, route: "/admin/payers" },
-          { text: "Locations", icon: <PinDrop />, route: "/admin/locations" }
+          {
+            text: formatMessage(this.props.intl, "admin", "menu.payers"),
+            icon: <AccountBalance />,
+            route: "/admin/payers"
+          },
+          {
+            text: formatMessage(this.props.intl, "admin", "menu.locations"),
+            icon: <PinDrop />,
+            route: "/admin/locations"
+          }
         ]}
       />
     );
   }
 }
-export { AdminMainMenu };
+export default injectIntl(AdminMainMenu);

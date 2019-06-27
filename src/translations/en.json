@@ -1,0 +1,15 @@
+{
+    "admin.mainMenu": "Administration",
+    "admin.menu.products": "Products",
+    "admin.menu.healthFacilities": "Health Facilities",
+    "admin.menu.medicalServicesPrices": "Medical Services Price List",
+    "admin.menu.medicalItemsPrices": "Medical Items Price List",
+    "admin.menu.medicalServices": "Medical Services",
+    "admin.menu.medicalItems": "Medical Items",
+    "admin.menu.users": "Users",
+    "admin.menu.usersProfiles": "Users Profiles",
+    "admin.menu.enrolmentOfficers": "Enrolment Officers",
+    "admin.menu.claimAdministrators": "Claim Administrators",
+    "admin.menu.payers": "Payers",
+    "admin.menu.locations": "Locations"
+}

@@ -1,4 +1,4 @@
-import { AdminMainMenu } from "./components/AdminMainMenu";
+import AdminMainMenu from "./components/AdminMainMenu";
 import { ProductsPage } from "./components/ProductsPage";
 import { HealthFacilitiesPage } from "./components/HealthFacilitiesPage";
 import { MedicalServicesPriceListPage } from "./components/MedicalServicesPriceListPage";
@@ -11,10 +11,10 @@ import { EnrolmentOfficersPage } from "./components/EnrolmentOfficersPage";
 import { ClaimAdministratorsPage } from "./components/ClaimAdministratorsPage";
 import { PayersPage } from "./components/PayersPage";
 import { LocationsPage } from "./components/LocationsPage";
-
-import { itemSearcherByCode, serviceSearcherByCode } from "./components/AdminMainSearchers";
+import messages_en from "./translations/en.json";
 
 const AdminModule = {
+  "translations": [{key: 'en', messages: messages_en}],
   "core.Router": [
     { path: "admin/products", component: ProductsPage },
     { path: "admin/healthFacilities", component: HealthFacilitiesPage },
@@ -30,10 +30,6 @@ const AdminModule = {
     { path: "admin/locations", component: LocationsPage },
   ],
   "core.MainMenu": [AdminMainMenu],
-  "core.MainSearcher": [
-    { label: "Item Code", searcher: itemSearcherByCode },
-    { label: "Service Code", searcher: serviceSearcherByCode }
-  ]
 }
 
 export { AdminModule };
