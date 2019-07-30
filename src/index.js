@@ -13,7 +13,7 @@ import { PayersPage } from "./components/PayersPage";
 import { LocationsPage } from "./components/LocationsPage";
 import messages_en from "./translations/en.json";
 
-const AdminModule = {
+const DEFAULT_CONFIG = {
   "translations": [{key: 'en', messages: messages_en}],
   "core.Router": [
     { path: "admin/products", component: ProductsPage },
@@ -32,4 +32,6 @@ const AdminModule = {
   "core.MainMenu": [AdminMainMenu],
 }
 
-export { AdminModule };
+export const AdminModule = (cfg) => {
+  return { ...DEFAULT_CONFIG, ...(cfg && cfg['fe-admin'] || {})};
+}
