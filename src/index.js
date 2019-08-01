@@ -33,5 +33,5 @@ const DEFAULT_CONFIG = {
 }
 
 export const AdminModule = (cfg) => {
-  return { ...DEFAULT_CONFIG, ...(cfg && cfg['fe-admin'] || {})};
+  return { ...DEFAULT_CONFIG, ...cfg};
 }
