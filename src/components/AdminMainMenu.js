@@ -69,9 +69,9 @@ class AdminMainMenu extends Component {
             route: "/admin/userProfiles"
           },
           {
-            text: formatMessage(this.props.intl, "admin", "menu.enrolmentOfficers"),
+            text: formatMessage(this.props.intl, "admin", "menu.enrollmentOfficers"),
             icon: <SupervisorAccount />,
-            route: "/admin/enrolmentOfficers"
+            route: "/admin/enrollmentOfficers"
           },
           {
             text: formatMessage(this.props.intl, "admin", "menu.claimAdministrators"),
