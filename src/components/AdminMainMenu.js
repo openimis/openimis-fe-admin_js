@@ -121,7 +121,7 @@ class AdminMainMenu extends Component {
       entries.push({
         text: formatMessage(this.props.intl, "admin", "menu.locations"),
         icon: <PinDrop />,
-        route: "/admin/locations"
+        route: "/location/locations"
       });
     }
 

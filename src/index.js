@@ -10,7 +10,6 @@ import { UserProfilesPage } from "./components/UserProfilesPage";
 import { EnrollmentOfficersPage } from "./components/EnrollmentOfficersPage";
 import { ClaimAdministratorsPage } from "./components/ClaimAdministratorsPage";
 import { PayersPage } from "./components/PayersPage";
-import { LocationsPage } from "./components/LocationsPage";
 import messages_en from "./translations/en.json";
 
 const DEFAULT_CONFIG = {
@@ -27,7 +26,6 @@ const DEFAULT_CONFIG = {
     { path: "admin/enrollmentOfficers", component: EnrollmentOfficersPage },
     { path: "admin/claimAdministrators", component: ClaimAdministratorsPage },
     { path: "admin/payers", component: PayersPage },
-    { path: "admin/locations", component: LocationsPage },
   ],
   "core.MainMenu": [AdminMainMenu],
 }
