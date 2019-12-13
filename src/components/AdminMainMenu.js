@@ -48,7 +48,7 @@ class AdminMainMenu extends Component {
       entries.push({
         text: formatMessage(this.props.intl, "admin", "menu.healthFacilities"),
         icon: <LocalHospital />,
-        route: "/admin/healthFacilities",
+        route: "/location/healthFacilities",
         withDivider: true
       });
     }

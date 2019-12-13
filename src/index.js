@@ -1,6 +1,5 @@
 import AdminMainMenu from "./components/AdminMainMenu";
 import { ProductsPage } from "./components/ProductsPage";
-import { HealthFacilitiesPage } from "./components/HealthFacilitiesPage";
 import { MedicalServicesPriceListPage } from "./components/MedicalServicesPriceListPage";
 import { MedicalItemsPriceListPage } from "./components/MedicalItemsPriceListPage";
 import { MedicalServicesPage } from "./components/MedicalServicesPage";
@@ -16,7 +15,6 @@ const DEFAULT_CONFIG = {
   "translations": [{key: 'en', messages: messages_en}],
   "core.Router": [
     { path: "admin/products", component: ProductsPage },
-    { path: "admin/healthFacilities", component: HealthFacilitiesPage },
     { path: "admin/medicalServicesPriceList", component: MedicalServicesPriceListPage },
     { path: "admin/medicalItemsPriceList", component: MedicalItemsPriceListPage },
     { path: "admin/medilcalServices", component: MedicalServicesPage },
