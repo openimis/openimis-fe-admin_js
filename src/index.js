@@ -17,7 +17,7 @@ const DEFAULT_CONFIG = {
     { path: "admin/products", component: ProductsPage },
     { path: "admin/medicalServicesPriceList", component: MedicalServicesPriceListPage },
     { path: "admin/medicalItemsPriceList", component: MedicalItemsPriceListPage },
-    { path: "admin/medilcalServices", component: MedicalServicesPage },
+    { path: "admin/medicalServices", component: MedicalServicesPage },
     { path: "admin/medilcalItems", component: MedicalItemsPage },
     { path: "admin/users", component: UsersPage },
     { path: "admin/userProfiles", component: UserProfilesPage },

@@ -71,7 +71,7 @@ class AdminMainMenu extends Component {
       entries.push({
         text: formatMessage(this.props.intl, "admin", "menu.medicalServices"),
         icon: <Healing />,
-        route: "/admin/medilcalServices"
+        route: "/admin/medicalServices"
       });
     }
     if (rights.includes(RIGHT_MEDICALITEMS)) {
