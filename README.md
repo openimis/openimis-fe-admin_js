@@ -50,7 +50,7 @@ It is dedicated to be deployed as a module of [openimis-fe_js](https://github.co
 * `Locations.aspx`
 
 ## Available Contribution Points
-None
+* `admin.MainMenu`: ability to add entries within the main menu entry
 
 ## Published Components
 None
