@@ -3,7 +3,6 @@ import { injectIntl } from 'react-intl';
 import { connect } from "react-redux";
 import {
   AccountBalance,
-  AccountBox,
   LocationCity,
   Healing,
   HealingOutlined,
@@ -28,8 +27,7 @@ import {
   RIGHT_CLAIMADMINISTRATOR,
   RIGHT_USERS,
   RIGHT_PAYERS,
-  RIGHT_LOCATIONS,
-  RIGHT_USERPROFILES,
+  RIGHT_LOCATIONS
 } from "../constants";
 
 const ADMIN_MAIN_MENU_CONTRIBUTION_KEY = "admin.MainMenu";
@@ -89,13 +87,6 @@ class AdminMainMenu extends Component {
         text: formatMessage(this.props.intl, "admin", "menu.users"),
         icon: <Person />,
         route: "/admin/users"
-      });
-    }
-    if (rights.includes(RIGHT_USERPROFILES)) {
-      entries.push({
-        text: formatMessage(this.props.intl, "admin", "menu.usersProfiles"),
-        icon: <AccountBox />,
-        route: "/admin/userProfiles"
       });
     }
     if (rights.includes(RIGHT_ENROLMENTOFFICER)) {
