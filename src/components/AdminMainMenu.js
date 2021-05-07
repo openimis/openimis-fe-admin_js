@@ -3,7 +3,6 @@ import { injectIntl } from 'react-intl';
 import { connect } from "react-redux";
 import {
   AccountBalance,
-  AccountBox,
   LocationCity,
   Healing,
   HealingOutlined,
@@ -16,7 +15,7 @@ import {
   SupervisorAccount,
   Tune
 } from "@material-ui/icons";
-import { formatMessage, MainMenuContribution } from "@openimis/fe-core";
+import { formatMessage, MainMenuContribution, withModulesManager } from "@openimis/fe-core";
 import {
   RIGHT_PRODUCTS,
   RIGHT_HEALTHFACILITIES,
@@ -28,9 +27,10 @@ import {
   RIGHT_CLAIMADMINISTRATOR,
   RIGHT_USERS,
   RIGHT_PAYERS,
-  RIGHT_LOCATIONS,
-  RIGHT_USERPROFILES,
+  RIGHT_LOCATIONS
 } from "../constants";
+
+const ADMIN_MAIN_MENU_CONTRIBUTION_KEY = "admin.MainMenu";
 
 class AdminMainMenu extends Component {
   render() {
@@ -71,7 +71,7 @@ class AdminMainMenu extends Component {
       entries.push({
         text: formatMessage(this.props.intl, "admin", "menu.medicalServices"),
         icon: <Healing />,
-        route: "/admin/medilcalServices"
+        route: "/admin/medicalServices"
       });
     }
     if (rights.includes(RIGHT_MEDICALITEMS)) {
@@ -87,13 +87,6 @@ class AdminMainMenu extends Component {
         text: formatMessage(this.props.intl, "admin", "menu.users"),
         icon: <Person />,
         route: "/admin/users"
-      });
-    }
-    if (rights.includes(RIGHT_USERPROFILES)) {
-      entries.push({
-        text: formatMessage(this.props.intl, "admin", "menu.usersProfiles"),
-        icon: <AccountBox />,
-        route: "/admin/userProfiles"
       });
     }
     if (rights.includes(RIGHT_ENROLMENTOFFICER)) {
@@ -125,6 +118,9 @@ class AdminMainMenu extends Component {
       });
     }
 
+    entries.push(
+      ...this.props.modulesManager.getContribs(ADMIN_MAIN_MENU_CONTRIBUTION_KEY).filter(c => !c.filter || c.filter(rights)));
+
     if (!entries.length) return null;
     return (
       <MainMenuContribution
@@ -141,4 +137,4 @@ const mapStateToProps = state => ({
   rights: !!state.core && !!state.core.user && !!state.core.user.i_user ? state.core.user.i_user.rights : [],
 })
 
-export default injectIntl(connect(mapStateToProps)(AdminMainMenu));
+export default withModulesManager(injectIntl(connect(mapStateToProps)(AdminMainMenu)));

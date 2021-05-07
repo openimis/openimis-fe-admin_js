@@ -5,7 +5,6 @@ import { MedicalItemsPriceListPage } from "./components/MedicalItemsPriceListPag
 import { MedicalServicesPage } from "./components/MedicalServicesPage";
 import { MedicalItemsPage } from "./components/MedicalItemsPage";
 import { UsersPage } from "./components/UsersPage";
-import { UserProfilesPage } from "./components/UserProfilesPage";
 import { EnrollmentOfficersPage } from "./components/EnrollmentOfficersPage";
 import { ClaimAdministratorsPage } from "./components/ClaimAdministratorsPage";
 import { PayersPage } from "./components/PayersPage";
@@ -17,10 +16,9 @@ const DEFAULT_CONFIG = {
     { path: "admin/products", component: ProductsPage },
     { path: "admin/medicalServicesPriceList", component: MedicalServicesPriceListPage },
     { path: "admin/medicalItemsPriceList", component: MedicalItemsPriceListPage },
-    { path: "admin/medilcalServices", component: MedicalServicesPage },
+    { path: "admin/medicalServices", component: MedicalServicesPage },
     { path: "admin/medilcalItems", component: MedicalItemsPage },
     { path: "admin/users", component: UsersPage },
-    { path: "admin/userProfiles", component: UserProfilesPage },
     { path: "admin/enrollmentOfficers", component: EnrollmentOfficersPage },
     { path: "admin/claimAdministrators", component: ClaimAdministratorsPage },
     { path: "admin/payers", component: PayersPage },
