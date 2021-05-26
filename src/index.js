@@ -9,9 +9,12 @@ import { EnrollmentOfficersPage } from "./components/EnrollmentOfficersPage";
 import { ClaimAdministratorsPage } from "./components/ClaimAdministratorsPage";
 import { PayersPage } from "./components/PayersPage";
 import messages_en from "./translations/en.json";
+import UserPicker from "./components/pickers/UserPicker";
+import reducer from "./reducer";
 
 const DEFAULT_CONFIG = {
   "translations": [{key: 'en', messages: messages_en}],
+  "reducers": [{ key: 'admin', reducer }],
   "core.Router": [
     { path: "admin/products", component: ProductsPage },
     { path: "admin/medicalServicesPriceList", component: MedicalServicesPriceListPage },
@@ -24,6 +27,10 @@ const DEFAULT_CONFIG = {
     { path: "admin/payers", component: PayersPage },
   ],
   "core.MainMenu": [AdminMainMenu],
+  "refs" : [
+    { key: "admin.UserPicker", ref: UserPicker },
+    { key: "admin.UserPicker.projection", ref: ["id", "username"] }
+  ]
 }
 
 export const AdminModule = (cfg) => {
