@@ -1,23 +1,53 @@
 {
-  "parser": "babel-eslint",
-  "extends": [
-    "standard",
-    "standard-react"
-  ],
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true,
+      "js": true
+    }
+  },
   "env": {
-    "es6": true
+    "es6": true,
+    "node": true
   },
   "plugins": [
-    "react"
+    "react",
+    "prettier",
+    "import"
   ],
-  "parserOptions": {
-    "sourceType": "module"
-  },
   "rules": {
-    // don't force es6 functions to include space before paren
-    "space-before-function-paren": 0,
-
-    // allow specifying true explicitly for boolean props
-    "react/jsx-boolean-value": 0
-  }
+    "prettier/prettier": "error",
+    "no-debugger": "off",
+    "import/order": "error",
+    "class-methods-use-this": "off",
+    "new-cap": "off",
+    "import/no-cycle": "off",
+    "no-case-declarations": "off",
+    "import/prefer-default-export": "off",
+    "no-unused-vars": "warn",
+    "react/display-name": "warn",
+    "react/prop-types": "off"
+  },
+  "parser": "babel-eslint",
+  "extends": [
+    "airbnb-base",
+    "prettier",
+    "plugin:react/recommended"
+  ],
+  "globals": {
+    "document": "readonly",
+    "window": "readonly",
+    "Event": "readonly",
+    "btoa": "readonly",
+    "navigator": "readonly",
+    "fetch": "readonly",
+    "test": "readonly",
+    "expect": "readonly"
+  },
+    "settings": {
+      "react": {
+        "version": "detect"
+      }
+    }
 }
