@@ -20,6 +20,8 @@
     "admin.user.addNewUserTooltip": "Add new user",
     "admin.user.deleteUser.tooltip": "Delete user",
     "admin.user.deleteUserDialog.message": "Are you sure you want to delete this user?",
+    "admin.user.createUser.mutationLabel": "Create user",
+    "admin.user.updateUser.mutationLabel": "Update user",
     "admin.user.otherNames": "Other names",
     "admin.user.email": "Email",
     "admin.user.lastName": "Last name",
@@ -36,5 +38,7 @@
     "admin.user.userTypes.OFFICER": "Officer",
     "admin.user.userTypes.CLAIM_ADMIN": "Claim admin",
     "admin.user.userTypes.none": " ",
+    "admin.user.UserOverview.newTitle": "New User",
+    "admin.user.UserOverview.title": "User Details",
     "admin.user.userTypes.null": "Any"
 }

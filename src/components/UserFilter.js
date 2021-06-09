@@ -25,7 +25,7 @@ const styles = (theme) => ({
   paperDivider: theme.paper.divider,
 });
 
-const getLocations = (locations) => {
+const getParentLocation = (locations) => {
   const locationsArray = Object.values(locations).map((l) => l.value);
   const region = locationsArray.find((l) => !l.parent);
   const district =
@@ -133,20 +133,19 @@ class UserFilter extends Component {
       }
     });
     this.setState({ locationFilters });
+    const parentLocation = getParentLocation(locationFilters);
+
     const filters = [
       {
-        id: "showHistory",
-        filter: `${getLocations(locationFilters).key}: ${
-          getLocations(locationFilters).id
-        }`,
+        id: "parentLocation",
+        filter: parentLocation && `${parentLocation.key}: ${parentLocation.id}`,
       },
     ];
     onChangeFilters(filters);
-    console.log("ICI");
   };
 
   render() {
-    const { classes, filters, onChangeFilters, intl } = this.props;
+    const { classes, onChangeFilters, intl } = this.props;
     const { locationFilters } = this.state;
     return (
       <section className={classes.form}>

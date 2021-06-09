@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { injectIntl } from 'react-intl';
+import { injectIntl } from "react-intl";
 import { connect } from "react-redux";
 import {
   AccountBalance,
@@ -13,9 +13,13 @@ import {
   PersonOutlined,
   PinDrop,
   SupervisorAccount,
-  Tune
+  Tune,
 } from "@material-ui/icons";
-import { formatMessage, MainMenuContribution, withModulesManager } from "@openimis/fe-core";
+import {
+  formatMessage,
+  MainMenuContribution,
+  withModulesManager,
+} from "@openimis/fe-core";
 import {
   RIGHT_PRODUCTS,
   RIGHT_HEALTHFACILITIES,
@@ -27,7 +31,7 @@ import {
   RIGHT_CLAIMADMINISTRATOR,
   RIGHT_USERS,
   RIGHT_PAYERS,
-  RIGHT_LOCATIONS
+  RIGHT_LOCATIONS,
 } from "../constants";
 
 const ADMIN_MAIN_MENU_CONTRIBUTION_KEY = "admin.MainMenu";
@@ -35,13 +39,13 @@ const ADMIN_MAIN_MENU_CONTRIBUTION_KEY = "admin.MainMenu";
 class AdminMainMenu extends Component {
   render() {
     const { rights } = this.props;
-    let entries = [];
+    const entries = [];
 
     if (rights.includes(RIGHT_PRODUCTS)) {
       entries.push({
         text: formatMessage(this.props.intl, "admin", "menu.products"),
         icon: <Tune />,
-        route: "/admin/products"
+        route: "/admin/products",
       });
     }
     if (rights.includes(RIGHT_HEALTHFACILITIES)) {
@@ -49,29 +53,37 @@ class AdminMainMenu extends Component {
         text: formatMessage(this.props.intl, "admin", "menu.healthFacilities"),
         icon: <LocalHospital />,
         route: "/location/healthFacilities",
-        withDivider: true
+        withDivider: true,
       });
     }
     if (rights.includes(RIGHT_PRICELISTMS)) {
       entries.push({
-        text: formatMessage(this.props.intl, "admin", "menu.medicalServicesPrices"),
+        text: formatMessage(
+          this.props.intl,
+          "admin",
+          "menu.medicalServicesPrices",
+        ),
         icon: <HealingOutlined />,
-        route: "/admin/medicalServicesPriceList"
+        route: "/admin/medicalServicesPriceList",
       });
     }
     if (rights.includes(RIGHT_PRICELISTMI)) {
       entries.push({
-        text: formatMessage(this.props.intl, "admin", "menu.medicalItemsPrices"),
+        text: formatMessage(
+          this.props.intl,
+          "admin",
+          "menu.medicalItemsPrices",
+        ),
         icon: <LocalPharmacyOutlined />,
         route: "/admin/medicalItemsPriceList",
-        withDivider: true
+        withDivider: true,
       });
     }
     if (rights.includes(RIGHT_MEDICALSERVICES)) {
       entries.push({
         text: formatMessage(this.props.intl, "admin", "menu.medicalServices"),
         icon: <Healing />,
-        route: "/admin/medicalServices"
+        route: "/admin/medicalServices",
       });
     }
     if (rights.includes(RIGHT_MEDICALITEMS)) {
@@ -79,47 +91,58 @@ class AdminMainMenu extends Component {
         text: formatMessage(this.props.intl, "admin", "menu.medicalItems"),
         icon: <LocalPharmacy />,
         route: "/admin/medilcalItems",
-        withDivider: true
+        withDivider: true,
       });
     }
     if (rights.includes(RIGHT_USERS)) {
       entries.push({
         text: formatMessage(this.props.intl, "admin", "menu.users"),
         icon: <Person />,
-        route: "/admin/users"
+        route: "/admin/users",
       });
     }
-    if (rights.includes(RIGHT_ENROLMENTOFFICER)) {
-      entries.push({
-        text: formatMessage(this.props.intl, "admin", "menu.enrollmentOfficers"),
-        icon: <SupervisorAccount />,
-        route: "/admin/enrollmentOfficers"
-      });
-    }
-    if (rights.includes(RIGHT_CLAIMADMINISTRATOR)) {
-      entries.push({
-        text: formatMessage(this.props.intl, "admin", "menu.claimAdministrators"),
-        icon: <PersonOutlined />,
-        route: "/admin/claimAdministrators"
-      });
-    }
+    // if (rights.includes(RIGHT_ENROLMENTOFFICER)) {
+    //   entries.push({
+    //     text: formatMessage(
+    //       this.props.intl,
+    //       "admin",
+    //       "menu.enrollmentOfficers",
+    //     ),
+    //     icon: <SupervisorAccount />,
+    //     route: "/admin/enrollmentOfficers",
+    //   });
+    // }
+    // if (rights.includes(RIGHT_CLAIMADMINISTRATOR)) {
+    //   entries.push({
+    //     text: formatMessage(
+    //       this.props.intl,
+    //       "admin",
+    //       "menu.claimAdministrators",
+    //     ),
+    //     icon: <PersonOutlined />,
+    //     route: "/admin/claimAdministrators",
+    //   });
+    // }
     if (rights.includes(RIGHT_PAYERS)) {
       entries.push({
         text: formatMessage(this.props.intl, "admin", "menu.payers"),
         icon: <AccountBalance />,
-        route: "/admin/payers"
+        route: "/admin/payers",
       });
     }
     if (rights.includes(RIGHT_LOCATIONS)) {
       entries.push({
         text: formatMessage(this.props.intl, "admin", "menu.locations"),
         icon: <PinDrop />,
-        route: "/location/locations"
+        route: "/location/locations",
       });
     }
 
     entries.push(
-      ...this.props.modulesManager.getContribs(ADMIN_MAIN_MENU_CONTRIBUTION_KEY).filter(c => !c.filter || c.filter(rights)));
+      ...this.props.modulesManager
+        .getContribs(ADMIN_MAIN_MENU_CONTRIBUTION_KEY)
+        .filter((c) => !c.filter || c.filter(rights)),
+    );
 
     if (!entries.length) return null;
     return (
@@ -133,8 +156,13 @@ class AdminMainMenu extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  rights: !!state.core && !!state.core.user && !!state.core.user.i_user ? state.core.user.i_user.rights : [],
-})
+const mapStateToProps = (state) => ({
+  rights:
+    !!state.core && !!state.core.user && !!state.core.user.i_user
+      ? state.core.user.i_user.rights
+      : [],
+});
 
-export default withModulesManager(injectIntl(connect(mapStateToProps)(AdminMainMenu)));
+export default withModulesManager(
+  injectIntl(connect(mapStateToProps)(AdminMainMenu)),
+);

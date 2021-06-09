@@ -98,8 +98,8 @@ class UserSearcher extends Component {
     });
   };
 
-  confirmDelete = (deleteUser) => {
-    this.setState({ deleteUser });
+  confirmDelete = (deletedUser) => {
+    this.setState({ deleteUser: deletedUser });
   };
 
   deleteAction = (i) =>
@@ -120,10 +120,10 @@ class UserSearcher extends Component {
   itemFormatters = () => {
     const formatters = [
       (u) => u.username,
-      (u) => u.iUser.lastName,
-      (u) => u.iUser.otherNames,
-      (u) => u.iUser.email,
-      (u) => u.iUser.phone,
+      (u) => u.iUser && u.iUser.lastName,
+      (u) => u.iUser && u.iUser.otherNames,
+      (u) => u.iUser && u.iUser.email,
+      (u) => u.iUser && u.iUser.phone,
       (u) =>
         u.officer &&
         formatDateFromISO(

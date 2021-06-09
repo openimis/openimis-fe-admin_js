@@ -86,7 +86,7 @@ function reducer(
       const users = parseData(action.payload.data.users);
       let user = null;
       if (!!users && users.length > 0) {
-        user = users[0];
+        [user] = users;
       }
       return {
         ...state,
