@@ -206,3 +206,12 @@ export function newUser() {
     dispatch({ type: "ADMIN_USER_NEW" });
   };
 }
+
+export function fetchUserMutation(mm, clientMutationId) {
+  const payload = formatPageQuery(
+    "mutationLogs",
+    [`clientMutationId:"${clientMutationId}"`],
+    ["id", "users{user{id}}"],
+  );
+  return graphql(payload, "ADMIN_USER");
+}

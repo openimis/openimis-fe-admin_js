@@ -13,10 +13,11 @@ import {
   ProgressOrError,
   journalize,
   coreConfirm,
+  parseData,
 } from "@openimis/fe-core";
 import { RIGHT_USERS } from "../constants";
 
-import { fetchUser, newUser, createUser } from "../actions";
+import { fetchUser, newUser, createUser, fetchUserMutation } from "../actions";
 import UserMasterPanel from "./UserMasterPanel";
 
 const styles = (theme) => ({
@@ -111,18 +112,46 @@ class UserForm extends Component {
   };
 
   reload = () => {
-    const { user } = this.state;
-    this.props.fetchUser(
-      this.props.modulesManager,
-      this.state.userId,
-      user.clientMutationId,
-    );
+    const { family } = this.state;
+    const { clientMutationId, userId } = this.props.mutation;
+    if (clientMutationId && !userId) {
+      this.props
+        .fetchUserMutation(this.props.modulesManager, clientMutationId)
+        .then((res) => {
+          const mutationLogs = parseData(res.payload.data.mutationLogs);
+          if (
+            mutationLogs &&
+            mutationLogs[0] &&
+            mutationLogs[0].users &&
+            mutationLogs[0].users[0] &&
+            mutationLogs[0].users[0].user
+          ) {
+            const { id } = parseData(res.payload.data.mutationLogs)[0].users[0]
+              .user;
+            if (id) {
+              historyPush(
+                this.props.modulesManager,
+                this.props.history,
+                "admin.userOverview",
+                [id],
+              );
+            }
+          }
+        });
+    } else {
+      this.props.fetchUser(
+        this.props.modulesManager,
+        userId,
+        family.clientMutationId,
+      );
+    }
   };
 
   canSave = () => {
     if (
       this.state.user.iUser &&
       this.state.user.iUser.lastName &&
+      this.state.user.iUser.otherNames &&
       this.state.user.iUser.roles &&
       this.state.user.username &&
       this.state.user.userTypes
@@ -216,7 +245,7 @@ class UserForm extends Component {
   }
 }
 
-const mapStateToProps = (state, props) => ({
+const mapStateToProps = (state) => ({
   rights:
     !!state.core && !!state.core.user && !!state.core.user.i_user
       ? state.core.user.i_user.rights
@@ -233,7 +262,14 @@ const mapStateToProps = (state, props) => ({
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
-    { fetchUser, newUser, createUser, journalize, coreConfirm },
+    {
+      fetchUser,
+      newUser,
+      createUser,
+      fetchUserMutation,
+      journalize,
+      coreConfirm,
+    },
     dispatch,
   );
 

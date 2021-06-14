@@ -9,7 +9,6 @@ import {
   TextInput,
   PublishedComponent,
   FormPanel,
-  decodeId,
 } from "@openimis/fe-core";
 import { userTypesMapping, RIGHT_ENROLMENTOFFICER } from "../constants";
 
@@ -45,6 +44,7 @@ class UserMasterPanel extends FormPanel {
           <Grid item xs={4} className={classes.item}>
             <TextInput
               module="admin"
+              required
               label="user.username"
               readOnly={Boolean(edited.id) || readOnly}
               value={edited ? edited.username : ""}
@@ -53,6 +53,7 @@ class UserMasterPanel extends FormPanel {
           </Grid>
           <Grid item xs={4} className={classes.item}>
             <PublishedComponent
+              required
               pubRef="admin.UserTypesPicker"
               value={(edited && edited.userTypes) || getUserTypes(edited)}
               module="admin"
@@ -63,6 +64,7 @@ class UserMasterPanel extends FormPanel {
           <Grid item xs={4} className={classes.item}>
             <PublishedComponent
               pubRef="admin.UserRolesPicker"
+              required
               value={userRoles || []}
               module="admin"
               readOnly={readOnly}
@@ -78,24 +80,10 @@ class UserMasterPanel extends FormPanel {
         </Grid>
         <Grid container className={classes.item}>
           <Grid item xs={4} className={classes.item}>
-            <PublishedComponent
-              pubRef="location.HealthFacilityPicker"
-              value={edited && edited.iUser && edited.iUser.healthFacility}
-              module="admin"
-              readOnly={readOnly}
-              onChange={(healthFacility) => {
-                const iUser = {
-                  ...edited.iUser,
-                  healthFacility,
-                };
-                this.updateAttributes({ iUser });
-              }}
-            />
-          </Grid>
-          <Grid item xs={4} className={classes.item}>
             <TextInput
               module="admin"
               label="user.lastName"
+              required
               readOnly={readOnly}
               value={edited && edited.iUser ? edited.iUser.lastName : ""}
               onChange={(lastName) => {
@@ -111,6 +99,7 @@ class UserMasterPanel extends FormPanel {
             <TextInput
               module="admin"
               label="user.otherNames"
+              required
               readOnly={readOnly}
               value={edited && edited.iUser ? edited.iUser.otherNames : ""}
               onChange={(otherNames) => {
@@ -123,6 +112,21 @@ class UserMasterPanel extends FormPanel {
             />
           </Grid>
 
+          <Grid item xs={4} className={classes.item}>
+            <PublishedComponent
+              pubRef="location.HealthFacilityPicker"
+              value={edited && edited.iUser && edited.iUser.healthFacility}
+              module="admin"
+              readOnly={readOnly}
+              onChange={(healthFacility) => {
+                const iUser = {
+                  ...edited.iUser,
+                  healthFacility,
+                };
+                this.updateAttributes({ iUser });
+              }}
+            />
+          </Grid>
           <Grid container className={classes.item}>
             <Grid item xs={4} className={classes.item}>
               <TextInput

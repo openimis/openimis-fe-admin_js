@@ -11,7 +11,13 @@ import {
 
 import { fetchUserRoles } from "../../actions";
 
-const UserRolesPicker = ({ readOnly, modulesManager, value, onChange }) => {
+const UserRolesPicker = ({
+  readOnly,
+  modulesManager,
+  value,
+  onChange,
+  required,
+}) => {
   const intl = useIntl();
   const roles = useSelector((state) => state.admin.userRoles);
   const userHealthFacilityFullPath = useSelector((state) =>
@@ -46,7 +52,9 @@ const UserRolesPicker = ({ readOnly, modulesManager, value, onChange }) => {
             <TextField
               {...params}
               variant="standard"
-              label={formatMessage(intl, "admin.user", "userRoles")}
+              label={`${formatMessage(intl, "admin.user", "userRoles")}${
+                required ? "*" : ""
+              }`}
               placeholder=""
             />
           )}
