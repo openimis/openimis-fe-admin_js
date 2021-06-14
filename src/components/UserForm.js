@@ -124,10 +124,10 @@ class UserForm extends Component {
             mutationLogs[0] &&
             mutationLogs[0].users &&
             mutationLogs[0].users[0] &&
-            mutationLogs[0].users[0].user
+            mutationLogs[0].users[0].coreUser
           ) {
             const { id } = parseData(res.payload.data.mutationLogs)[0].users[0]
-              .user;
+              .coreUser;
             if (id) {
               historyPush(
                 this.props.modulesManager,

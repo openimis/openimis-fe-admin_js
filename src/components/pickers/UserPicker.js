@@ -65,7 +65,6 @@ class UserPicker extends Component {
       withLabel = true,
       label,
     } = this.props;
-    console.log("users", users);
     return (
       <>
         <ProgressOrError progress={fetchingUsers} error={errorUsers} />
