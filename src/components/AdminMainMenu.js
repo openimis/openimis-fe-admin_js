@@ -101,28 +101,6 @@ class AdminMainMenu extends Component {
         route: "/admin/users",
       });
     }
-    // if (rights.includes(RIGHT_ENROLMENTOFFICER)) {
-    //   entries.push({
-    //     text: formatMessage(
-    //       this.props.intl,
-    //       "admin",
-    //       "menu.enrollmentOfficers",
-    //     ),
-    //     icon: <SupervisorAccount />,
-    //     route: "/admin/enrollmentOfficers",
-    //   });
-    // }
-    // if (rights.includes(RIGHT_CLAIMADMINISTRATOR)) {
-    //   entries.push({
-    //     text: formatMessage(
-    //       this.props.intl,
-    //       "admin",
-    //       "menu.claimAdministrators",
-    //     ),
-    //     icon: <PersonOutlined />,
-    //     route: "/admin/claimAdministrators",
-    //   });
-    // }
     if (rights.includes(RIGHT_PAYERS)) {
       entries.push({
         text: formatMessage(this.props.intl, "admin", "menu.payers"),

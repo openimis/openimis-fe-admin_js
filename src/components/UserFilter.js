@@ -150,17 +150,6 @@ class UserFilter extends Component {
     return (
       <section className={classes.form}>
         <Grid container>
-          <Grid item xs={12}>
-            <PublishedComponent
-              pubRef="location.DetailedLocationFilter"
-              withNull={true}
-              filters={locationFilters}
-              onChangeFilters={this.onChangeLocation}
-              anchor="parentLocation"
-            />
-          </Grid>
-        </Grid>
-        <Grid container>
           <ControlledField
             module="admin"
             id="userFilter.userTypes"
@@ -168,7 +157,6 @@ class UserFilter extends Component {
               <Grid item xs={3} className={classes.item}>
                 <PublishedComponent
                   pubRef="admin.UserTypesPicker"
-                  withNull={true}
                   value={this.filterValue("userTypes")}
                   onChange={(v) => this.onChangeUserTypes(v)}
                 />
@@ -246,6 +234,17 @@ class UserFilter extends Component {
           />
         </Grid>
 
+        <Grid container>
+          <Grid item xs={12}>
+            <PublishedComponent
+              pubRef="location.DetailedLocationFilter"
+              withNull={true}
+              filters={locationFilters}
+              onChangeFilters={this.onChangeLocation}
+              anchor="parentLocation"
+            />
+          </Grid>
+        </Grid>
         <Grid container>
           <ControlledField
             module="admin"

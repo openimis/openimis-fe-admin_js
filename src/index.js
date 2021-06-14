@@ -13,6 +13,7 @@ import { ClaimAdministratorsPage } from "./pages/ClaimAdministratorsPage";
 import { PayersPage } from "./pages/PayersPage";
 import messagesEn from "./translations/en.json";
 import UserPicker from "./components/pickers/UserPicker";
+import UserRolesPicker from "./components/pickers/UserRolesPicker";
 import UserTypesPicker from "./components/pickers/UserTypesPicker";
 import reducer from "./reducer";
 
@@ -48,8 +49,10 @@ const DEFAULT_CONFIG = {
   "core.MainMenu": [AdminMainMenu],
   refs: [
     { key: "admin.UserPicker", ref: UserPicker },
+    { key: "admin.UserRolesPicker", ref: UserRolesPicker },
     { key: "admin.UserTypesPicker", ref: UserTypesPicker },
     { key: "admin.UserPicker.projection", ref: ["id", "username"] },
+    { key: "admin.UserRolesPicker.projection", ref: ["id", "name"] },
     { key: "admin.users", ref: ROUTE_ADMIN_USERS },
     { key: "admin.userOverview", ref: ROUTE_ADMIN_USER_OVERVIEW },
     { key: "admin.userNew", ref: ROUTE_ADMIN_USER_NEW },

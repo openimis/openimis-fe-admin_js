@@ -15,9 +15,19 @@ export const RIGHT_USER_ADD = 121702;
 export const RIGHT_USER_EDIT = 121703;
 export const RIGHT_USER_DELETE = 121704;
 
-export const USER_TYPES = [
-  "INTERACTIVE",
-  "TECHNICAL",
-  "OFFICER",
-  "CLAIM_ADMIN",
-];
+export const USER_TYPES = (rights) => {
+  const baseTypes = ["INTERACTIVE"];
+  if (rights.includes(RIGHT_ENROLMENTOFFICER)) {
+    baseTypes.push("OFFICER");
+    if (rights.includes(RIGHT_CLAIMADMINISTRATOR)) {
+      baseTypes.push("CLAIM_ADMIN");
+    }
+  }
+  return baseTypes;
+};
+
+export const userTypesMapping = {
+  iUser: "INTERACTIVE",
+  officer: "OFFICER",
+  claimAdmin: "CLAIM_ADMIN",
+};

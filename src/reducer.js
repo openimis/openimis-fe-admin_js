@@ -8,6 +8,8 @@ import {
   dispatchMutationReq,
 } from "@openimis/fe-core";
 
+import { getUserTypes } from "./components/UserMasterPanel";
+
 function reducer(
   state = {
     fetchingUsers: false,
@@ -25,6 +27,10 @@ function reducer(
     usersPageInfo: { totalCount: 0 },
     submittingMutation: false,
     mutation: {},
+    fetchingUserRoles: false,
+    fetchedUserRoles: null,
+    errorRoles: null,
+    userRoles: [],
   },
   action,
 ) {
@@ -42,7 +48,10 @@ function reducer(
         ...state,
         fetchingUsers: false,
         fetchedUsers: action.meta,
-        users: parseData(action.payload.data.users),
+        users: parseData(action.payload.data.users).map((user) => ({
+          ...user,
+          userTypes: getUserTypes(user),
+        })),
         errorUsers: formatGraphQLError(action.payload),
       };
     case "ADMIN_USERS_ERR":
@@ -50,6 +59,36 @@ function reducer(
         ...state,
         fetchingUsers: null,
         errorUsers: formatServerError(action.payload),
+      };
+    case "ADMIN_USER_ROLES_REQ":
+      return {
+        ...state,
+        fetchingUserRoles: true,
+        fetchedUserRoles: null,
+        userRoles: [],
+        errorUsers: null,
+      };
+    case "ADMIN_USER_ROLES_RESP":
+      return {
+        ...state,
+        fetchingUserRoles: false,
+        fetchedUserRoles: action.meta,
+        userRoles: parseData(action.payload.data.role),
+        errorRoles: formatGraphQLError(action.payload),
+      };
+    case "ADMIN_USER_ROLES_RESET":
+      return {
+        ...state,
+        fetchingUserRoles: false,
+        fetchedUserRoles: null,
+        errorRoles: null,
+        userRoles: [],
+      };
+    case "ADMIN_USER_ROLES_ERR":
+      return {
+        ...state,
+        fetchingUserRoles: null,
+        errorRoles: formatServerError(action.payload),
       };
     case "ADMIN_USERS_SUMMARIES_REQ":
       return {
@@ -87,6 +126,10 @@ function reducer(
       let user = null;
       if (!!users && users.length > 0) {
         [user] = users;
+        user = {
+          ...user,
+          userTypes: getUserTypes(user),
+        };
       }
       return {
         ...state,

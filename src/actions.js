@@ -4,7 +4,6 @@ import {
   formatPageQueryWithCount,
   formatMutation,
   decodeId,
-  formatJsonField,
   formatGQLString,
 } from "@openimis/fe-core";
 import _ from "lodash";
@@ -14,23 +13,25 @@ const USER_SUMMARY_PROJECTION = [
   "id",
   "username",
   "officer{id,phone,dob}",
-  "iUser{id,lastName,otherNames,email,roleId,userRoles{role{name}}}",
+  "iUser{id,lastName,otherNames,email,roles{id,name}}",
   "claimAdmin{id}",
   "clientMutationId",
 ];
 
-const USER_FULL_PROJECTION = [
+const USER_FULL_PROJECTION = (mm) => [
   "id",
   "username",
   "officer{id,phone,dob,lastName,location{id,name}}",
-  // "iUser{id,lastName,otherNames,loginName,email,healthFacilityId,roleId,userRoles{role{name}},userdistrictSet{location{id,name,parent{id,name}}}}",
-  "iUser{id,phone,languageId,lastName,otherNames,userRoles{role{name}},validityFrom,validityTo,email,healthFacilityId,roleId,userRoles{role{name}}}",
+  "iUser{id,phone,languageId,lastName,otherNames,roles{id,name}",
+  `healthFacility${mm.getProjection(
+    "location.HealthFacilityPicker.projection",
+  )}`,
+  ",validityFrom,validityTo,email,healthFacilityId,userdistrictSet{location{id,name,parent{id,name}}}}",
   "claimAdmin{id,emailId,dob,lastName,otherNames}",
   "clientMutationId",
 ];
 
 export function formatUserGQL(mm, user) {
-  console.log("decodeId(user.id)", decodeId(user.id));
   const req = `
     ${user.id ? `id: "${decodeId(user.id)}"` : ""}
     ${user.username ? `username: "${user.username}"` : ""}
@@ -40,7 +41,7 @@ export function formatUserGQL(mm, user) {
         : ""
     }
     ${
-      user.iUser.language
+      user.iUser.languageId
         ? `language: "${formatGQLString(user.iUser.languageId)}"`
         : 'language: "en"'
     }
@@ -60,22 +61,56 @@ export function formatUserGQL(mm, user) {
         : ""
     }
     ${user.iUser.email ? `email: "${formatGQLString(user.iUser.email)}"` : ""}
+    ${user.userTypes ? `userTypes: [${user.userTypes}]` : ""}
     ${
-      user.userTypes
-        ? `userTypes: ${formatGQLString(user.userTypes)}`
-        : "userTypes: INTERACTIVE"
+      user.iUser && user.iUser.healthFacility
+        ? `healthFacilityId: ${decodeId(user.iUser.healthFacility.id)}`
+        : ""
     }
-    ${user.iUser.roleId ? `roles: [${user.iUser.roleId}]` : ""}
+    ${
+      user.iUser && user.iUser.roles
+        ? `roles: [${user.iUser.roles.map((u) => decodeId(u.id))}]`
+        : ""
+    }
   `;
   return req;
 }
-export function fetchUsers(mm, filters = []) {
+export function fetchUsers(mm, hf, str, prev) {
+  const filters = [];
+  if (hf) {
+    filters.push(`healthFacility_Uuid: "${hf.uuid}"`);
+  }
+  if (str) {
+    filters.push(`str: "${str}"`);
+  }
+  if (_.isEqual(filters, prev)) {
+    return (dispatch) => {};
+  }
   const payload = formatPageQuery(
     "users",
-    null,
+    filters,
     mm.getRef("admin.UserPicker.projection"),
   );
   return graphql(payload, "ADMIN_USERS", filters);
+}
+
+export function fetchUserRoles(mm, hf, str, prev) {
+  const filters = [];
+  if (hf) {
+    filters.push(`healthFacility_Uuid: "${hf.uuid}"`);
+  }
+  if (str) {
+    filters.push(`str: "${str}"`);
+  }
+  if (_.isEqual(filters, prev)) {
+    return (dispatch) => {};
+  }
+  const payload = formatPageQuery(
+    "role",
+    filters,
+    mm.getRef("admin.UserRolesPicker.projection"),
+  );
+  return graphql(payload, "ADMIN_USER_ROLES", filters);
 }
 
 export function fetchUsersSummaries(mm, filters) {
@@ -162,12 +197,18 @@ export function fetchUser(mm, userId, clientMutationId) {
   } else if (clientMutationId) {
     filters.push(`clientMutationId: "${clientMutationId}"`);
   }
-  const payload = formatPageQuery("users", filters, USER_FULL_PROJECTION);
+  const payload = formatPageQuery("users", filters, USER_FULL_PROJECTION(mm));
   return graphql(payload, "ADMIN_USER_OVERVIEW");
 }
 
 export function newUser() {
   return (dispatch) => {
     dispatch({ type: "ADMIN_USER_NEW" });
+  };
+}
+
+export function resetUserRoles() {
+  return (dispatch) => {
+    dispatch({ type: "ADMIN_USER_ROLES_RESET" });
   };
 }

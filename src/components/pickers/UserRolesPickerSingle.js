@@ -11,7 +11,7 @@ import {
   ProgressOrError,
   withModulesManager,
 } from "@openimis/fe-core";
-import { fetchUsers } from "../../actions";
+import { fetchUserRoles } from "../../actions";
 
 const styles = (theme) => ({
   label: {
@@ -19,30 +19,31 @@ const styles = (theme) => ({
   },
 });
 
-class UserPicker extends Component {
+class UserRolesPicker extends Component {
   constructor(props) {
     super(props);
     this.selectThreshold = props.modulesManager.getConf(
       "fe-admin",
-      "UserPicker.selectThreshold",
+      "UserRolesPicker.selectThreshold",
       10,
     );
   }
 
-  formatSuggestion = (p) => (!p ? "" : `${p.username || ""}`);
+  formatSuggestion = (p) => (!p ? "" : `${p.name || ""}`);
 
-  onSuggestionSelected = (v) =>
+  onSuggestionSelected = (v) => {
     this.props.onChange(v, this.formatSuggestion(v));
+  };
 
   getSuggestions = (str) =>
     !!str &&
     str.length >=
-      this.props.modulesManager.getConf("fe-admin", "usersMinCharLookup", 2) &&
-    this.props.fetchUsers(
+      this.props.modulesManager.getConf("fe-admin", "rolesMinCharLookup", 2) &&
+    this.props.fetchUserRoles(
       this.props.modulesManager,
       this.props.userHealthFacilityFullPath,
       str,
-      this.props.fetchedUsers,
+      this.props.fetchedUserRoles,
     );
 
   debouncedGetSuggestion = _.debounce(
@@ -57,25 +58,24 @@ class UserPicker extends Component {
       reset,
       readOnly = false,
       required = false,
-      users,
-      fetchingUsers,
-      errorUsers,
+      roles,
+      fetchingUserRoles,
+      errorUserRoles,
       withNull = false,
       nullLabel = null,
       withLabel = true,
       label,
     } = this.props;
-    console.log("users", users);
     return (
-      <>
-        <ProgressOrError progress={fetchingUsers} error={errorUsers} />
-        {!fetchingUsers && !errorUsers && (
+      <Fragment>
+        <ProgressOrError progress={fetchingUserRoles} error={errorUserRoles} />
+        {!fetchingUserRoles && !errorUserRoles && (
           <AutoSuggestion
             module="admin"
-            items={users}
+            items={roles}
             label={
               !!withLabel &&
-              (label || formatMessage(intl, "admin", "UserPicker.label"))
+              (label || formatMessage(intl, "admin", "UserRolesPicker.label"))
             }
             getSuggestions={this.debouncedGetSuggestion}
             renderSuggestion={(a) => <span>{this.formatSuggestion(a)}</span>}
@@ -88,11 +88,11 @@ class UserPicker extends Component {
             selectThreshold={this.selectThreshold}
             withNull={withNull}
             nullLabel={
-              nullLabel || formatMessage(intl, "admin", "UserPicker.null")
+              nullLabel || formatMessage(intl, "admin", "UserRolesPicker.null")
             }
           />
         )}
-      </>
+      </Fragment>
     );
   }
 }
@@ -101,16 +101,16 @@ const mapStateToProps = (state) => ({
   userHealthFacilityFullPath: state.loc
     ? state.loc.userHealthFacilityFullPath
     : null,
-  users: state.admin.users,
-  fetchedUsers: state.admin.fetchedUsers,
+  roles: state.admin.roles,
+  fetchedUserRoles: state.admin.fetchedUserRoles,
 });
 
 const mapDispatchToProps = (dispatch) =>
-  bindActionCreators({ fetchUsers }, dispatch);
+  bindActionCreators({ fetchUserRoles }, dispatch);
 
 export default withModulesManager(
   connect(
     mapStateToProps,
     mapDispatchToProps,
-  )(injectIntl(withTheme(withStyles(styles)(UserPicker)))),
+  )(injectIntl(withTheme(withStyles(styles)(UserRolesPicker)))),
 );

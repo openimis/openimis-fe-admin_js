@@ -120,8 +120,15 @@ class UserForm extends Component {
   };
 
   canSave = () => {
-    if (!this.state.user.iUser.lastName) return false;
-    return true;
+    if (
+      this.state.user.iUser &&
+      this.state.user.iUser.lastName &&
+      this.state.user.iUser.roles &&
+      this.state.user.username &&
+      this.state.user.userTypes
+    )
+      return true;
+    return false;
   };
 
   save = (user) => {
