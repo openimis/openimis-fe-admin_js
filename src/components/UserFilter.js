@@ -9,14 +9,13 @@ import {
   PublishedComponent,
   ControlledField,
   TextInput,
-  formatMessage,
 } from "@openimis/fe-core";
 
 const styles = (theme) => ({
   dialogTitle: theme.dialog.title,
   dialogContent: theme.dialog.content,
   form: {
-    padding: 0,
+    padding: "0 0 10px 0",
     width: "100%",
   },
   item: {
@@ -68,6 +67,7 @@ class UserFilter extends Component {
   state = {
     showHistory: false,
     currentUserType: undefined,
+    currentUserRoles: undefined,
     locationFilters: {},
   };
 
@@ -119,6 +119,22 @@ class UserFilter extends Component {
     ]);
   };
 
+  onChangeUserRoles = (currentUserRoles) => {
+    const { onChangeFilters } = this.props;
+    this.setState({ currentUserRoles });
+    onChangeFilters([
+      {
+        id: "roles",
+        value: currentUserRoles,
+        filter: currentUserRoles
+          ? `roles: [${currentUserRoles
+              .map((ur) => decodeId(ur.id))
+              .join(",")}]`
+          : null,
+      },
+    ]);
+  };
+
   onChangeLocation = (newLocationFilters) => {
     const { onChangeFilters } = this.props;
     const locationFilters = { ...this.state.locationFilters };
@@ -146,7 +162,7 @@ class UserFilter extends Component {
 
   render() {
     const { classes, onChangeFilters, intl } = this.props;
-    const { locationFilters } = this.state;
+    const { locationFilters, currentUserType, currentUserRoles } = this.state;
     return (
       <section className={classes.form}>
         <Grid container>
@@ -157,12 +173,63 @@ class UserFilter extends Component {
               <Grid item xs={3} className={classes.item}>
                 <PublishedComponent
                   pubRef="admin.UserTypesPicker"
-                  value={this.filterValue("userTypes")}
+                  value={currentUserType}
                   onChange={(v) => this.onChangeUserTypes(v)}
                 />
               </Grid>
             }
           />
+          <ControlledField
+            module="admin"
+            id="userFilter.userRoles"
+            field={
+              <Grid item xs={3} className={classes.item}>
+                <PublishedComponent
+                  pubRef="admin.UserRolesPicker"
+                  value={currentUserRoles}
+                  onChange={(v) => this.onChangeUserRoles(v)}
+                />
+              </Grid>
+            }
+          />
+          <ControlledField
+            module="admin"
+            id="userFilter.healthFacility"
+            field={
+              <Grid item xs={3} className={classes.item}>
+                <PublishedComponent
+                  pubRef="location.HealthFacilityPicker"
+                  withNull={true}
+                  value={this.filterValue("healthFacilityId") || ""}
+                  onChange={(v) => {
+                    onChangeFilters([
+                      {
+                        id: "healthFacility",
+                        value: v,
+                        filter: v
+                          ? `healthFacilityId: ${decodeId(v.id)}`
+                          : null,
+                      },
+                    ]);
+                  }}
+                />
+              </Grid>
+            }
+          />
+        </Grid>
+
+        <Grid container>
+          <Grid item xs={12}>
+            <PublishedComponent
+              pubRef="location.DetailedLocationFilter"
+              withNull={true}
+              filters={locationFilters}
+              onChangeFilters={this.onChangeLocation}
+              anchor="parentLocation"
+            />
+          </Grid>
+        </Grid>
+        <Grid container>
           <ControlledField
             module="admin"
             id="userFilter.username"
@@ -232,44 +299,6 @@ class UserFilter extends Component {
               </Grid>
             }
           />
-        </Grid>
-
-        <Grid container>
-          <Grid item xs={12}>
-            <PublishedComponent
-              pubRef="location.DetailedLocationFilter"
-              withNull={true}
-              filters={locationFilters}
-              onChangeFilters={this.onChangeLocation}
-              anchor="parentLocation"
-            />
-          </Grid>
-        </Grid>
-        <Grid container>
-          <ControlledField
-            module="admin"
-            id="userFilter.healthFacility"
-            field={
-              <Grid item xs={3} className={classes.item}>
-                <PublishedComponent
-                  pubRef="location.HealthFacilityPicker"
-                  withNull={true}
-                  value={this.filterValue("healthFacilityId") || ""}
-                  onChange={(v) => {
-                    onChangeFilters([
-                      {
-                        id: "healthFacility",
-                        value: v,
-                        filter: v
-                          ? `healthFacilityId: ${decodeId(v.id)}`
-                          : null,
-                      },
-                    ]);
-                  }}
-                />
-              </Grid>
-            }
-          />
           <ControlledField
             module="admin"
             id="userFilter.Email"
@@ -286,6 +315,31 @@ class UserFilter extends Component {
                         id: "email",
                         value: v,
                         filter: `email: "${v}"`,
+                      },
+                    ])
+                  }
+                />
+              </Grid>
+            }
+          />
+        </Grid>
+        <Grid container>
+          <ControlledField
+            module="admin"
+            id="userFilter.Phone"
+            field={
+              <Grid item xs={3} className={classes.item}>
+                <TextInput
+                  module="user"
+                  label="admin.user.phone"
+                  name="phone"
+                  value={this.filterValue("phone")}
+                  onChange={(v) =>
+                    this.debouncedOnChangeFilter([
+                      {
+                        id: "phone",
+                        value: v,
+                        filter: `phone: "${v}"`,
                       },
                     ])
                   }
@@ -338,7 +392,7 @@ class UserFilter extends Component {
             }
           />
         </Grid>
-        <Grid container justify="flex-end">
+        {/* <Grid container justify="flex-end">
           <ControlledField
             module="admin"
             id="UserFilter.showHistory"
@@ -357,7 +411,7 @@ class UserFilter extends Component {
               </Grid>
             }
           />
-        </Grid>
+        </Grid> */}
       </section>
     );
   }

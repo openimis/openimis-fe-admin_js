@@ -33,8 +33,6 @@
     "admin.user.phone": "Phone",
     "admin.user.updateUser.mutationLabel": "Update user",
     "admin.user.userRoles": "User role(s)",
-    "admin.user.userRoles.search": "Search a user role",
-    "admin.user.userRoles.loading": "...loading user roles",
     "admin.user.userRoles.noOptions": "No user role found",
     "admin.user.userSummaries": "{count} user(s) found",
     "admin.user.userTypes": "User type(s)",

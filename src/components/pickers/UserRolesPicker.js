@@ -1,147 +1,60 @@
-import React, { Component, Fragment } from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { withTheme, withStyles } from "@material-ui/core/styles";
-import Autocomplete from "@material-ui/lab/Autocomplete";
+import React, { useEffect } from "react";
+import { useIntl } from "react-intl";
+import { useSelector, useDispatch } from "react-redux";
 import TextField from "@material-ui/core/TextField";
-import { injectIntl } from "react-intl";
-import _debounce from "lodash/debounce";
-import _ from "lodash";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 import {
   formatMessage,
-  ProgressOrError,
   withModulesManager,
+  ProgressOrError,
 } from "@openimis/fe-core";
-import { fetchUserRoles, resetUserRoles } from "../../actions";
 
-const styles = (theme) => ({
-  label: {
-    color: theme.palette.primary.main,
-  },
-});
+import { fetchUserRoles } from "../../actions";
 
-class UserRolesPicker extends Component {
-  constructor(props) {
-    super(props);
-    this.selectThreshold = props.modulesManager.getConf(
-      "fe-admin",
-      "UserRolesPicker.selectThreshold",
-      10,
-    );
-    this.state = {
-      str: "",
-      rolesMinCharLookup: props.modulesManager.getConf(
-        "fe-admin",
-        "rolesMinCharLookup",
-        2,
-      ),
-    };
-  }
-
-  formatSuggestion = (p) => (!p ? "" : `${p.name || ""}`);
-
-  onSuggestionSelected = (v) => {
-    this.props.onChange(v, this.formatSuggestion(v));
-  };
-
-  getSuggestions = (str) => {
-    const { rolesMinCharLookup } = this.state;
-    this.setState({ str });
-    if (str.length >= rolesMinCharLookup) {
-      this.props.fetchUserRoles(
-        this.props.modulesManager,
-        this.props.userHealthFacilityFullPath,
-        str,
-        this.props.fetchedUserRoles,
-      );
-    } else {
-      this.props.resetUserRoles();
-    }
-  };
-
-  handleBlur = () => {
-    this.props.resetUserRoles();
-    this.setState({ str: "" });
-  };
-
-  debouncedGetSuggestion = _.debounce(
-    this.getSuggestions,
-    this.props.modulesManager.getConf("fe-admin", "debounceTime", 800),
+const UserRolesPicker = ({ readOnly, modulesManager, value, onChange }) => {
+  const intl = useIntl();
+  const roles = useSelector((state) => state.admin.userRoles);
+  const userHealthFacilityFullPath = useSelector((state) =>
+    state.loc ? state.loc.userHealthFacilityFullPath : null,
   );
+  const fetchingUserRoles = useSelector(
+    (state) => state.admin.fetchingUserRoles,
+  );
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchUserRoles(modulesManager, userHealthFacilityFullPath));
+  }, []);
+  return (
+    <>
+      <ProgressOrError progress={fetchingUserRoles} />
+      {!fetchingUserRoles && (
+        <Autocomplete
+          loading={fetchingUserRoles}
+          multiple
+          disabled={readOnly}
+          noOptionsText={formatMessage(
+            intl,
+            "admin.user",
+            "userRoles.noOptions",
+          )}
+          id="user-role-select"
+          options={roles}
+          getOptionLabel={(option) => option.name}
+          getOptionSelected={(option, val) => option.id === val.id}
+          onChange={(e, userRoles) => onChange(userRoles)}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              variant="standard"
+              label={formatMessage(intl, "admin.user", "userRoles")}
+              placeholder=""
+            />
+          )}
+          value={value}
+        />
+      )}
+    </>
+  );
+};
 
-  handleChange = (userRoles) => {
-    this.props.onChange(userRoles);
-    this.props.resetUserRoles();
-    this.setState({ str: "" });
-  };
-
-  render() {
-    const {
-      intl,
-      value,
-      readOnly = false,
-      roles,
-      fetchingUserRoles,
-    } = this.props;
-    const { str, rolesMinCharLookup } = this.state;
-    let filteredRoles = roles || [];
-    if (roles && roles.length > 0) {
-      filteredRoles = filteredRoles.filter(
-        (r) => !value.find((v) => v.id === r.id),
-      );
-    }
-    let noOptionsText = fetchingUserRoles
-      ? formatMessage(intl, "admin.user", "userRoles.search")
-      : formatMessage(intl, "admin.user", "userRoles.search");
-    if (
-      !fetchingUserRoles &&
-      str.length > rolesMinCharLookup &&
-      filteredRoles &&
-      filteredRoles.length === 0
-    ) {
-      noOptionsText = formatMessage(intl, "admin.user", "userRoles.noOptions");
-    }
-    return (
-      <Autocomplete
-        loading={fetchingUserRoles}
-        multiple
-        disabled={readOnly}
-        noOptionsText={noOptionsText}
-        id="user-role-select"
-        options={filteredRoles}
-        getOptionLabel={(option) => option.name}
-        onChange={(e, userRoles) => this.handleChange(userRoles)}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            onChange={(e) => this.debouncedGetSuggestion(e.target.value)}
-            variant="standard"
-            label={formatMessage(intl, "admin.user", "userRoles")}
-            placeholder=""
-            onBlur={() => this.handleBlur()}
-          />
-        )}
-        value={value}
-      />
-    );
-  }
-}
-
-const mapStateToProps = (state) => ({
-  userHealthFacilityFullPath: state.loc
-    ? state.loc.userHealthFacilityFullPath
-    : null,
-  roles: state.admin.userRoles,
-  fetchedUserRoles: state.admin.fetchedUserRoles,
-  fetchingUserRoles: state.admin.fetchingUserRoles,
-});
-
-const mapDispatchToProps = (dispatch) =>
-  bindActionCreators({ fetchUserRoles, resetUserRoles }, dispatch);
-
-export default withModulesManager(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps,
-  )(injectIntl(withTheme(withStyles(styles)(UserRolesPicker)))),
-);
+export default withModulesManager(UserRolesPicker);

@@ -12,8 +12,8 @@ import _uuid from "lodash-uuid";
 const USER_SUMMARY_PROJECTION = [
   "id",
   "username",
-  "officer{id,phone,dob}",
-  "iUser{id,lastName,otherNames,email,roles{id,name}}",
+  "officer{id,dob}",
+  "iUser{id,phone,lastName,otherNames,email,roles{id,name}}",
   "claimAdmin{id}",
   "clientMutationId",
 ];
@@ -204,11 +204,5 @@ export function fetchUser(mm, userId, clientMutationId) {
 export function newUser() {
   return (dispatch) => {
     dispatch({ type: "ADMIN_USER_NEW" });
-  };
-}
-
-export function resetUserRoles() {
-  return (dispatch) => {
-    dispatch({ type: "ADMIN_USER_ROLES_RESET" });
   };
 }

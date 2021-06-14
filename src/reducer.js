@@ -76,14 +76,6 @@ function reducer(
         userRoles: parseData(action.payload.data.role),
         errorRoles: formatGraphQLError(action.payload),
       };
-    case "ADMIN_USER_ROLES_RESET":
-      return {
-        ...state,
-        fetchingUserRoles: false,
-        fetchedUserRoles: null,
-        errorRoles: null,
-        userRoles: [],
-      };
     case "ADMIN_USER_ROLES_ERR":
       return {
         ...state,
