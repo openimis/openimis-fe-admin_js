@@ -24,14 +24,11 @@ class DeleteUserDialog extends Component {
     return (
       <Dialog open={!!user} onClose={onCancel}>
         <DialogTitle>
-          <FormattedMessage module="user" id="deleteContributionDialog.title" />
+          <FormattedMessage module="admin" id="user.deleteDialog.title" />
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            <FormattedMessage
-              module="user"
-              id="deleteContributionDialog.message"
-            />
+            <FormattedMessage module="admin" id="user.deleteDialog.message" />
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -41,8 +38,8 @@ class DeleteUserDialog extends Component {
             autoFocus
           >
             <FormattedMessage
-              module="user"
-              id="deleteContributionDialog.yes.button"
+              module="admin"
+              id="user.deleteDialog.yes.button"
             />
           </Button>
           <Button onClick={onCancel} className={classes.secondaryButton}>

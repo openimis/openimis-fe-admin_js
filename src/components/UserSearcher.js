@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
@@ -93,7 +93,7 @@ class UserSearcher extends Component {
       this.props.deleteUser(
         this.props.modulesManager,
         user,
-        formatMessage(this.props.intl, "admin.user", "deleteUserDialog.title"),
+        formatMessage(this.props.intl, "admin.user", "deleteDialog.title"),
       );
     });
   };
@@ -137,7 +137,6 @@ class UserSearcher extends Component {
           title={formatMessage(this.props.intl, "admin.user", "openNewTab")}
         >
           <IconButton onClick={(e) => this.props.onDoubleClick(u, true)}>
-            {" "}
             <TabIcon />
           </IconButton>
         </Tooltip>
@@ -168,7 +167,7 @@ class UserSearcher extends Component {
     } = this.props;
     const count = usersPageInfo.totalCount;
     return (
-      <Fragment>
+      <>
         <DeleteUserDialog
           user={this.state.deleteUser}
           onConfirm={this.deleteUser}
@@ -207,7 +206,7 @@ class UserSearcher extends Component {
           onDoubleClick={(c) => !c.clientMutationId && onDoubleClick(c)}
           reset={this.state.reset}
         />
-      </Fragment>
+      </>
     );
   }
 }

@@ -170,10 +170,11 @@ export function updateUser(mm, user, clientMutationLabel) {
 export function deleteUser(mm, user, clientMutationLabel) {
   const mutation = formatMutation(
     "deleteUser",
-    `ids: ["${user.id}"]`,
+    `uuids: ["${decodeId(user.id)}"]`,
     clientMutationLabel,
   );
-  // user.clientMutationId = mutation.clientMutationId;
+  // eslint-disable-next-line no-param-reassign
+  user.clientMutationId = mutation.clientMutationId;
   const requestedDateTime = new Date();
   return graphql(
     mutation.payload,
