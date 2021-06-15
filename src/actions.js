@@ -12,9 +12,9 @@ import _uuid from "lodash-uuid";
 const USER_SUMMARY_PROJECTION = [
   "id",
   "username",
-  "officer{id,dob}",
+  "officer{id,dob,phone,lastName,otherNames,email}",
   "iUser{id,phone,lastName,otherNames,email,roles{id,name}}",
-  "claimAdmin{id}",
+  "claimAdmin{id,phone,lastName,otherNames,emailId,dob}",
   "clientMutationId",
 ];
 
@@ -27,7 +27,7 @@ const USER_FULL_PROJECTION = (mm) => [
     "location.HealthFacilityPicker.projection",
   )}`,
   ",validityFrom,validityTo,email,healthFacilityId,userdistrictSet{location{id,name,parent{id,name}}}}",
-  "claimAdmin{id,emailId,dob,lastName,otherNames}",
+  "claimAdmin{id,emailId,phone,dob,lastName,otherNames}",
   "clientMutationId",
 ];
 
@@ -36,35 +36,35 @@ export function formatUserGQL(mm, user) {
     ${user.id ? `id: "${decodeId(user.id)}"` : ""}
     ${user.username ? `username: "${user.username}"` : ""}
     ${
-      user.iUser.lastName
-        ? `lastName: "${formatGQLString(user.iUser.lastName)}"`
+      user.lastName
+        ? `lastName: "${formatGQLString(user.lastName)}"`
         : ""
     }
     ${
-      user.iUser.languageId
-        ? `language: "${formatGQLString(user.iUser.languageId)}"`
+      user.language
+        ? `language: "${formatGQLString(user.language)}"`
         : 'language: "en"'
     }
     ${
-      user.iUser.otherNames
-        ? `otherNames: "${formatGQLString(user.iUser.otherNames)}"`
+      user.otherNames
+        ? `otherNames: "${formatGQLString(user.otherNames)}"`
         : ""
     }
     ${
-      user.iUser && user.iUser.phone
-        ? `phoneNumber: "${formatGQLString(user.iUser.phone)}"`
+      user.phoneNumber
+        ? `phoneNumber: "${formatGQLString(user.phoneNumber)}"`
         : ""
     }
     ${
-      user.officer && user.officer.dob
-        ? `birthDate: "${formatGQLString(user.officer.dob)}"`
+      user.birthDate
+        ? `birthDate: "${formatGQLString(user.birthDate)}"`
         : ""
     }
-    ${user.iUser.email ? `email: "${formatGQLString(user.iUser.email)}"` : ""}
+    ${user.email ? `email: "${formatGQLString(user.email)}"` : ""}
     ${user.userTypes ? `userTypes: [${user.userTypes}]` : ""}
     ${
-      user.iUser && user.iUser.healthFacility
-        ? `healthFacilityId: ${decodeId(user.iUser.healthFacility.id)}`
+      user.healthFacility
+        ? `healthFacilityId: ${decodeId(user.healthFacility.id)}`
         : ""
     }
     ${
@@ -191,6 +191,7 @@ export function deleteUser(mm, user, clientMutationLabel) {
     },
   );
 }
+
 export function fetchUser(mm, userId, clientMutationId) {
   const filters = [];
   if (userId) {

@@ -53,11 +53,11 @@ class UserForm extends Component {
           this.props.fetchUser(this.props.modulesManager, this.props.userId),
       );
     }
-    if (this.props.premium_uuid) {
+    if (this.props.id) {
       this.setState({
         user: {
           ...this.newUser(),
-          premium_uuid: this.props.premium_uuid,
+          id: this.props.id,
         },
       });
     }
@@ -148,16 +148,15 @@ class UserForm extends Component {
   };
 
   canSave = () => {
-    if (
-      this.state.user.iUser &&
-      this.state.user.iUser.lastName &&
-      this.state.user.iUser.otherNames &&
-      this.state.user.iUser.roles &&
+    console.log({userTypes: this.state.user})
+    return (
+      this.state.user &&
+      this.state.user.lastName &&
+      this.state.user.otherNames &&
+      (!this.state.user.userTypes.includes("INTERACTIVE") || this.state.user.iUser.roles) &&
       this.state.user.username &&
       this.state.user.userTypes
     )
-      return true;
-    return false;
   };
 
   save = (user) => {

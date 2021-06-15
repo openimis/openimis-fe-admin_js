@@ -8,7 +8,7 @@ import {
   dispatchMutationReq,
 } from "@openimis/fe-core";
 
-import { getUserTypes } from "./components/UserMasterPanel";
+import {getUserTypes, mapQueriesUserToMutation} from "./components/UserMasterPanel";
 
 function reducer(
   state = {
@@ -119,7 +119,7 @@ function reducer(
       if (!!users && users.length > 0) {
         [user] = users;
         user = {
-          ...user,
+          ...mapQueriesUserToMutation(user),
           userTypes: getUserTypes(user),
         };
       }

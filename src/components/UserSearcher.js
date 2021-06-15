@@ -117,20 +117,24 @@ class UserSearcher extends Component {
       </Tooltip>
     );
 
+  getUserItem = (user, item) =>
+    (user.iUser && user.iUser[item]) ||
+    (user.officer && user.officer[item]) ||
+    (user.claimAdmin && user.claimAdmin[item]);
   itemFormatters = () => {
     const formatters = [
       (u) => u.username,
-      (u) => u.iUser && u.iUser.lastName,
-      (u) => u.iUser && u.iUser.otherNames,
-      (u) => u.iUser && u.iUser.email,
-      (u) => u.iUser && u.iUser.phone,
-      (u) =>
-        u.officer &&
+      (u) => this.getUserItem(u, "lastName"),
+      (u) => this.getUserItem(u, "otherNames"),
+      (u) => this.getUserItem(u, "email") || this.getUserItem(u, "emailId"),
+      (u) => this.getUserItem(u, "phone"),
+      (u) => { console.log({u:u});
+        return (u.claimAdmin||u.officer) &&
         formatDateFromISO(
           this.props.modulesManager,
           this.props.intl,
-          u.officer.dob,
-        ),
+          this.getUserItem(u, "dob"),
+        )},
 
       (u) => (
         <Tooltip

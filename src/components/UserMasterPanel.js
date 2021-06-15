@@ -10,7 +10,7 @@ import {
   PublishedComponent,
   FormPanel,
 } from "@openimis/fe-core";
-import { userTypesMapping, RIGHT_ENROLMENTOFFICER } from "../constants";
+import { userTypesMapping } from "../constants";
 
 export const getUserTypes = (user) => {
   const userTypes = [];
@@ -25,6 +25,34 @@ export const getUserTypes = (user) => {
   }
   return userTypes;
 };
+
+export const mapQueriesUserToMutation = (u) => {
+  // TODO: make this more generic
+  if (u.iUser) {
+    u.lastName = u.iUser.lastName;
+    u.otherNames = u.iUser.otherNames;
+    u.email = u.iUser.email;
+    u.phoneNumber = u.iUser.phone;
+    u.healthFacility = u.iUser.healthFacility;
+    u.language = u.iUser.languageId;
+  }
+  if (u.claimAdmin) {
+    u.lastName = u.claimAdmin.lastName;
+    u.otherNames = u.claimAdmin.otherNames;
+    u.email = u.claimAdmin.emailId;
+    u.phoneNumber = u.claimAdmin.phone;
+    u.birthDate = u.claimAdmin.dob;
+    u.healthFacility = u.claimAdmin.healthFacility;
+  }
+  if (u.officer) {
+    u.lastName = u.officer.lastName;
+    u.otherNames = u.officer.otherNames;
+    u.email = u.officer.email;
+    u.phoneNumber = u.officer.phone;
+    u.birthDate = u.officer.dob;
+  }
+  return u;
+}
 
 const styles = (theme) => ({
   tableTitle: theme.table.title,
@@ -85,14 +113,8 @@ class UserMasterPanel extends FormPanel {
               label="user.lastName"
               required
               readOnly={readOnly}
-              value={edited && edited.iUser ? edited.iUser.lastName : ""}
-              onChange={(lastName) => {
-                const iUser = {
-                  ...edited.iUser,
-                  lastName,
-                };
-                this.updateAttributes({ iUser });
-              }}
+              value={edited && edited.lastName ? edited.lastName : ""}
+              onChange={(lastName) => this.updateAttributes({ lastName })}
             />
           </Grid>
           <Grid item xs={4} className={classes.item}>
@@ -101,30 +123,18 @@ class UserMasterPanel extends FormPanel {
               label="user.otherNames"
               required
               readOnly={readOnly}
-              value={edited && edited.iUser ? edited.iUser.otherNames : ""}
-              onChange={(otherNames) => {
-                const iUser = {
-                  ...edited.iUser,
-                  otherNames,
-                };
-                this.updateAttributes({ iUser });
-              }}
+              value={edited && edited.otherNames ? edited.otherNames : ""}
+              onChange={(otherNames) => this.updateAttributes({ otherNames })}
             />
           </Grid>
 
           <Grid item xs={4} className={classes.item}>
             <PublishedComponent
               pubRef="location.HealthFacilityPicker"
-              value={edited && edited.iUser && edited.iUser.healthFacility}
+              value={edited && edited.healthFacility}
               module="admin"
               readOnly={readOnly}
-              onChange={(healthFacility) => {
-                const iUser = {
-                  ...edited.iUser,
-                  healthFacility,
-                };
-                this.updateAttributes({ iUser });
-              }}
+              onChange={(healthFacilityId) => this.updateAttributes({ healthFacilityId })}
             />
           </Grid>
           <Grid container className={classes.item}>
@@ -134,14 +144,8 @@ class UserMasterPanel extends FormPanel {
                 type="email"
                 label="user.email"
                 readOnly={readOnly}
-                value={edited && edited.iUser ? edited.iUser.email : ""}
-                onChange={(email) => {
-                  const iUser = {
-                    ...edited.iUser,
-                    email,
-                  };
-                  this.updateAttributes({ iUser });
-                }}
+                value={edited && edited.email ? edited.email : ""}
+                onChange={(email) => this.updateAttributes({ email })}
               />
             </Grid>
             <Grid item xs={4} className={classes.item}>
@@ -150,34 +154,22 @@ class UserMasterPanel extends FormPanel {
                 type="phone"
                 label="user.phone"
                 readOnly={readOnly}
-                value={edited && edited.iUser ? edited.iUser.phone : ""}
-                onChange={(phone) => {
-                  const iUser = {
-                    ...edited.iUser,
-                    phone,
-                  };
-                  this.updateAttributes({ iUser });
-                }}
+                value={edited && edited.phoneNumber ? edited.phoneNumber : ""}
+                onChange={(phoneNumber) => this.updateAttributes({ phoneNumber })}
               />
             </Grid>
             {(edited.officer ||
               (edited.userTypes &&
-                edited.userTypes.includes("OFFICER") &&
-                rights.includes(RIGHT_ENROLMENTOFFICER))) && (
+                (edited.userTypes.includes("OFFICER") || edited.userTypes.includes("CLAIM_ADMIN"))
+                )) && (
               <Grid item xs={4} className={classes.item}>
                 <PublishedComponent
                   pubRef="core.DatePicker"
-                  value={edited && edited.officer ? edited.officer.dob : ""}
+                  value={edited && edited.birthDate ? edited.birthDate : ""}
                   module="admin"
                   label="user.dob"
                   readOnly={readOnly}
-                  onChange={(dob) => {
-                    const officer = {
-                      ...edited.officer,
-                      dob,
-                    };
-                    this.updateAttributes({ officer });
-                  }}
+                  onChange={(birthDate) => this.updateAttributes({ birthDate })}
                 />
               </Grid>
             )}
