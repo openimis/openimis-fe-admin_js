@@ -153,7 +153,7 @@ class UserForm extends Component {
       this.state.user &&
       this.state.user.lastName &&
       this.state.user.otherNames &&
-      (!this.state.user.userTypes.includes("INTERACTIVE") || this.state.user.iUser.roles) &&
+      (!this.state.user.userTypes.includes("INTERACTIVE") || this.state.user.roles) &&
       this.state.user.username &&
       this.state.user.userTypes
     )

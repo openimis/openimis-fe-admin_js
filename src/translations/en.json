@@ -18,6 +18,7 @@
     "admin.user.CreateUser.mutationLabel": "Create user",
     "admin.user.UserOverview.newTitle": "New User",
     "admin.user.UserOverview.title": "User Details",
+    "admin.user.address": "Address",
     "admin.user.addNewUser.tooltip": "Add new user",
     "admin.user.addNewUserTooltip": "Add new user",
     "admin.user.createUser.mutationLabel": "Create user",
@@ -31,8 +32,10 @@
     "admin.user.dobTo": "Birth date to",
     "admin.user.email": "Email",
     "admin.user.lastName": "Last name",
+    "admin.user.language": "Language",
     "admin.user.openNewTab": "Open in new tab",
     "admin.user.otherNames": "Other names",
+    "admin.user.password": "Password",
     "admin.user.phone": "Phone",
     "admin.user.updateUser.mutationLabel": "Update user",
     "admin.user.userRoles": "User role(s)",
@@ -45,5 +48,6 @@
     "admin.user.userTypes.noOptions": "No user type found",
     "admin.user.userTypes.none": " ",
     "admin.user.userTypes.null": "Any",
-    "admin.user.username": "User name"
+    "admin.user.username": "User name",
+    "admin.user.worksTo": "Works to"
 }

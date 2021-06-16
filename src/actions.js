@@ -21,7 +21,7 @@ const USER_SUMMARY_PROJECTION = [
 const USER_FULL_PROJECTION = (mm) => [
   "id",
   "username",
-  "officer{id,phone,dob,lastName,location{id,name}}",
+  "officer{id,phone,dob,lastName,otherNames,address,substitutionOfficer{id},worksTo,location{id,name}}",
   "iUser{id,phone,languageId,lastName,otherNames,roles{id,name}",
   `healthFacility${mm.getProjection(
     "location.HealthFacilityPicker.projection",
@@ -62,16 +62,21 @@ export function formatUserGQL(mm, user) {
     }
     ${user.email ? `email: "${formatGQLString(user.email)}"` : ""}
     ${user.userTypes ? `userTypes: [${user.userTypes}]` : ""}
+    ${user.password ? `password: "${formatGQLString(user.password)}"` : ""}
     ${
       user.healthFacility
         ? `healthFacilityId: ${decodeId(user.healthFacility.id)}`
         : ""
     }
     ${
-      user.iUser && user.iUser.roles
-        ? `roles: [${user.iUser.roles.map((u) => decodeId(u.id))}]`
+      user.roles
+        ? `roles: [${user.roles.map((u) => decodeId(u.id))}]`
         : ""
     }
+    ${user.address ? `address: "${formatGQLString(user.address)}"` : ""}
+    ${user.substitutionOfficerId ? `substitutionOfficerId: "${formatGQLString(user.substitutionOfficerId)}"` : ""}
+    ${user.worksTo ? `worksTo: "${formatGQLString(user.worksTo)}"` : ""}
+
   `;
   return req;
 }

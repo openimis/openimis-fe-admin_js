@@ -35,6 +35,7 @@ export const mapQueriesUserToMutation = (u) => {
     u.phoneNumber = u.iUser.phone;
     u.healthFacility = u.iUser.healthFacility;
     u.language = u.iUser.languageId;
+    u.roles = u.iUser.roles;
   }
   if (u.claimAdmin) {
     u.lastName = u.claimAdmin.lastName;
@@ -50,6 +51,9 @@ export const mapQueriesUserToMutation = (u) => {
     u.email = u.officer.email;
     u.phoneNumber = u.officer.phone;
     u.birthDate = u.officer.dob;
+    u.address = u.officer.address;
+    u.substitutionOfficerId = u.officer.substitutionOfficer ? u.officer.substitutionOfficer.id : null;
+    u.worksTo = u.officer.worksTo;
   }
   return u;
 }
@@ -65,7 +69,7 @@ const styles = (theme) => ({
 class UserMasterPanel extends FormPanel {
   render() {
     const { classes, edited, readOnly, rights } = this.props;
-    const userRoles = edited && edited.iUser ? edited.iUser.roles : [];
+    const userRoles = edited && edited.roles ? edited.roles : [];
     return (
       <>
         <Grid container className={classes.item}>
@@ -92,17 +96,14 @@ class UserMasterPanel extends FormPanel {
           <Grid item xs={4} className={classes.item}>
             <PublishedComponent
               pubRef="admin.UserRolesPicker"
-              required
+              required={!!(edited.iUser ||
+                        (edited.userTypes &&
+                          edited.userTypes.includes("INTERACTIVE")
+                          ))}
               value={userRoles || []}
               module="admin"
               readOnly={readOnly}
-              onChange={(roles) => {
-                const iUser = {
-                  ...edited.iUser,
-                  roles,
-                };
-                this.updateAttributes({ iUser });
-              }}
+              onChange={(roles) => this.updateAttributes({ roles })}
             />
           </Grid>
         </Grid>
@@ -174,6 +175,61 @@ class UserMasterPanel extends FormPanel {
               </Grid>
             )}
           </Grid>
+          {(edited.iUser ||
+          (edited.userTypes &&
+            edited.userTypes.includes("INTERACTIVE")
+            )) && (
+            <Grid container className={classes.item}>
+              <Grid item xs={4} className={classes.item}>
+                <TextInput
+                  module="admin"
+                  type="password"
+                  label="user.password"
+                  readOnly={readOnly}
+                  value=""
+                  onChange={(password) => this.updateAttributes({ password })}
+                />
+              </Grid>
+              <Grid item xs={4} className={classes.item}>
+                <TextInput
+                  module="admin"
+                  type="text"
+                  label="user.language"
+                  readOnly={readOnly}
+                  value={edited && edited.language ? edited.language : "en"}
+                  onChange={(language) => this.updateAttributes({ language })}
+                />
+              </Grid>
+            </Grid>
+          )}
+          {(edited.iUser ||
+          (edited.userTypes &&
+            edited.userTypes.includes("OFFICER")
+            )) && (
+            <Grid container className={classes.item}>
+              <Grid item xs={4} className={classes.item}>
+                <TextInput
+                  module="admin"
+                  label="user.address"
+                  multiline
+                  rows={2}
+                  readOnly={readOnly}
+                  value={edited && edited.address ? edited.address : ""}
+                  onChange={(address) => this.updateAttributes({ address })}
+                />
+              </Grid>
+              <Grid item xs={4} className={classes.item}>
+                <PublishedComponent
+                  pubRef="core.DatePicker"
+                  value={edited && edited.worksTo ? edited.worksTo : ""}
+                  module="admin"
+                  label="user.worksTo"
+                  readOnly={readOnly}
+                  onChange={(worksTo) => this.updateAttributes({ worksTo })}
+                />
+              </Grid>
+            </Grid>
+          )}
         </Grid>
       </>
     );
