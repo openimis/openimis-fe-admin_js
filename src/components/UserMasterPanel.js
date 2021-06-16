@@ -191,9 +191,9 @@ class UserMasterPanel extends FormPanel {
                 />
               </Grid>
               <Grid item xs={4} className={classes.item}>
-                <TextInput
+                <PublishedComponent
+                  pubRef="core.LanguagePicker"
                   module="admin"
-                  type="text"
                   label="user.language"
                   readOnly={readOnly}
                   value={edited && edited.language ? edited.language : "en"}
