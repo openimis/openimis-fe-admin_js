@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import { ProxyPage } from "@openimis/fe-core";
 
-
 class MedicalItemsPage extends Component {
-    render() {
-        return <ProxyPage url="/FindMedicalItem.aspx" />
-    }
+  render() {
+    return <ProxyPage url="/FindMedicalItem.aspx" />;
+  }
 }
 
 export { MedicalItemsPage };
