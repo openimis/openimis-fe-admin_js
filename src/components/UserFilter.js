@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import _debounce from "lodash/debounce";
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import { injectIntl } from "react-intl";
-import { Grid, Checkbox, FormControlLabel } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import {
   withModulesManager,
   decodeId,
@@ -161,7 +161,7 @@ class UserFilter extends Component {
   };
 
   render() {
-    const { classes, onChangeFilters, intl } = this.props;
+    const { classes, onChangeFilters } = this.props;
     const { locationFilters, currentUserType, currentUserRoles } = this.state;
     return (
       <section className={classes.form}>

@@ -68,7 +68,7 @@ const styles = (theme) => ({
 
 class UserMasterPanel extends FormPanel {
   render() {
-    const { classes, edited, readOnly, rights } = this.props;
+    const { classes, edited, readOnly } = this.props;
     const userRoles = edited && edited.roles ? edited.roles : [];
     return (
       <>

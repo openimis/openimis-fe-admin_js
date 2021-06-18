@@ -10,9 +10,7 @@ import {
   LocalPharmacy,
   LocalPharmacyOutlined,
   Person,
-  PersonOutlined,
   PinDrop,
-  SupervisorAccount,
   Tune,
 } from "@material-ui/icons";
 import {
@@ -27,8 +25,8 @@ import {
   RIGHT_PRICELISTMI,
   RIGHT_MEDICALSERVICES,
   RIGHT_MEDICALITEMS,
-  RIGHT_ENROLMENTOFFICER,
-  RIGHT_CLAIMADMINISTRATOR,
+  // RIGHT_ENROLMENTOFFICER,
+  // RIGHT_CLAIMADMINISTRATOR,
   RIGHT_USERS,
   RIGHT_PAYERS,
   RIGHT_LOCATIONS,
