@@ -1,4 +1,3 @@
-import React from "react";
 import AdminMainMenu from "./components/AdminMainMenu";
 import { ProductsPage } from "./components/ProductsPage";
 import { MedicalServicesPriceListPage } from "./pages/MedicalServicesPriceListPage";
@@ -51,7 +50,7 @@ const DEFAULT_CONFIG = {
     { key: "admin.UserPicker", ref: UserPicker },
     { key: "admin.UserRolesPicker", ref: UserRolesPicker },
     { key: "admin.UserTypesPicker", ref: UserTypesPicker },
-    { key: "admin.UserPicker.projection", ref: ["id", "username"] },
+    { key: "admin.UserPicker.projection", ref: ["id", "username", "iUser{id}"] },
     { key: "admin.UserRolesPicker.projection", ref: ["id", "name"] },
     { key: "admin.users", ref: ROUTE_ADMIN_USERS },
     { key: "admin.userOverview", ref: ROUTE_ADMIN_USER_OVERVIEW },
