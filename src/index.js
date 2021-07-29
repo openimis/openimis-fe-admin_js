@@ -2,8 +2,6 @@ import AdminMainMenu from "./components/AdminMainMenu";
 import { ProductsPage } from "./components/ProductsPage";
 import { MedicalServicesPriceListPage } from "./pages/MedicalServicesPriceListPage";
 import { MedicalItemsPriceListPage } from "./pages/MedicalItemsPriceListPage";
-import { MedicalServicesPage } from "./pages/MedicalServicesPage";
-import { MedicalItemsPage } from "./pages/MedicalItemsPage";
 import UsersPage from "./pages/UsersPage";
 import UserPage from "./pages/UserPage";
 import UserOverviewPage from "./pages/UserOverviewPage";
@@ -17,7 +15,7 @@ import UserTypesPicker from "./components/pickers/UserTypesPicker";
 import reducer from "./reducer";
 
 const ROUTE_ADMIN_USERS = "admin/users";
-const ROUTE_ADMIN_USER_OVERVIEW = "admin/users/overiew";
+const ROUTE_ADMIN_USER_OVERVIEW = "admin/users/overview";
 const ROUTE_ADMIN_USER_NEW = "admin/users/new";
 
 const DEFAULT_CONFIG = {
@@ -33,8 +31,6 @@ const DEFAULT_CONFIG = {
       path: "admin/medicalItemsPriceList",
       component: MedicalItemsPriceListPage,
     },
-    { path: "admin/medicalServices", component: MedicalServicesPage },
-    { path: "admin/medilcalItems", component: MedicalItemsPage },
     { path: ROUTE_ADMIN_USERS, component: UsersPage },
     { path: ROUTE_ADMIN_USER_NEW, component: UserPage },
     {

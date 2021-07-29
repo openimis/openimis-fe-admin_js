@@ -128,13 +128,12 @@ class UserSearcher extends Component {
       (u) => this.getUserItem(u, "otherNames"),
       (u) => this.getUserItem(u, "email") || this.getUserItem(u, "emailId"),
       (u) => this.getUserItem(u, "phone"),
-      (u) => { console.log({u:u});
-        return (u.claimAdmin||u.officer) &&
+      (u) => (u.claimAdmin||u.officer) &&
         formatDateFromISO(
           this.props.modulesManager,
           this.props.intl,
           this.getUserItem(u, "dob"),
-        )},
+        ),
 
       (u) => (
         <Tooltip
