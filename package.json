@@ -1,6 +1,6 @@
 {
   "name": "@openimis/fe-admin",
-  "version": "1.2.1-rc1",
+  "version": "1.2.1-rc2",
   "license": "AGPL-3.0-only",
   "description": "openIMIS Frontend Admin reference module",
   "repository": "openimis/openimis-fe-admin_js",
@@ -57,6 +57,7 @@
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-react": "^7.23.2",
     "prettier-eslint": "^12.0.0",
-    "prettier-eslint-cli": "^5.0.1"
+    "prettier-eslint-cli": "^5.0.1",
+    "@material-ui/lab": "^4.0.0-alpha.60"
   }
 }
