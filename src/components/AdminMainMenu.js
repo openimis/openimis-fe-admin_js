@@ -17,6 +17,7 @@ import {
   formatMessage,
   MainMenuContribution,
   withModulesManager,
+  ErrorBoundary,
 } from "@openimis/fe-core";
 import {
   RIGHT_PRODUCTS,
@@ -81,14 +82,14 @@ class AdminMainMenu extends Component {
       entries.push({
         text: formatMessage(this.props.intl, "admin", "menu.medicalServices"),
         icon: <Healing />,
-        route: "/admin/medicalServices",
+        route: "/medical/medicalServices",
       });
     }
     if (rights.includes(RIGHT_MEDICALITEMS)) {
       entries.push({
         text: formatMessage(this.props.intl, "admin", "menu.medicalItems"),
         icon: <LocalPharmacy />,
-        route: "/admin/medilcalItems",
+        route: "/medical/medicalItems",
         withDivider: true,
       });
     }
