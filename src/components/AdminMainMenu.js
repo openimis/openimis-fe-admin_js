@@ -13,12 +13,7 @@ import {
   PinDrop,
   Tune,
 } from "@material-ui/icons";
-import {
-  formatMessage,
-  MainMenuContribution,
-  withModulesManager,
-  ErrorBoundary,
-} from "@openimis/fe-core";
+import { formatMessage, MainMenuContribution, withModulesManager, ErrorBoundary } from "@openimis/fe-core";
 import {
   RIGHT_PRODUCTS,
   RIGHT_HEALTHFACILITIES,
@@ -57,24 +52,16 @@ class AdminMainMenu extends Component {
     }
     if (rights.includes(RIGHT_PRICELISTMS)) {
       entries.push({
-        text: formatMessage(
-          this.props.intl,
-          "admin",
-          "menu.medicalServicesPrices",
-        ),
+        text: formatMessage(this.props.intl, "admin", "menu.medicalServicesPrices"),
         icon: <HealingOutlined />,
-        route: "/admin/medicalServicesPriceList",
+        route: "/medical/pricelists/services",
       });
     }
     if (rights.includes(RIGHT_PRICELISTMI)) {
       entries.push({
-        text: formatMessage(
-          this.props.intl,
-          "admin",
-          "menu.medicalItemsPrices",
-        ),
+        text: formatMessage(this.props.intl, "admin", "menu.medicalItemsPrices"),
         icon: <LocalPharmacyOutlined />,
-        route: "/admin/medicalItemsPriceList",
+        route: "/medical/pricelists/items",
         withDivider: true,
       });
     }
@@ -118,7 +105,7 @@ class AdminMainMenu extends Component {
     entries.push(
       ...this.props.modulesManager
         .getContribs(ADMIN_MAIN_MENU_CONTRIBUTION_KEY)
-        .filter((c) => !c.filter || c.filter(rights)),
+        .filter((c) => !c.filter || c.filter(rights))
     );
 
     if (!entries.length) return null;
@@ -134,12 +121,7 @@ class AdminMainMenu extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  rights:
-    !!state.core && !!state.core.user && !!state.core.user.i_user
-      ? state.core.user.i_user.rights
-      : [],
+  rights: !!state.core && !!state.core.user && !!state.core.user.i_user ? state.core.user.i_user.rights : [],
 });
 
-export default withModulesManager(
-  injectIntl(connect(mapStateToProps)(AdminMainMenu)),
-);
+export default withModulesManager(injectIntl(connect(mapStateToProps)(AdminMainMenu)));
