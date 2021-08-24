@@ -9,19 +9,20 @@ import { fetchUserRoles } from "../../actions";
 
 const UserRolesPicker = ({ readOnly, modulesManager, value, onChange, required }) => {
   const intl = useIntl();
-  const roles = useSelector((state) => state.admin.userRoles);
+  const roles = useSelector((state) => state.admin.userRoles.items ?? []);
   const userHealthFacilityFullPath = useSelector((state) => (state.loc ? state.loc.userHealthFacilityFullPath : null));
-  const fetchingUserRoles = useSelector((state) => state.admin.fetchingUserRoles);
+  const isFetching = useSelector((state) => state.admin.userRoles.isFetching);
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(fetchUserRoles(modulesManager, userHealthFacilityFullPath));
   }, []);
+
   return (
     <>
-      <ProgressOrError progress={fetchingUserRoles} />
-      {!fetchingUserRoles && (
+      <ProgressOrError progress={isFetching} />
+      {!isFetching && (
         <Autocomplete
-          loading={fetchingUserRoles}
           multiple
           disabled={readOnly}
           noOptionsText={formatMessage(intl, "admin.user", "userRoles.noOptions")}

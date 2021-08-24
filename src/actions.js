@@ -5,6 +5,7 @@ import {
   formatMutation,
   decodeId,
   formatGQLString,
+  fetchMutation,
 } from "@openimis/fe-core";
 import _ from "lodash";
 
@@ -58,7 +59,7 @@ export function fetchUsers(mm, hf, str, prev) {
     filters.push(`str: "${str}"`);
   }
   if (_.isEqual(filters, prev)) {
-    return (dispatch) => {};
+    return () => {};
   }
   const payload = formatPageQuery("users", filters, mm.getRef("admin.UserPicker.projection"));
   return graphql(payload, "ADMIN_USERS", filters);
@@ -109,13 +110,16 @@ export function deleteUser(mm, user, clientMutationLabel) {
   const mutation = formatMutation("deleteUser", `uuids: ["${decodeId(user.id)}"]`, clientMutationLabel);
   // eslint-disable-next-line no-param-reassign
   user.clientMutationId = mutation.clientMutationId;
-  const requestedDateTime = new Date();
-  return graphql(mutation.payload, ["ADMIN_USER_MUTATION_REQ", "ADMIN_USER_DELETE_RESP", "ADMIN_USER_MUTATION_ERR"], {
-    clientMutationId: mutation.clientMutationId,
-    clientMutationLabel,
-    requestedDateTime,
-    userId: user.id,
-  });
+  return (dispatch) => {
+    dispatch(
+      graphql(mutation.payload, ["ADMIN_USER_MUTATION_REQ", "ADMIN_USER_DELETE_RESP", "ADMIN_USER_MUTATION_ERR"], {
+        clientMutationId: mutation.clientMutationId,
+        clientMutationLabel,
+        userId: user.id,
+      }),
+    );
+    dispatch(fetchMutation(mutation.clientMutationId));
+  };
 }
 
 export function fetchUser(mm, userId, clientMutationId) {

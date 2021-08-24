@@ -42,7 +42,7 @@ class UsersPage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  rights: !!state.core && !!state.core.user && !!state.core.user.i_user ? state.core.user.i_user.rights : [],
+  rights: state.core?.user?.i_user?.rights ?? [],
 });
 
 export default injectIntl(

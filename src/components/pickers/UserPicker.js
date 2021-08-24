@@ -81,8 +81,8 @@ class UserPicker extends Component {
 
 const mapStateToProps = (state) => ({
   userHealthFacilityFullPath: state.loc ? state.loc.userHealthFacilityFullPath : null,
-  users: state.admin.users,
-  fetchedUsers: state.admin.fetchedUsers,
+  users: state.admin.users.items,
+  fetchedUsers: state.admin.users.fetched,
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({ fetchUsers }, dispatch);

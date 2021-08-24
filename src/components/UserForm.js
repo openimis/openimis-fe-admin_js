@@ -15,7 +15,7 @@ import {
   coreConfirm,
   parseData,
 } from "@openimis/fe-core";
-import { RIGHT_USERS } from "../constants";
+import { INTERACTIVE_USER_TYPE, RIGHT_USERS } from "../constants";
 
 import { fetchUser, newUser, createUser, fetchUserMutation } from "../actions";
 import UserMasterPanel from "./UserMasterPanel";
@@ -28,16 +28,11 @@ const USER_OVERVIEW_MUTATIONS_KEY = "user.UserOverview.mutations";
 
 class UserForm extends Component {
   state = {
-    lockNew: false,
+    isLocked: false,
     reset: 0,
-    user: this.newUser(),
+    user: {},
     newUser: true,
-    consirmedAction: null,
   };
-
-  newUser() {
-    return {};
-  }
 
   componentDidMount() {
     document.title = formatMessageWithValues(this.props.intl, "admin.user", "UserOverview.title", { label: "" });
@@ -50,7 +45,6 @@ class UserForm extends Component {
     if (this.props.id) {
       this.setState({
         user: {
-          ...this.newUser(),
           id: this.props.id,
         },
       });
@@ -63,14 +57,14 @@ class UserForm extends Component {
       this.setState({
         user,
         userId: user.id,
-        lockNew: false,
+        isLocked: false,
         newUser: false,
       });
     } else if (prevProps.userId && !this.props.userId) {
       this.setState({
-        user: this.newUser(),
+        user: {},
         newUser: true,
-        lockNew: false,
+        isLocked: false,
         userId: null,
       });
     } else if (prevProps.submittingMutation && !this.props.submittingMutation) {
@@ -89,9 +83,9 @@ class UserForm extends Component {
   add = () => {
     this.setState(
       (state) => ({
-        user: this.newUser(),
+        user: {},
         newUser: true,
-        lockNew: false,
+        isLocked: false,
         reset: state.reset + 1,
       }),
       (e) => {
@@ -125,22 +119,18 @@ class UserForm extends Component {
     }
   };
 
-  canSave = () => {
-    console.log({ userTypes: this.state.user });
-    return (
-      this.state.user &&
-      this.state.user.lastName &&
-      this.state.user.otherNames &&
-      (!this.state.user.userTypes.includes("INTERACTIVE") || this.state.user.roles) &&
-      this.state.user.username &&
-      this.state.user.userTypes
-    );
-  };
+  canSave = () =>
+    this.state.user &&
+    this.state.user.lastName &&
+    this.state.user.otherNames &&
+    (!this.state.user.userTypes.includes(INTERACTIVE_USER_TYPE) || this.state.user.roles) &&
+    this.state.user.username &&
+    this.state.user.userTypes;
 
   save = (user) => {
     this.setState(
-      { lockNew: !user.id }, // avoid duplicates
-      (e) => this.props.save(user),
+      { isLocked: !user.id }, // avoid duplicates
+      () => this.props.save(user),
     );
   };
 
@@ -169,21 +159,21 @@ class UserForm extends Component {
       back,
     } = this.props;
     const { user, reset } = this.state;
+
     if (!rights.includes(RIGHT_USERS)) return null;
-    let runningMutation = !!user && !!user.clientMutationId;
-    const contributedMutations = modulesManager.getContribs(USER_OVERVIEW_MUTATIONS_KEY);
-    for (let i = 0; i < contributedMutations.length && !runningMutation; i += 1) {
-      runningMutation = contributedMutations[i](state);
-    }
+
+    const isInMutation =
+      user?.clientMutationId ||
+      modulesManager.getContribs(USER_OVERVIEW_MUTATIONS_KEY).some((mutation) => mutation(state));
     const actions = [
       {
         doIt: this.reload,
         icon: <ReplayIcon />,
-        onlyIfDirty: !readOnly && !runningMutation,
+        onlyIfDirty: !readOnly && !isInMutation,
       },
     ];
     return (
-      <div className={runningMutation ? classes.lockedPage : null}>
+      <div className={isInMutation ? classes.lockedPage : null}>
         <ProgressOrError progress={fetchingUser} error={errorUser} />
         {((!!fetchedUser && !!user && user.id === userId) || !userId) && (
           <Form
@@ -194,7 +184,7 @@ class UserForm extends Component {
             reset={reset}
             back={back}
             add={!!add && !this.state.newUser ? this.add : null}
-            readOnly={readOnly || runningMutation || (!!user && !!user.validityTo)}
+            readOnly={readOnly || isInMutation || user?.validityTo}
             actions={actions}
             overview={overview}
             HeadPanel={UserMasterPanel}
@@ -211,7 +201,7 @@ class UserForm extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  rights: !!state.core && !!state.core.user && !!state.core.user.i_user ? state.core.user.i_user.rights : [],
+  rights: state.core?.user?.i_user?.rights ?? [],
   fetchingUser: state.admin.fetchingUser,
   errorUser: state.admin.errorUser,
   fetchedUser: state.admin.fetchedUser,
@@ -219,7 +209,6 @@ const mapStateToProps = (state) => ({
   mutation: state.admin.mutation,
   user: state.admin.user,
   confirmed: state.core.confirmed,
-  state,
 });
 
 const mapDispatchToProps = (dispatch) =>
