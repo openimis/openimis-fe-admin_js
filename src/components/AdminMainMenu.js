@@ -105,7 +105,7 @@ class AdminMainMenu extends Component {
     entries.push(
       ...this.props.modulesManager
         .getContribs(ADMIN_MAIN_MENU_CONTRIBUTION_KEY)
-        .filter((c) => !c.filter || c.filter(rights))
+        .filter((c) => !c.filter || c.filter(rights)),
     );
 
     if (!entries.length) return null;

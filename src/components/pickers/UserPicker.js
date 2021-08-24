@@ -4,12 +4,7 @@ import { bindActionCreators } from "redux";
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import { injectIntl } from "react-intl";
 import _ from "lodash";
-import {
-  formatMessage,
-  AutoSuggestion,
-  ProgressOrError,
-  withModulesManager,
-} from "@openimis/fe-core";
+import { formatMessage, AutoSuggestion, ProgressOrError, withModulesManager } from "@openimis/fe-core";
 import { fetchUsers } from "../../actions";
 
 const styles = (theme) => ({
@@ -21,22 +16,16 @@ const styles = (theme) => ({
 class UserPicker extends Component {
   constructor(props) {
     super(props);
-    this.selectThreshold = props.modulesManager.getConf(
-      "fe-admin",
-      "UserPicker.selectThreshold",
-      10,
-    );
+    this.selectThreshold = props.modulesManager.getConf("fe-admin", "UserPicker.selectThreshold", 10);
   }
 
   formatSuggestion = (p) => (!p ? "" : `${p.username || ""}`);
 
-  onSuggestionSelected = (v) =>
-    this.props.onChange(v, this.formatSuggestion(v));
+  onSuggestionSelected = (v) => this.props.onChange(v, this.formatSuggestion(v));
 
   getSuggestions = (str) =>
     !!str &&
-    str.length >=
-      this.props.modulesManager.getConf("fe-admin", "usersMinCharLookup", 2) &&
+    str.length >= this.props.modulesManager.getConf("fe-admin", "usersMinCharLookup", 2) &&
     this.props.fetchUsers(
       this.props.modulesManager,
       this.props.userHealthFacilityFullPath,
@@ -71,10 +60,7 @@ class UserPicker extends Component {
           <AutoSuggestion
             module="admin"
             items={users}
-            label={
-              !!withLabel &&
-              (label || formatMessage(intl, "admin", "UserPicker.label"))
-            }
+            label={!!withLabel && (label || formatMessage(intl, "admin", "UserPicker.label"))}
             getSuggestions={this.debouncedGetSuggestion}
             renderSuggestion={(a) => <span>{this.formatSuggestion(a)}</span>}
             getSuggestionValue={this.formatSuggestion}
@@ -85,9 +71,7 @@ class UserPicker extends Component {
             required={required}
             selectThreshold={this.selectThreshold}
             withNull={withNull}
-            nullLabel={
-              nullLabel || formatMessage(intl, "admin", "UserPicker.null")
-            }
+            nullLabel={nullLabel || formatMessage(intl, "admin", "UserPicker.null")}
           />
         )}
       </>
@@ -96,19 +80,13 @@ class UserPicker extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  userHealthFacilityFullPath: state.loc
-    ? state.loc.userHealthFacilityFullPath
-    : null,
+  userHealthFacilityFullPath: state.loc ? state.loc.userHealthFacilityFullPath : null,
   users: state.admin.users,
   fetchedUsers: state.admin.fetchedUsers,
 });
 
-const mapDispatchToProps = (dispatch) =>
-  bindActionCreators({ fetchUsers }, dispatch);
+const mapDispatchToProps = (dispatch) => bindActionCreators({ fetchUsers }, dispatch);
 
 export default withModulesManager(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps,
-  )(injectIntl(withTheme(withStyles(styles)(UserPicker)))),
+  connect(mapStateToProps, mapDispatchToProps)(injectIntl(withTheme(withStyles(styles)(UserPicker)))),
 );

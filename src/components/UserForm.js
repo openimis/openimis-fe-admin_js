@@ -40,17 +40,11 @@ class UserForm extends Component {
   }
 
   componentDidMount() {
-    document.title = formatMessageWithValues(
-      this.props.intl,
-      "admin.user",
-      "UserOverview.title",
-      { label: "" },
-    );
+    document.title = formatMessageWithValues(this.props.intl, "admin.user", "UserOverview.title", { label: "" });
     if (this.props.userId) {
       this.setState(
         (state, props) => ({ userId: props.userId }),
-        (e) =>
-          this.props.fetchUser(this.props.modulesManager, this.props.userId),
+        (e) => this.props.fetchUser(this.props.modulesManager, this.props.userId),
       );
     }
     if (this.props.id) {
@@ -87,11 +81,7 @@ class UserForm extends Component {
           clientMutationId: props.mutation.clientMutationId,
         },
       }));
-    } else if (
-      prevProps.confirmed !== this.props.confirmed &&
-      !!this.props.confirmed &&
-      !!this.state.confirmedAction
-    ) {
+    } else if (prevProps.confirmed !== this.props.confirmed && !!this.props.confirmed && !!this.state.confirmedAction) {
       this.state.confirmedAction();
     }
   }
@@ -115,40 +105,28 @@ class UserForm extends Component {
     const { family } = this.state;
     const { clientMutationId, userId } = this.props.mutation;
     if (clientMutationId && !userId) {
-      this.props
-        .fetchUserMutation(this.props.modulesManager, clientMutationId)
-        .then((res) => {
-          const mutationLogs = parseData(res.payload.data.mutationLogs);
-          if (
-            mutationLogs &&
-            mutationLogs[0] &&
-            mutationLogs[0].users &&
-            mutationLogs[0].users[0] &&
-            mutationLogs[0].users[0].coreUser
-          ) {
-            const { id } = parseData(res.payload.data.mutationLogs)[0].users[0]
-              .coreUser;
-            if (id) {
-              historyPush(
-                this.props.modulesManager,
-                this.props.history,
-                "admin.userOverview",
-                [id],
-              );
-            }
+      this.props.fetchUserMutation(this.props.modulesManager, clientMutationId).then((res) => {
+        const mutationLogs = parseData(res.payload.data.mutationLogs);
+        if (
+          mutationLogs &&
+          mutationLogs[0] &&
+          mutationLogs[0].users &&
+          mutationLogs[0].users[0] &&
+          mutationLogs[0].users[0].coreUser
+        ) {
+          const { id } = parseData(res.payload.data.mutationLogs)[0].users[0].coreUser;
+          if (id) {
+            historyPush(this.props.modulesManager, this.props.history, "admin.userOverview", [id]);
           }
-        });
+        }
+      });
     } else {
-      this.props.fetchUser(
-        this.props.modulesManager,
-        userId,
-        family.clientMutationId,
-      );
+      this.props.fetchUser(this.props.modulesManager, userId, family.clientMutationId);
     }
   };
 
   canSave = () => {
-    console.log({userTypes: this.state.user})
+    console.log({ userTypes: this.state.user });
     return (
       this.state.user &&
       this.state.user.lastName &&
@@ -156,7 +134,7 @@ class UserForm extends Component {
       (!this.state.user.userTypes.includes("INTERACTIVE") || this.state.user.roles) &&
       this.state.user.username &&
       this.state.user.userTypes
-    )
+    );
   };
 
   save = (user) => {
@@ -193,14 +171,8 @@ class UserForm extends Component {
     const { user, reset } = this.state;
     if (!rights.includes(RIGHT_USERS)) return null;
     let runningMutation = !!user && !!user.clientMutationId;
-    const contributedMutations = modulesManager.getContribs(
-      USER_OVERVIEW_MUTATIONS_KEY,
-    );
-    for (
-      let i = 0;
-      i < contributedMutations.length && !runningMutation;
-      i += 1
-    ) {
+    const contributedMutations = modulesManager.getContribs(USER_OVERVIEW_MUTATIONS_KEY);
+    for (let i = 0; i < contributedMutations.length && !runningMutation; i += 1) {
       runningMutation = contributedMutations[i](state);
     }
     const actions = [
@@ -216,19 +188,13 @@ class UserForm extends Component {
         {((!!fetchedUser && !!user && user.id === userId) || !userId) && (
           <Form
             module="user"
-            title={
-              this.state.newUser
-                ? "admin.user.UserOverview.newTitle"
-                : "admin.user.UserOverview.title"
-            }
+            title={this.state.newUser ? "admin.user.UserOverview.newTitle" : "admin.user.UserOverview.title"}
             edited_id={userId}
             edited={user}
             reset={reset}
             back={back}
             add={!!add && !this.state.newUser ? this.add : null}
-            readOnly={
-              readOnly || runningMutation || (!!user && !!user.validityTo)
-            }
+            readOnly={readOnly || runningMutation || (!!user && !!user.validityTo)}
             actions={actions}
             overview={overview}
             HeadPanel={UserMasterPanel}
@@ -245,10 +211,7 @@ class UserForm extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  rights:
-    !!state.core && !!state.core.user && !!state.core.user.i_user
-      ? state.core.user.i_user.rights
-      : [],
+  rights: !!state.core && !!state.core.user && !!state.core.user.i_user ? state.core.user.i_user.rights : [],
   fetchingUser: state.admin.fetchingUser,
   errorUser: state.admin.errorUser,
   fetchedUser: state.admin.fetchedUser,
@@ -273,10 +236,5 @@ const mapDispatchToProps = (dispatch) =>
   );
 
 export default withHistory(
-  withModulesManager(
-    connect(
-      mapStateToProps,
-      mapDispatchToProps,
-    )(injectIntl(withTheme(withStyles(styles)(UserForm)))),
-  ),
+  withModulesManager(connect(mapStateToProps, mapDispatchToProps)(injectIntl(withTheme(withStyles(styles)(UserForm))))),
 );

@@ -104,13 +104,7 @@ class UserSearcher extends Component {
 
   deleteAction = (i) =>
     !!i.validityTo || !!i.clientMutationId ? null : (
-      <Tooltip
-        title={formatMessage(
-          this.props.intl,
-          "admin.user",
-          "deleteUser.tooltip",
-        )}
-      >
+      <Tooltip title={formatMessage(this.props.intl, "admin.user", "deleteUser.tooltip")}>
         <IconButton onClick={() => this.confirmDelete(i)}>
           <DeleteIcon />
         </IconButton>
@@ -121,6 +115,7 @@ class UserSearcher extends Component {
     (user.iUser && user.iUser[item]) ||
     (user.officer && user.officer[item]) ||
     (user.claimAdmin && user.claimAdmin[item]);
+
   itemFormatters = () => {
     const formatters = [
       (u) => u.username,
@@ -128,17 +123,12 @@ class UserSearcher extends Component {
       (u) => this.getUserItem(u, "otherNames"),
       (u) => this.getUserItem(u, "email") || this.getUserItem(u, "emailId"),
       (u) => this.getUserItem(u, "phone"),
-      (u) => (u.claimAdmin||u.officer) &&
-        formatDateFromISO(
-          this.props.modulesManager,
-          this.props.intl,
-          this.getUserItem(u, "dob"),
-        ),
+      (u) =>
+        (u.claimAdmin || u.officer) &&
+        formatDateFromISO(this.props.modulesManager, this.props.intl, this.getUserItem(u, "dob")),
 
       (u) => (
-        <Tooltip
-          title={formatMessage(this.props.intl, "admin.user", "openNewTab")}
-        >
+        <Tooltip title={formatMessage(this.props.intl, "admin.user", "openNewTab")}>
           <IconButton onClick={(e) => this.props.onDoubleClick(u, true)}>
             <TabIcon />
           </IconButton>
@@ -187,14 +177,9 @@ class UserSearcher extends Component {
           fetchedItems={fetchedUsers}
           errorItems={errorUsers}
           userKey={USER_SEARCHER_CONTRIBUTION_KEY}
-          tableTitle={formatMessageWithValues(
-            intl,
-            "admin.user",
-            "userSummaries",
-            {
-              count,
-            },
-          )}
+          tableTitle={formatMessageWithValues(intl, "admin.user", "userSummaries", {
+            count,
+          })}
           rowsPerPageOptions={this.rowsPerPageOptions}
           defaultPageSize={this.defaultPageSize}
           fetch={this.fetch}
@@ -215,10 +200,7 @@ class UserSearcher extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  rights:
-    !!state.core && !!state.core.user && !!state.core.user.i_user
-      ? state.core.user.i_user.rights
-      : [],
+  rights: !!state.core && !!state.core.user && !!state.core.user.i_user ? state.core.user.i_user.rights : [],
   users: state.admin.usersSummaries,
   usersPageInfo: state.admin.usersPageInfo,
   fetchingUsers: state.admin.fetchingUsersSummaries,
@@ -228,9 +210,6 @@ const mapStateToProps = (state) => ({
   mutation: state.admin.mutation,
 });
 
-const mapDispatchToProps = (dispatch) =>
-  bindActionCreators({ fetchUsersSummaries, deleteUser, journalize }, dispatch);
+const mapDispatchToProps = (dispatch) => bindActionCreators({ fetchUsersSummaries, deleteUser, journalize }, dispatch);
 
-export default withModulesManager(
-  connect(mapStateToProps, mapDispatchToProps)(injectIntl(UserSearcher)),
-);
+export default withModulesManager(connect(mapStateToProps, mapDispatchToProps)(injectIntl(UserSearcher)));

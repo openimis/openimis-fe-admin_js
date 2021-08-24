@@ -3,29 +3,15 @@ import { useIntl } from "react-intl";
 import { useSelector, useDispatch } from "react-redux";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import {
-  formatMessage,
-  withModulesManager,
-  ProgressOrError,
-} from "@openimis/fe-core";
+import { formatMessage, withModulesManager, ProgressOrError } from "@openimis/fe-core";
 
 import { fetchUserRoles } from "../../actions";
 
-const UserRolesPicker = ({
-  readOnly,
-  modulesManager,
-  value,
-  onChange,
-  required,
-}) => {
+const UserRolesPicker = ({ readOnly, modulesManager, value, onChange, required }) => {
   const intl = useIntl();
   const roles = useSelector((state) => state.admin.userRoles);
-  const userHealthFacilityFullPath = useSelector((state) =>
-    state.loc ? state.loc.userHealthFacilityFullPath : null,
-  );
-  const fetchingUserRoles = useSelector(
-    (state) => state.admin.fetchingUserRoles,
-  );
+  const userHealthFacilityFullPath = useSelector((state) => (state.loc ? state.loc.userHealthFacilityFullPath : null));
+  const fetchingUserRoles = useSelector((state) => state.admin.fetchingUserRoles);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchUserRoles(modulesManager, userHealthFacilityFullPath));
@@ -38,11 +24,7 @@ const UserRolesPicker = ({
           loading={fetchingUserRoles}
           multiple
           disabled={readOnly}
-          noOptionsText={formatMessage(
-            intl,
-            "admin.user",
-            "userRoles.noOptions",
-          )}
+          noOptionsText={formatMessage(intl, "admin.user", "userRoles.noOptions")}
           id="user-role-select"
           options={roles}
           getOptionLabel={(option) => option.name}
@@ -52,9 +34,7 @@ const UserRolesPicker = ({
             <TextField
               {...params}
               variant="standard"
-              label={`${formatMessage(intl, "admin.user", "userRoles")}${
-                required ? "*" : ""
-              }`}
+              label={`${formatMessage(intl, "admin.user", "userRoles")}${required ? "*" : ""}`}
               placeholder=""
             />
           )}

@@ -3,13 +3,7 @@ import { withTheme, withStyles } from "@material-ui/core/styles";
 import { injectIntl } from "react-intl";
 import { connect } from "react-redux";
 import { Grid } from "@material-ui/core";
-import {
-  withHistory,
-  withModulesManager,
-  TextInput,
-  PublishedComponent,
-  FormPanel,
-} from "@openimis/fe-core";
+import { withHistory, withModulesManager, TextInput, PublishedComponent, FormPanel } from "@openimis/fe-core";
 import { userTypesMapping } from "../constants";
 
 export const getUserTypes = (user) => {
@@ -56,7 +50,7 @@ export const mapQueriesUserToMutation = (u) => {
     u.worksTo = u.officer.worksTo;
   }
   return u;
-}
+};
 
 const styles = (theme) => ({
   tableTitle: theme.table.title,
@@ -96,10 +90,7 @@ class UserMasterPanel extends FormPanel {
           <Grid item xs={4} className={classes.item}>
             <PublishedComponent
               pubRef="admin.UserRolesPicker"
-              required={!!(edited.iUser ||
-                        (edited.userTypes &&
-                          edited.userTypes.includes("INTERACTIVE")
-                          ))}
+              required={!!(edited.iUser || (edited.userTypes && edited.userTypes.includes("INTERACTIVE")))}
               value={userRoles || []}
               module="admin"
               readOnly={readOnly}
@@ -161,8 +152,7 @@ class UserMasterPanel extends FormPanel {
             </Grid>
             {(edited.officer ||
               (edited.userTypes &&
-                (edited.userTypes.includes("OFFICER") || edited.userTypes.includes("CLAIM_ADMIN"))
-                )) && (
+                (edited.userTypes.includes("OFFICER") || edited.userTypes.includes("CLAIM_ADMIN")))) && (
               <Grid item xs={4} className={classes.item}>
                 <PublishedComponent
                   pubRef="core.DatePicker"
@@ -175,10 +165,7 @@ class UserMasterPanel extends FormPanel {
               </Grid>
             )}
           </Grid>
-          {(edited.iUser ||
-          (edited.userTypes &&
-            edited.userTypes.includes("INTERACTIVE")
-            )) && (
+          {(edited.iUser || (edited.userTypes && edited.userTypes.includes("INTERACTIVE"))) && (
             <Grid container className={classes.item}>
               <Grid item xs={4} className={classes.item}>
                 <TextInput
@@ -202,10 +189,7 @@ class UserMasterPanel extends FormPanel {
               </Grid>
             </Grid>
           )}
-          {(edited.iUser ||
-          (edited.userTypes &&
-            edited.userTypes.includes("OFFICER")
-            )) && (
+          {(edited.iUser || (edited.userTypes && edited.userTypes.includes("OFFICER"))) && (
             <Grid container className={classes.item}>
               <Grid item xs={4} className={classes.item}>
                 <TextInput
@@ -237,16 +221,9 @@ class UserMasterPanel extends FormPanel {
 }
 
 const mapStateToProps = (state) => ({
-  rights:
-    !!state.core && !!state.core.user && !!state.core.user.i_user
-      ? state.core.user.i_user.rights
-      : [],
+  rights: !!state.core && !!state.core.user && !!state.core.user.i_user ? state.core.user.i_user.rights : [],
 });
 
 export default injectIntl(
-  withModulesManager(
-    withHistory(
-      connect(mapStateToProps)(withTheme(withStyles(styles)(UserMasterPanel))),
-    ),
-  ),
+  withModulesManager(withHistory(connect(mapStateToProps)(withTheme(withStyles(styles)(UserMasterPanel))))),
 );
