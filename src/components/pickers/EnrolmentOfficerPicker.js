@@ -4,7 +4,7 @@ import { withTheme, withStyles } from "@material-ui/core/styles";
 import { Autocomplete } from "@material-ui/lab";
 import { TextField } from "@material-ui/core";
 import { withModulesManager, useDebounceCb, useTranslations } from "@openimis/fe-core";
-import { fetchUsers } from "../../actions";
+import { fetchEnrolmentOfficers } from "../../actions";
 
 const styles = (theme) => ({
   label: {
@@ -14,18 +14,16 @@ const styles = (theme) => ({
 
 const formatSuggestion = (p) => {
   if (!p) return "?";
-  return [p.username, p.iUser?.lastName, p.iUser?.otherNames].filter(Boolean).join(" ");
+  return [p.code, p.lastName, p.otherNames].filter(Boolean).join(" ");
 };
 
-const UserPicker = (props) => {
+const EnrolmentOfficerPicker = (props) => {
   const {
     onChange,
     modulesManager,
     readOnly = false,
     required = false,
     withLabel = true,
-    healthFacility,
-    filters = [],
     value,
     label,
     filterOptions,
@@ -36,10 +34,10 @@ const UserPicker = (props) => {
   const minCharLookup = modulesManager.getConf("fe-admin", "usersMinCharLookup", 2);
   const dispatch = useDispatch();
   const [searchString, setSearchString] = useState(null);
-  const { formatMessage } = useTranslations("admin.UserPicker", modulesManager);
+  const { formatMessage } = useTranslations("admin.EnrolmentOfficerPicker", modulesManager);
   const [open, setOpen] = useState(false);
-  const users = useSelector((state) => state.admin.users.items);
-  const isLoading = useSelector((state) => state.admin.users.isLoading);
+  const isLoading = useSelector((state) => state.admin.enrolmentOfficers.isFetching);
+  const items = useSelector((state) => state.admin.enrolmentOfficers.items);
 
   const onInputChange = useDebounceCb(setSearchString, modulesManager.getConf("fe-admin", "debounceTime", 400));
   // eslint-disable-next-line no-shadow
@@ -51,18 +49,20 @@ const UserPicker = (props) => {
   useEffect(() => {
     if (searchString?.length > minCharLookup) {
       dispatch(
-        fetchUsers(
-          modulesManager,
-          [searchString && `str: "${searchString}"`, ...(filters ?? [])].filter(Boolean),
-          !healthFacility,
-        ),
+        fetchEnrolmentOfficers(modulesManager, {
+          searchString,
+        }),
       );
     }
   }, [searchString]);
 
   useEffect(() => {
     if (open) {
-      dispatch(fetchUsers(modulesManager, [`first: 10`, ...(filters ?? [])], !healthFacility));
+      dispatch(
+        fetchEnrolmentOfficers(modulesManager, {
+          first: 10,
+        }),
+      );
     }
   }, [open]);
 
@@ -75,7 +75,7 @@ const UserPicker = (props) => {
       openOnFocus
       multiple={multiple}
       disabled={readOnly}
-      options={users}
+      options={items}
       loading={isLoading}
       open={open}
       onOpen={() => setOpen(true)}
@@ -101,4 +101,4 @@ const UserPicker = (props) => {
   );
 };
 
-export default withModulesManager(withTheme(withStyles(styles)(UserPicker)));
+export default withModulesManager(withTheme(withStyles(styles)(EnrolmentOfficerPicker)));

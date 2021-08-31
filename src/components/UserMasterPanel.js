@@ -1,10 +1,16 @@
 import React from "react";
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import { injectIntl } from "react-intl";
-import { connect } from "react-redux";
-import { Grid } from "@material-ui/core";
-import { withHistory, withModulesManager, TextInput, PublishedComponent, FormPanel, combine } from "@openimis/fe-core";
-import { getUserTypes } from "../utils";
+import { Grid, Divider, Typography } from "@material-ui/core";
+import {
+  withHistory,
+  withModulesManager,
+  useTranslations,
+  TextInput,
+  PublishedComponent,
+  combine,
+} from "@openimis/fe-core";
+import { CLAIM_ADMIN_USER_TYPE } from "../constants";
 
 const styles = (theme) => ({
   tableTitle: theme.table.title,
@@ -12,176 +18,150 @@ const styles = (theme) => ({
   fullHeight: {
     height: "100%",
   },
+  sectionHeader: {
+    ...theme.paper.item,
+    paddingBottom: 0,
+  },
+  sectionTitle: theme.typography.title,
 });
 
-class UserMasterPanel extends FormPanel {
-  render() {
-    const { classes, edited, readOnly } = this.props;
-    return (
-      <>
-        <Grid container className={classes.item}>
-          <Grid item xs={4} className={classes.item}>
-            <TextInput
-              module="admin"
-              required
-              label="user.username"
-              readOnly={Boolean(edited.id) || readOnly}
-              value={edited?.username ?? ""}
-              onChange={(p) => this.updateAttribute("username", p)}
-            />
-          </Grid>
-          <Grid item xs={4} className={classes.item}>
-            <PublishedComponent
-              required
-              pubRef="admin.UserTypesPicker"
-              value={edited?.userTypes || getUserTypes(edited)}
-              module="admin"
-              readOnly={readOnly}
-              onChange={(p) => this.updateAttribute("userTypes", p)}
-            />
-          </Grid>
-          <Grid item xs={4} className={classes.item}>
-            <PublishedComponent
-              pubRef="admin.UserRolesPicker"
-              required={!!(edited.iUser || (edited.userTypes && edited.userTypes.includes("INTERACTIVE")))}
-              value={edited?.roles ?? []}
-              module="admin"
-              readOnly={readOnly}
-              onChange={(roles) => this.updateAttributes({ roles })}
-            />
-          </Grid>
-        </Grid>
-        <Grid container className={classes.item}>
-          <Grid item xs={4} className={classes.item}>
-            <TextInput
-              module="admin"
-              label="user.lastName"
-              required
-              readOnly={readOnly}
-              value={edited?.lastName ?? ""}
-              onChange={(lastName) => this.updateAttributes({ lastName })}
-            />
-          </Grid>
-          <Grid item xs={4} className={classes.item}>
-            <TextInput
-              module="admin"
-              label="user.otherNames"
-              required
-              readOnly={readOnly}
-              value={edited?.otherNames ?? ""}
-              onChange={(otherNames) => this.updateAttributes({ otherNames })}
-            />
-          </Grid>
+const UserMasterPanel = (props) => {
+  const { classes, edited, readOnly, onEditedChanged, modulesManager } = props;
+  const { formatMessage } = useTranslations("admin", modulesManager);
 
-          <Grid item xs={4} className={classes.item}>
-            <PublishedComponent
-              pubRef="location.HealthFacilityPicker"
-              value={edited?.healthFacility}
-              module="admin"
-              readOnly={readOnly}
-              onChange={(healthFacilityId) => this.updateAttributes({ healthFacilityId })}
-            />
-          </Grid>
-          <Grid container>
-            <Grid item xs={4} className={classes.item}>
-              <TextInput
-                module="admin"
-                type="email"
-                label="user.email"
-                readOnly={readOnly}
-                value={edited?.email ?? ""}
-                onChange={(email) => this.updateAttributes({ email })}
-              />
-            </Grid>
-            <Grid item xs={4} className={classes.item}>
-              <TextInput
-                module="admin"
-                type="phone"
-                label="user.phone"
-                readOnly={readOnly}
-                value={edited?.phoneNumber ?? ""}
-                onChange={(phoneNumber) => this.updateAttributes({ phoneNumber })}
-              />
-            </Grid>
-            {(edited.officer || edited.userTypes?.includes("OFFICER") || edited.userTypes?.includes("CLAIM_ADMIN")) && (
-              <Grid item xs={4} className={classes.item}>
-                <PublishedComponent
-                  pubRef="core.DatePicker"
-                  value={edited?.birthDate}
-                  module="admin"
-                  label="user.dob"
-                  readOnly={readOnly}
-                  onChange={(birthDate) => this.updateAttributes({ birthDate })}
-                />
-              </Grid>
-            )}
-          </Grid>
-          {(edited.iUser || edited.userTypes?.includes("INTERACTIVE")) && (
-            <Grid container>
-              <Grid item xs={4} className={classes.item}>
-                <TextInput
-                  module="admin"
-                  type="password"
-                  label="user.password"
-                  readOnly={readOnly}
-                  value=""
-                  onChange={(password) => this.updateAttributes({ password })}
-                />
-              </Grid>
-              <Grid item xs={4} className={classes.item}>
-                <PublishedComponent
-                  pubRef="core.LanguagePicker"
-                  module="admin"
-                  label="user.language"
-                  readOnly={readOnly}
-                  value={edited?.language ?? "en"}
-                  onChange={(language) => this.updateAttributes({ language })}
-                />
-              </Grid>
-            </Grid>
-          )}
-          {(edited.iUser || edited.userTypes?.includes("OFFICER")) && (
-            <Grid container>
-              <Grid item xs={4} className={classes.item}>
-                <TextInput
-                  module="admin"
-                  label="user.address"
-                  multiline
-                  rows={2}
-                  readOnly={readOnly}
-                  value={edited?.address ?? ""}
-                  onChange={(address) => this.updateAttributes({ address })}
-                />
-              </Grid>
-              <Grid item xs={4} className={classes.item}>
-                <PublishedComponent
-                  pubRef="core.DatePicker"
-                  value={edited?.worksTo ?? ""}
-                  module="admin"
-                  label="user.worksTo"
-                  readOnly={readOnly}
-                  onChange={(worksTo) => this.updateAttributes({ worksTo })}
-                />
-              </Grid>
-            </Grid>
-          )}
-        </Grid>
-      </>
-    );
-  }
-}
+  return (
+    <Grid container direction="row">
+      <Grid item xs={4} className={classes.item}>
+        <TextInput
+          module="admin"
+          required
+          label="user.username"
+          readOnly={Boolean(edited.id) || readOnly}
+          value={edited?.username ?? ""}
+          onChange={(username) => onEditedChanged({ ...edited, username })}
+        />
+      </Grid>
+      <Grid item xs={4} className={classes.item}>
+        <TextInput
+          module="admin"
+          label="user.givenNames"
+          required
+          readOnly={readOnly}
+          value={edited?.otherNames ?? ""}
+          onChange={(otherNames) => onEditedChanged({ ...edited, otherNames })}
+        />
+      </Grid>
+      <Grid item xs={4} className={classes.item}>
+        <TextInput
+          module="admin"
+          label="user.lastName"
+          required
+          readOnly={readOnly}
+          value={edited?.lastName ?? ""}
+          onChange={(lastName) => onEditedChanged({ ...edited, lastName })}
+        />
+      </Grid>
 
-const mapStateToProps = (state) => ({
-  rights: state.core?.user?.i_user?.rights ?? [],
-});
+      <Grid item xs={4} className={classes.item}>
+        <TextInput
+          module="admin"
+          type="email"
+          label="user.email"
+          readOnly={readOnly}
+          value={edited?.email ?? ""}
+          onChange={(email) => onEditedChanged({ ...edited, email })}
+        />
+      </Grid>
+      <Grid item xs={4} className={classes.item}>
+        <TextInput
+          module="admin"
+          type="phone"
+          label="user.phone"
+          readOnly={readOnly}
+          value={edited?.phoneNumber ?? ""}
+          onChange={(phoneNumber) => onEditedChanged({ ...edited, phoneNumber })}
+        />
+      </Grid>
+      <Grid item xs={4} className={classes.item}>
+        <PublishedComponent
+          pubRef="location.HealthFacilityPicker"
+          value={edited?.healthFacility}
+          module="admin"
+          readOnly={readOnly}
+          required={
+            edited.userTypes.includes(
+              CLAIM_ADMIN_USER_TYPE,
+            ) /* This field is also present in the claim administrator panel */
+          }
+          onChange={(healthFacility) => onEditedChanged({ ...edited, healthFacility })}
+        />
+      </Grid>
+      <Grid item xs={6} className={classes.item}>
+        <PublishedComponent
+          pubRef="admin.UserRolesPicker"
+          required
+          value={edited?.roles ?? []}
+          module="admin"
+          readOnly={readOnly}
+          onChange={(roles) => onEditedChanged({ ...edited, roles })}
+        />
+      </Grid>
+      <Grid item xs={6} className={classes.item}>
+        <PublishedComponent
+          pubRef="location.LocationPicker"
+          locationLevel={1}
+          value={edited.districts}
+          onChange={(districts) => onEditedChanged({ ...edited, districts })}
+          readOnly={readOnly}
+          required
+          multiple
+          withLabel
+          label={formatMessage("user.districts")}
+        />
+      </Grid>
 
-const enhance = combine(
-  injectIntl,
-  withModulesManager,
-  withHistory,
-  withTheme,
-  withStyles(styles),
-  connect(mapStateToProps),
-);
+      <Grid item xs={12} className={classes.sectionHeader}>
+        <Typography className={classes.sectionTitle}>{formatMessage("UserMasterPanel.loginDetailsTitle")}</Typography>
+        <Divider variant="fullWidth" />
+      </Grid>
+      <Grid item xs={4} className={classes.item}>
+        <PublishedComponent
+          pubRef="core.LanguagePicker"
+          module="admin"
+          label="user.language"
+          readOnly={readOnly}
+          required
+          withNull
+          nullLabel={formatMessage("UserMasterPanel.language.null")}
+          value={edited?.language}
+          onChange={(language) => onEditedChanged({ ...edited, language })}
+        />
+      </Grid>
+      <Grid item xs={4} className={classes.item}>
+        <TextInput
+          module="admin"
+          type="password"
+          label="user.newPassword"
+          readOnly={readOnly}
+          value=""
+          onChange={(password) => onEditedChanged({ ...edited, password })}
+        />
+      </Grid>
+      <Grid item xs={4} className={classes.item}>
+        <TextInput
+          module="admin"
+          type="password"
+          label="user.confirmNewPassword"
+          required={edited.password}
+          readOnly={readOnly}
+          value=""
+          onChange={(confirmPassword) => onEditedChanged({ ...edited, confirmPassword })}
+        />
+      </Grid>
+    </Grid>
+  );
+};
+
+const enhance = combine(injectIntl, withModulesManager, withHistory, withTheme, withStyles(styles));
 
 export default enhance(UserMasterPanel);

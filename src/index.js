@@ -5,6 +5,7 @@ import UserPage from "./pages/UserPage";
 import { PayersPage } from "./pages/PayersPage";
 import messagesEn from "./translations/en.json";
 import UserPicker from "./components/pickers/UserPicker";
+import EnrolmentOfficerPicker from "./components/pickers/EnrolmentOfficerPicker";
 import UserRolesPicker from "./components/pickers/UserRolesPicker";
 import UserTypesPicker from "./components/pickers/UserTypesPicker";
 import reducer from "./reducer";
@@ -29,11 +30,12 @@ const DEFAULT_CONFIG = {
   "core.MainMenu": [AdminMainMenu],
   refs: [
     { key: "admin.UserPicker", ref: UserPicker },
+    { key: "admin.EnrolmentOfficerPicker", ref: EnrolmentOfficerPicker },
     { key: "admin.UserRolesPicker", ref: UserRolesPicker },
     { key: "admin.UserTypesPicker", ref: UserTypesPicker },
     {
       key: "admin.UserPicker.projection",
-      ref: ["id", "username", "iUser{id}"],
+      ref: ["id", "username", "iUser{id otherNames lastName}"],
     },
     { key: "admin.UserRolesPicker.projection", ref: ["id", "name"] },
     { key: "admin.users", ref: ROUTE_ADMIN_USERS },

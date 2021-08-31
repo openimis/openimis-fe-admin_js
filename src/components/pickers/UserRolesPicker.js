@@ -25,6 +25,7 @@ const UserRolesPicker = ({ readOnly, modulesManager, value, onChange, required }
         <Autocomplete
           multiple
           disabled={readOnly}
+          disableCloseOnSelect
           noOptionsText={formatMessage(intl, "admin.user", "userRoles.noOptions")}
           id="user-role-select"
           options={roles}

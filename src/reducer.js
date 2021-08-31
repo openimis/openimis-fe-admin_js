@@ -8,10 +8,19 @@ import {
   dispatchMutationReq,
 } from "@openimis/fe-core";
 
-import { getUserTypes, mapQueriesUserToMutation } from "./utils";
+import { getUserTypes, mapQueriesUserToStore } from "./utils";
 
 function reducer(
   state = {
+    enrolmentOfficers: {
+      items: [],
+      isFetching: false,
+      pageInfo: {
+        totalCount: 0,
+      },
+      error: null,
+    },
+
     usersSummaries: {
       items: [],
       isFetching: false,
@@ -47,6 +56,33 @@ function reducer(
   action,
 ) {
   switch (action.type) {
+    case "ADMIN_ENROLMENT_OFFICERS_REQ":
+      return {
+        ...state,
+        enrolmentOfficers: {
+          ...state.enrolmentOfficers,
+          isFetching: true,
+        },
+      };
+    case "ADMIN_ENROLMENT_OFFICERS_RESP":
+      return {
+        ...state,
+        enrolmentOfficers: {
+          ...state.enrolmentOfficers,
+          isFetching: false,
+          pageInfo: pageInfo(action.payload.data.enrolmentOfficers),
+          items: parseData(action.payload.data.enrolmentOfficers),
+        },
+      };
+    case "ADMIN_ENROLMENT_OFFICERS_ERR":
+      return {
+        ...state,
+        enrolmentOfficers: {
+          ...state.enrolmentOfficers,
+          isFetching: false,
+          error: formatGraphQLError(action.payload),
+        },
+      };
     case "ADMIN_USERS_REQ":
       return {
         ...state,
@@ -158,12 +194,9 @@ function reducer(
     case "ADMIN_USER_OVERVIEW_RESP":
       const users = parseData(action.payload.data.users);
       let user = null;
-      if (!!users && users.length > 0) {
+      if (users?.length > 0) {
         [user] = users;
-        user = {
-          ...mapQueriesUserToMutation(user),
-          userTypes: getUserTypes(user),
-        };
+        user = mapQueriesUserToStore(user);
       }
       return {
         ...state,

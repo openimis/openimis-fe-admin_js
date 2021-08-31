@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import { withModulesManager, combine, withHistory, historyPush, useTranslations } from "@openimis/fe-core";
@@ -13,9 +13,11 @@ const styles = (theme) => ({
 const UserPage = (props) => {
   const { modulesManager, history, match, classes } = props;
   const rights = useSelector((state) => state.core?.user?.i_user?.rights ?? []);
+  const [resetKey, setResetKey] = useState(Date.now());
   const { formatMessageWithValues } = useTranslations("admin", modulesManager);
   const dispatch = useDispatch();
   const add = () => {
+    setResetKey(Date.now());
     historyPush(modulesManager, history, "admin.userNew");
   };
 
@@ -29,6 +31,7 @@ const UserPage = (props) => {
   return (
     <div className={classes.page}>
       <UserForm
+        key={resetKey}
         readOnly={match.params.user_id ? !rights.includes(RIGHT_USER_EDIT) : !rights.includes(RIGHT_USER_ADD)}
         userId={match.params.user_id}
         back={() => historyPush(modulesManager, history, "admin.users")}
