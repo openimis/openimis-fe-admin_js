@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { withModulesManager, combine, useTranslations, PublishedComponent } from "@openimis/fe-core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { withTheme, withStyles } from "@material-ui/core/styles";
@@ -15,9 +15,6 @@ import {
   TableFooter,
   Paper,
   Button,
-  Grid,
-  makeStyles,
-  Box,
   IconButton,
 } from "@material-ui/core";
 import _ from "lodash";
