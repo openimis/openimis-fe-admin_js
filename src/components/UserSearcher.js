@@ -9,42 +9,49 @@ import {
   formatMessageWithValues,
   formatMessage,
   Searcher,
-  journalize,
   formatDateFromISO,
+  ConfirmDialog,
 } from "@openimis/fe-core";
 import UserFilter from "./UserFilter";
 
 import { fetchUsersSummaries, deleteUser } from "../actions";
 import { RIGHT_USER_DELETE } from "../constants";
-import DeleteUserDialog from "./DeleteUserDialog";
 
 const USER_SEARCHER_CONTRIBUTION_KEY = "user.UserSearcher";
+
+const getHeaders = () => [
+  "admin.user.username",
+  "admin.user.lastName",
+  "admin.user.otherNames",
+  "admin.user.email",
+  "admin.user.phone",
+  "admin.user.dob",
+  "",
+];
+
+const getSorts = () => [
+  ["username", true],
+  ["iUser_LastName", true],
+  ["iUser_OtherNames", true],
+  ["iUser_email", true],
+  ["iUser_Phone", true],
+  ["officer__dob", false],
+];
+
+const getAligns = () => {
+  const aligns = getHeaders().map(() => null);
+  aligns.splice(-1, 1, "right");
+  return aligns;
+};
 
 class UserSearcher extends Component {
   state = {
     deleteUser: null,
-    reset: 0,
   };
-
-  constructor(props) {
-    super(props);
-    this.rowsPerPageOptions = [10, 20, 50, 100];
-    this.defaultPageSize = 10;
-    this.locationLevels = 4;
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.submittingMutation && !this.props.submittingMutation) {
-      this.props.journalize(this.props.mutation);
-      this.setState({ reset: this.state.reset + 1 });
-    }
-  }
 
   fetch = (prms) => {
     this.props.fetchUsersSummaries(this.props.modulesManager, prms);
   };
-
-  rowIdentifier = (r) => r.uuid;
 
   filtersToQueryParams = (state) => {
     const prms = Object.keys(state.filters)
@@ -63,64 +70,26 @@ class UserSearcher extends Component {
     return prms;
   };
 
-  headers = () => {
-    const h = [
-      "admin.user.username",
-      "admin.user.lastName",
-      "admin.user.otherNames",
-      "admin.user.email",
-      "admin.user.phone",
-      "admin.user.dob",
-    ];
-    return h;
+  deleteUser = (isConfirmed) => {
+    if (!isConfirmed) {
+      this.setState({ deleteUser: null });
+    } else {
+      const user = this.state.deleteUser;
+      this.setState({ deleteUser: null }, () => {
+        this.props.deleteUser(
+          this.props.modulesManager,
+          user,
+          formatMessage(this.props.intl, "admin.user", "deleteDialog.title"),
+        );
+      });
+    }
   };
-
-  sorts = () => {
-    const results = [
-      ["username", true],
-      ["iUser_LastName", true],
-      ["iUser_OtherNames", true],
-      ["iUser_email", true],
-      ["iUser_Phone", true],
-      ["officer__dob", false],
-    ];
-    return results;
-  };
-
-  deleteUser = () => {
-    const user = this.state.deleteUser;
-    this.setState({ deleteUser: null }, (e) => {
-      this.props.deleteUser(
-        this.props.modulesManager,
-        user,
-        formatMessage(this.props.intl, "admin.user", "deleteDialog.title"),
-      );
-    });
-  };
-
-  confirmDelete = (deletedUser) => {
-    this.setState({ deleteUser: deletedUser });
-  };
-
-  deleteAction = (i) =>
-    !!i.validityTo || !!i.clientMutationId ? null : (
-      <Tooltip
-        title={formatMessage(
-          this.props.intl,
-          "admin.user",
-          "deleteUser.tooltip",
-        )}
-      >
-        <IconButton onClick={() => this.confirmDelete(i)}>
-          <DeleteIcon />
-        </IconButton>
-      </Tooltip>
-    );
 
   getUserItem = (user, item) =>
     (user.iUser && user.iUser[item]) ||
     (user.officer && user.officer[item]) ||
     (user.claimAdmin && user.claimAdmin[item]);
+
   itemFormatters = () => {
     const formatters = [
       (u) => u.username,
@@ -128,86 +97,69 @@ class UserSearcher extends Component {
       (u) => this.getUserItem(u, "otherNames"),
       (u) => this.getUserItem(u, "email") || this.getUserItem(u, "emailId"),
       (u) => this.getUserItem(u, "phone"),
-      (u) => (u.claimAdmin||u.officer) &&
-        formatDateFromISO(
-          this.props.modulesManager,
-          this.props.intl,
-          this.getUserItem(u, "dob"),
-        ),
+      (u) =>
+        (u.claimAdmin || u.officer) &&
+        formatDateFromISO(this.props.modulesManager, this.props.intl, this.getUserItem(u, "dob")),
 
       (u) => (
-        <Tooltip
-          title={formatMessage(this.props.intl, "admin.user", "openNewTab")}
-        >
-          <IconButton onClick={(e) => this.props.onDoubleClick(u, true)}>
-            <TabIcon />
-          </IconButton>
-        </Tooltip>
+        <>
+          <Tooltip title={formatMessage(this.props.intl, "admin.user", "openNewTab")}>
+            <IconButton onClick={() => this.props.onDoubleClick(u, true)}>
+              <TabIcon />
+            </IconButton>
+          </Tooltip>
+          {this.props.rights.includes(RIGHT_USER_DELETE) && u.validityTo ? null : (
+            <Tooltip title={formatMessage(this.props.intl, "admin.user", "deleteUser.tooltip")}>
+              <IconButton onClick={() => this.setState({ deleteUser: u })}>
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+          )}
+        </>
       ),
     ];
 
-    if (this.props.rights.includes(RIGHT_USER_DELETE)) {
-      formatters.push(this.deleteAction);
-    }
     return formatters;
   };
 
-  rowDisabled = (selection, i) => !!i.validityTo;
-
-  rowLocked = (selection, i) => !!i.clientMutationId;
-
   render() {
-    const {
-      intl,
-      users,
-      usersPageInfo,
-      fetchingUsers,
-      fetchedUsers,
-      errorUsers,
-      filterPaneUsersKey,
-      cacheFiltersKey,
-      onDoubleClick,
-    } = this.props;
-    const count = usersPageInfo.totalCount;
+    const { intl, users, usersPageInfo, fetchingUsers, fetchedUsers, errorUsers, cacheFiltersKey, onDoubleClick } =
+      this.props;
     return (
       <>
-        <DeleteUserDialog
-          user={this.state.deleteUser}
-          onConfirm={this.deleteUser}
-          onCancel={(e) => this.setState({ deleteUser: null })}
-        />
+        {this.state.deleteUser && (
+          <ConfirmDialog
+            confirm={{
+              title: formatMessage(intl, "admin.user", "deleteDialog.title"),
+              message: formatMessage(intl, "admin.user", "deleteDialog.message"),
+            }}
+            onConfirm={this.deleteUser}
+          />
+        )}
         <Searcher
           module="user"
           cacheFiltersKey={cacheFiltersKey}
           FilterPane={UserFilter}
-          filterPaneUsersKey={filterPaneUsersKey}
           items={users}
           itemsPageInfo={usersPageInfo}
           fetchingItems={fetchingUsers}
           fetchedItems={fetchedUsers}
           errorItems={errorUsers}
-          userKey={USER_SEARCHER_CONTRIBUTION_KEY}
-          tableTitle={formatMessageWithValues(
-            intl,
-            "admin.user",
-            "userSummaries",
-            {
-              count,
-            },
-          )}
-          rowsPerPageOptions={this.rowsPerPageOptions}
-          defaultPageSize={this.defaultPageSize}
+          contributionKey={USER_SEARCHER_CONTRIBUTION_KEY}
+          tableTitle={formatMessageWithValues(intl, "admin.user", "userSummaries", {
+            count: usersPageInfo.totalCount,
+          })}
           fetch={this.fetch}
-          rowIdentifier={this.rowIdentifier}
+          rowIdentifier={(r) => r.uuid}
           filtersToQueryParams={this.filtersToQueryParams}
           defaultOrderBy="-username"
-          headers={this.headers}
+          headers={getHeaders}
+          aligns={getAligns}
           itemFormatters={this.itemFormatters}
-          sorts={this.sorts}
-          rowDisabled={this.rowDisabled}
-          rowLocked={this.rowLocked}
-          onDoubleClick={(c) => !c.clientMutationId && onDoubleClick(c)}
-          reset={this.state.reset}
+          sorts={getSorts}
+          rowDisabled={(_, i) => i.validityTo || i.clientMutationId}
+          rowLocked={(_, i) => i.clientMutationId}
+          onDoubleClick={onDoubleClick}
         />
       </>
     );
@@ -215,22 +167,14 @@ class UserSearcher extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  rights:
-    !!state.core && !!state.core.user && !!state.core.user.i_user
-      ? state.core.user.i_user.rights
-      : [],
-  users: state.admin.usersSummaries,
-  usersPageInfo: state.admin.usersPageInfo,
-  fetchingUsers: state.admin.fetchingUsersSummaries,
-  fetchedUsers: state.admin.fetchedUsersSummaries,
-  errorUsers: state.admin.errorUsersSummaries,
-  submittingMutation: state.admin.submittingMutation,
-  mutation: state.admin.mutation,
+  rights: state.core?.i_user?.rights ?? [],
+  users: state.admin.usersSummaries.items,
+  usersPageInfo: state.admin.usersSummaries.pageInfo,
+  fetchingUsers: state.admin.usersSummaries.isFetching,
+  fetchedUsers: state.admin.usersSummaries.fetched,
+  errorUsers: state.admin.usersSummaries.error,
 });
 
-const mapDispatchToProps = (dispatch) =>
-  bindActionCreators({ fetchUsersSummaries, deleteUser, journalize }, dispatch);
+const mapDispatchToProps = (dispatch) => bindActionCreators({ fetchUsersSummaries, deleteUser }, dispatch);
 
-export default withModulesManager(
-  connect(mapStateToProps, mapDispatchToProps)(injectIntl(UserSearcher)),
-);
+export default withModulesManager(connect(mapStateToProps, mapDispatchToProps)(injectIntl(UserSearcher)));

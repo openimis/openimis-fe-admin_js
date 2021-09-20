@@ -8,120 +8,195 @@ import {
   dispatchMutationReq,
 } from "@openimis/fe-core";
 
-import {getUserTypes, mapQueriesUserToMutation} from "./components/UserMasterPanel";
+import { getUserTypes, mapQueriesUserToStore } from "./utils";
 
 function reducer(
   state = {
-    fetchingUsers: false,
-    fetchingUsersSummaries: false,
+    enrolmentOfficers: {
+      items: [],
+      isFetching: false,
+      pageInfo: {
+        totalCount: 0,
+      },
+      error: null,
+    },
+
+    usersSummaries: {
+      items: [],
+      isFetching: false,
+      isFetched: false,
+      fetched: null,
+      pageInfo: {
+        totalCount: 0,
+      },
+      error: null,
+    },
+
+    userRoles: {
+      isFetching: false,
+      isFetched: false,
+      items: [],
+      error: null,
+    },
+
+    users: {
+      items: [],
+      isFetching: false,
+      isFetched: false,
+      error: null,
+    },
+
     fetchingUser: false,
-    fetchedUsers: null,
-    fetchedUsersSummaries: null,
     fetchedUser: false,
-    errorUsers: null,
-    errorUsersSummaries: null,
     errorUser: null,
-    users: null,
-    usersSummaries: null,
     user: null,
-    usersPageInfo: { totalCount: 0 },
     submittingMutation: false,
     mutation: {},
-    fetchingUserRoles: false,
-    fetchedUserRoles: null,
-    errorRoles: null,
-    userRoles: [],
   },
   action,
 ) {
   switch (action.type) {
+    case "ADMIN_ENROLMENT_OFFICERS_REQ":
+      return {
+        ...state,
+        enrolmentOfficers: {
+          ...state.enrolmentOfficers,
+          isFetching: true,
+        },
+      };
+    case "ADMIN_ENROLMENT_OFFICERS_RESP":
+      return {
+        ...state,
+        enrolmentOfficers: {
+          ...state.enrolmentOfficers,
+          isFetching: false,
+          pageInfo: pageInfo(action.payload.data.enrolmentOfficers),
+          items: parseData(action.payload.data.enrolmentOfficers),
+        },
+      };
+    case "ADMIN_ENROLMENT_OFFICERS_ERR":
+      return {
+        ...state,
+        enrolmentOfficers: {
+          ...state.enrolmentOfficers,
+          isFetching: false,
+          error: formatGraphQLError(action.payload),
+        },
+      };
     case "ADMIN_USERS_REQ":
       return {
         ...state,
-        fetchingUsers: true,
-        fetchedUsers: null,
-        users: null,
-        errorUsers: null,
+        users: {
+          ...state.users,
+          isFetching: true,
+          fetched: null,
+          error: null,
+        },
       };
     case "ADMIN_USERS_RESP":
       return {
         ...state,
-        fetchingUsers: false,
-        fetchedUsers: action.meta,
-        users: parseData(action.payload.data.users).map((user) => ({
-          ...user,
-          userTypes: getUserTypes(user),
-        })),
-        errorUsers: formatGraphQLError(action.payload),
+        users: {
+          ...state.users,
+          isFetching: false,
+          fetched: action.meta,
+          items: parseData(action.payload.data.users).map((user) => ({
+            ...user,
+            userTypes: getUserTypes(user),
+          })),
+          error: formatGraphQLError(action.payload),
+        },
       };
     case "ADMIN_USERS_ERR":
       return {
         ...state,
-        fetchingUsers: null,
-        errorUsers: formatServerError(action.payload),
+        users: {
+          ...state.users,
+          error: formatServerError(action.payload),
+          isFetching: false,
+          items: [],
+        },
       };
     case "ADMIN_USER_ROLES_REQ":
       return {
         ...state,
-        fetchingUserRoles: true,
-        fetchedUserRoles: null,
-        userRoles: [],
-        errorUsers: null,
+        userRoles: {
+          ...state.userRoles,
+          isFetching: true,
+          fetched: null,
+          items: [],
+          error: null,
+        },
       };
     case "ADMIN_USER_ROLES_RESP":
       return {
         ...state,
-        fetchingUserRoles: false,
-        fetchedUserRoles: action.meta,
-        userRoles: parseData(action.payload.data.role),
-        errorRoles: formatGraphQLError(action.payload),
+        userRoles: {
+          ...state.userRoles,
+          isFetching: false,
+          fetched: action.meta,
+          items: parseData(action.payload.data.role),
+          error: formatGraphQLError(action.payload),
+        },
       };
     case "ADMIN_USER_ROLES_ERR":
       return {
         ...state,
-        fetchingUserRoles: null,
-        errorRoles: formatServerError(action.payload),
+        userRoles: {
+          ...state.userRoles,
+          isFetching: false,
+          fetched: null,
+          error: formatServerError(action.payload),
+        },
       };
     case "ADMIN_USERS_SUMMARIES_REQ":
       return {
         ...state,
-        fetchingUsersSummaries: true,
-        fetchedUsersSummaries: null,
-        usersSummaries: null,
-        errorUsersSummaries: null,
+        usersSummaries: {
+          ...state.usersSummaries,
+          isFetching: true,
+          isFetched: false,
+          error: null,
+        },
       };
     case "ADMIN_USERS_SUMMARIES_RESP":
       return {
         ...state,
-        fetchingUsersSummaries: false,
-        fetchedUsersSummaries: action.meta,
-        usersSummaries: parseData(action.payload.data.users),
-        usersPageInfo: pageInfo(action.payload.data.users),
-        errorUsersSummaries: formatGraphQLError(action.payload),
+        usersSummaries: {
+          ...state.usersSummaries,
+          isFetching: false,
+          isFetched: true,
+          fetched: action.meta,
+          pageInfo: pageInfo(action.payload.data.users),
+          items: parseData(action.payload.data.users),
+          error: formatGraphQLError(action.payload),
+        },
       };
     case "ADMIN_USERS_SUMMARIES_ERR":
       return {
         ...state,
-        fetchingUsersSummaries: null,
-        errorUsersSummaries: formatServerError(action.payload),
+        usersSummaries: {
+          ...state.usersSummaries,
+          isFetching: false,
+          isFetched: true,
+          fetched: null,
+          items: [],
+          error: formatGraphQLError(action.payload),
+        },
       };
     case "ADMIN_USER_OVERVIEW_REQ":
       return {
         ...state,
         fetchingUser: true,
         fetchedUser: false,
-        contribution: null,
         errorUser: null,
       };
     case "ADMIN_USER_OVERVIEW_RESP":
       const users = parseData(action.payload.data.users);
       let user = null;
-      if (!!users && users.length > 0) {
+      if (users?.length > 0) {
         [user] = users;
-        user = {
-          ...mapQueriesUserToMutation(user),
-          userTypes: getUserTypes(user),
-        };
+        user = mapQueriesUserToStore(user);
       }
       return {
         ...state,
