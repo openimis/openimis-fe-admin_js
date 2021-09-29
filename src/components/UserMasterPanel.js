@@ -1,15 +1,7 @@
 import React from "react";
 import { withTheme, withStyles } from "@material-ui/core/styles";
-import { injectIntl } from "react-intl";
 import { Grid, Divider, Typography } from "@material-ui/core";
-import {
-  withHistory,
-  withModulesManager,
-  useTranslations,
-  TextInput,
-  PublishedComponent,
-  combine,
-} from "@openimis/fe-core";
+import { withModulesManager, useTranslations, TextInput, PublishedComponent, combine } from "@openimis/fe-core";
 import { CLAIM_ADMIN_USER_TYPE } from "../constants";
 
 const styles = (theme) => ({
@@ -162,6 +154,6 @@ const UserMasterPanel = (props) => {
   );
 };
 
-const enhance = combine(injectIntl, withModulesManager, withHistory, withTheme, withStyles(styles));
+const enhance = combine(withModulesManager, withTheme, withStyles(styles));
 
 export default enhance(UserMasterPanel);
