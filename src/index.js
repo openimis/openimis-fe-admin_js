@@ -2,7 +2,6 @@ import AdminMainMenu from "./components/AdminMainMenu";
 import { ProductsPage } from "./components/ProductsPage";
 import UsersPage from "./pages/UsersPage";
 import UserPage from "./pages/UserPage";
-import { PayersPage } from "./pages/PayersPage";
 import messagesEn from "./translations/en.json";
 import UserPicker from "./components/pickers/UserPicker";
 import EnrolmentOfficerPicker from "./components/pickers/EnrolmentOfficerPicker";
@@ -25,7 +24,6 @@ const DEFAULT_CONFIG = {
       path: `${ROUTE_ADMIN_USER_OVERVIEW}/:user_id`,
       component: UserPage,
     },
-    { path: "admin/payers", component: PayersPage },
   ],
   "core.MainMenu": [AdminMainMenu],
   refs: [
