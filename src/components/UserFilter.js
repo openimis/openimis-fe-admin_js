@@ -54,23 +54,10 @@ const getParentLocation = (locations) => {
 
 class UserFilter extends Component {
   state = {
-    showHistory: false,
     currentUserType: undefined,
     currentUserRoles: undefined,
     locationFilters: {},
   };
-
-  componentDidUpdate(prevProps) {
-    if (
-      prevProps.filters.showHistory !== this.props.filters.showHistory &&
-      !!this.props.filters.showHistory &&
-      this.state.showHistory !== this.props.filters.showHistory.value
-    ) {
-      this.setState((state, props) => ({
-        showHistory: props.filters.showHistory.value,
-      }));
-    }
-  }
 
   debouncedOnChangeFilter = _debounce(
     this.props.onChangeFilters,
@@ -375,26 +362,6 @@ class UserFilter extends Component {
             }
           />
         </Grid>
-        {/* <Grid container justify="flex-end">
-          <ControlledField
-            module="admin"
-            id="UserFilter.showHistory"
-            field={
-              <Grid item xs={2} className={classes.item}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      color="primary"
-                      checked={this.state.showHistory}
-                      onChange={(e) => this.onChangeShowHistory()}
-                    />
-                  }
-                  label={formatMessage(intl, "admin", "showHistory")}
-                />
-              </Grid>
-            }
-          />
-        </Grid> */}
       </section>
     );
   }
