@@ -5,6 +5,7 @@ import { bindActionCreators } from "redux";
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import ReplayIcon from "@material-ui/icons/Replay";
 import {
+  Helmet,
   formatMessageWithValues,
   withModulesManager,
   withHistory,
@@ -43,7 +44,6 @@ class UserForm extends Component {
   }
 
   componentDidMount() {
-    document.title = formatMessageWithValues(this.props.intl, "admin.user", "UserOverview.title", { label: "" });
     if (this.props.userId) {
       this.props.fetchUser(this.props.modulesManager, this.props.userId);
     }
@@ -154,6 +154,7 @@ class UserForm extends Component {
     ].filter(Boolean);
     return (
       <div className={isInMutation ? classes.lockedPage : null}>
+        <Helmet title={formatMessageWithValues(this.props.intl, "admin.user", "UserOverview.title", { label: "" })} />
         <ProgressOrError progress={fetchingUser} error={errorUser} />
         {(!userId || user?.id === userId) && (
           <Form
