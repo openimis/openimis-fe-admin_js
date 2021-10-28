@@ -3,13 +3,7 @@ import _debounce from "lodash/debounce";
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import { injectIntl } from "react-intl";
 import { Grid } from "@material-ui/core";
-import {
-  withModulesManager,
-  decodeId,
-  PublishedComponent,
-  ControlledField,
-  TextInput,
-} from "@openimis/fe-core";
+import { withModulesManager, decodeId, PublishedComponent, ControlledField, TextInput } from "@openimis/fe-core";
 
 const styles = (theme) => ({
   dialogTitle: theme.dialog.title,
@@ -27,14 +21,9 @@ const styles = (theme) => ({
 const getParentLocation = (locations) => {
   const locationsArray = Object.values(locations).map((l) => l.value);
   const region = locationsArray.find((l) => !l.parent);
-  const district =
-    region && locationsArray.find((l) => l.parent && l.parent.id === region.id);
-  const municipality =
-    district &&
-    locationsArray.find((l) => l.parent && l.parent.id === district.id);
-  const village =
-    municipality &&
-    locationsArray.find((l) => l.parent && l.parent.id === municipality.id);
+  const district = region && locationsArray.find((l) => l.parent && l.parent.id === region.id);
+  const municipality = district && locationsArray.find((l) => l.parent && l.parent.id === district.id);
+  const village = municipality && locationsArray.find((l) => l.parent && l.parent.id === municipality.id);
   if (!region) {
     return null;
   }
@@ -65,23 +54,10 @@ const getParentLocation = (locations) => {
 
 class UserFilter extends Component {
   state = {
-    showHistory: false,
     currentUserType: undefined,
     currentUserRoles: undefined,
     locationFilters: {},
   };
-
-  componentDidUpdate(prevProps) {
-    if (
-      prevProps.filters.showHistory !== this.props.filters.showHistory &&
-      !!this.props.filters.showHistory &&
-      this.state.showHistory !== this.props.filters.showHistory.value
-    ) {
-      this.setState((state, props) => ({
-        showHistory: props.filters.showHistory.value,
-      }));
-    }
-  }
 
   debouncedOnChangeFilter = _debounce(
     this.props.onChangeFilters,
@@ -126,11 +102,7 @@ class UserFilter extends Component {
       {
         id: "roles",
         value: currentUserRoles,
-        filter: currentUserRoles
-          ? `roles: [${currentUserRoles
-              .map((ur) => decodeId(ur.id))
-              .join(",")}]`
-          : null,
+        filter: currentUserRoles ? `roles: [${currentUserRoles.map((ur) => decodeId(ur.id)).join(",")}]` : null,
       },
     ]);
   };
@@ -206,9 +178,7 @@ class UserFilter extends Component {
                       {
                         id: "healthFacility",
                         value: v,
-                        filter: v
-                          ? `healthFacilityId: ${decodeId(v.id)}`
-                          : null,
+                        filter: v ? `healthFacilityId: ${decodeId(v.id)}` : null,
                       },
                     ]);
                   }}
@@ -392,31 +362,9 @@ class UserFilter extends Component {
             }
           />
         </Grid>
-        {/* <Grid container justify="flex-end">
-          <ControlledField
-            module="admin"
-            id="UserFilter.showHistory"
-            field={
-              <Grid item xs={2} className={classes.item}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      color="primary"
-                      checked={this.state.showHistory}
-                      onChange={(e) => this.onChangeShowHistory()}
-                    />
-                  }
-                  label={formatMessage(intl, "admin", "showHistory")}
-                />
-              </Grid>
-            }
-          />
-        </Grid> */}
       </section>
     );
   }
 }
 
-export default withModulesManager(
-  injectIntl(withTheme(withStyles(styles)(UserFilter))),
-);
+export default withModulesManager(injectIntl(withTheme(withStyles(styles)(UserFilter))));

@@ -13,11 +13,7 @@ import {
   PinDrop,
   Tune,
 } from "@material-ui/icons";
-import {
-  formatMessage,
-  MainMenuContribution,
-  withModulesManager,
-} from "@openimis/fe-core";
+import { formatMessage, MainMenuContribution, withModulesManager, ErrorBoundary } from "@openimis/fe-core";
 import {
   RIGHT_PRODUCTS,
   RIGHT_HEALTHFACILITIES,
@@ -56,24 +52,16 @@ class AdminMainMenu extends Component {
     }
     if (rights.includes(RIGHT_PRICELISTMS)) {
       entries.push({
-        text: formatMessage(
-          this.props.intl,
-          "admin",
-          "menu.medicalServicesPrices",
-        ),
+        text: formatMessage(this.props.intl, "admin", "menu.medicalServicesPrices"),
         icon: <HealingOutlined />,
-        route: "/admin/medicalServicesPriceList",
+        route: "/medical/pricelists/services",
       });
     }
     if (rights.includes(RIGHT_PRICELISTMI)) {
       entries.push({
-        text: formatMessage(
-          this.props.intl,
-          "admin",
-          "menu.medicalItemsPrices",
-        ),
+        text: formatMessage(this.props.intl, "admin", "menu.medicalItemsPrices"),
         icon: <LocalPharmacyOutlined />,
-        route: "/admin/medicalItemsPriceList",
+        route: "/medical/pricelists/items",
         withDivider: true,
       });
     }
@@ -81,14 +69,14 @@ class AdminMainMenu extends Component {
       entries.push({
         text: formatMessage(this.props.intl, "admin", "menu.medicalServices"),
         icon: <Healing />,
-        route: "/admin/medicalServices",
+        route: "/medical/medicalServices",
       });
     }
     if (rights.includes(RIGHT_MEDICALITEMS)) {
       entries.push({
         text: formatMessage(this.props.intl, "admin", "menu.medicalItems"),
         icon: <LocalPharmacy />,
-        route: "/admin/medilcalItems",
+        route: "/medical/medicalItems",
         withDivider: true,
       });
     }
@@ -133,12 +121,7 @@ class AdminMainMenu extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  rights:
-    !!state.core && !!state.core.user && !!state.core.user.i_user
-      ? state.core.user.i_user.rights
-      : [],
+  rights: !!state.core && !!state.core.user && !!state.core.user.i_user ? state.core.user.i_user.rights : [],
 });
 
-export default withModulesManager(
-  injectIntl(connect(mapStateToProps)(AdminMainMenu)),
-);
+export default withModulesManager(injectIntl(connect(mapStateToProps)(AdminMainMenu)));

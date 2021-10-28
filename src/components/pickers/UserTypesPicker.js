@@ -10,9 +10,7 @@ import { USER_TYPES } from "../../constants";
 const UserTypesPicker = (props) => {
   const intl = useIntl();
   const rights = useSelector((state) =>
-    !!state.core && !!state.core.user && !!state.core.user.i_user
-      ? state.core.user.i_user.rights
-      : [],
+    !!state.core && !!state.core.user && !!state.core.user.i_user ? state.core.user.i_user.rights : [],
   );
   const options = USER_TYPES(rights).map((ut) => ({
     id: ut,
@@ -40,9 +38,7 @@ const UserTypesPicker = (props) => {
         <TextField
           {...params}
           variant="standard"
-          label={`${formatMessage(intl, "admin.user", "userTypes")}${
-            props.required ? "*" : ""
-          }`}
+          label={`${formatMessage(intl, "admin.user", "userTypes")}${props.required ? "*" : ""}`}
           placeholder=""
         />
       )}
