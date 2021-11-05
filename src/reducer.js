@@ -32,13 +32,6 @@ function reducer(
       error: null,
     },
 
-    userRoles: {
-      isFetching: false,
-      isFetched: false,
-      items: [],
-      error: null,
-    },
-
     users: {
       items: [],
       isFetching: false,
@@ -115,38 +108,6 @@ function reducer(
           error: formatServerError(action.payload),
           isFetching: false,
           items: [],
-        },
-      };
-    case "ADMIN_USER_ROLES_REQ":
-      return {
-        ...state,
-        userRoles: {
-          ...state.userRoles,
-          isFetching: true,
-          fetched: null,
-          items: [],
-          error: null,
-        },
-      };
-    case "ADMIN_USER_ROLES_RESP":
-      return {
-        ...state,
-        userRoles: {
-          ...state.userRoles,
-          isFetching: false,
-          fetched: action.meta,
-          items: parseData(action.payload.data.role),
-          error: formatGraphQLError(action.payload),
-        },
-      };
-    case "ADMIN_USER_ROLES_ERR":
-      return {
-        ...state,
-        userRoles: {
-          ...state.userRoles,
-          isFetching: false,
-          fetched: null,
-          error: formatServerError(action.payload),
         },
       };
     case "ADMIN_USERS_SUMMARIES_REQ":

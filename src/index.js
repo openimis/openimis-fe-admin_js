@@ -37,7 +37,6 @@ const DEFAULT_CONFIG = {
       key: "admin.UserPicker.projection",
       ref: ["id", "username", "iUser{id otherNames lastName}"],
     },
-    { key: "admin.UserRolesPicker.projection", ref: ["id", "name"] },
     { key: "admin.users", ref: ROUTE_ADMIN_USERS },
     { key: "admin.userOverview", ref: ROUTE_ADMIN_USER_OVERVIEW },
     { key: "admin.userNew", ref: ROUTE_ADMIN_USER_NEW },
