@@ -34,22 +34,6 @@ export function fetchUsers(mm, filters = [], restrictHealthFacility = true) {
     return dispatch(graphql(payload, "ADMIN_USERS", filters));
   };
 }
-
-export function fetchUserRoles(mm, hf, str, prev) {
-  const filters = [];
-  if (hf) {
-    filters.push(`healthFacility_Uuid: "${hf.uuid}"`);
-  }
-  if (str) {
-    filters.push(`str: "${str}"`);
-  }
-  if (_.isEqual(filters, prev)) {
-    return (dispatch) => {};
-  }
-  const payload = formatPageQuery("role", filters, mm.getRef("admin.UserRolesPicker.projection"));
-  return graphql(payload, "ADMIN_USER_ROLES", filters);
-}
-
 export function fetchUsersSummaries(mm, filters) {
   const payload = formatPageQueryWithCount("users", filters, USER_SUMMARY_PROJECTION);
   return graphql(payload, "ADMIN_USERS_SUMMARIES");

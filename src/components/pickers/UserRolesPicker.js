@@ -1,50 +1,57 @@
-import React, { useEffect } from "react";
-import { useIntl } from "react-intl";
-import { useSelector, useDispatch } from "react-redux";
-import TextField from "@material-ui/core/TextField";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import { formatMessage, withModulesManager, ProgressOrError } from "@openimis/fe-core";
+import React, { useState } from "react";
+import { useGraphqlQuery, useTranslations, Autocomplete } from "@openimis/fe-core";
 
-import { fetchUserRoles } from "../../actions";
+const UserRolesPicker = ({
+  readOnly,
+  value,
+  onChange,
+  required,
+  multiple = true,
+  placeholder,
+  withLabel,
+  withPlaceholder,
+  label,
+  filterOptions,
+  filterSelectedOptions,
+}) => {
+  const [searchString, setSearchString] = useState();
+  const { formatMessage } = useTranslations("admin");
 
-const UserRolesPicker = ({ readOnly, modulesManager, value, onChange, required }) => {
-  const intl = useIntl();
-  const roles = useSelector((state) => state.admin.userRoles.items ?? []);
-  const userHealthFacilityFullPath = useSelector((state) => (state.loc ? state.loc.userHealthFacilityFullPath : null));
-  const isFetching = useSelector((state) => state.admin.userRoles.isFetching);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchUserRoles(modulesManager, userHealthFacilityFullPath));
-  }, []);
+  const { isLoading, data, error } = useGraphqlQuery(
+    `
+    query UserRolesPicker ($str: String) {
+      role(str: $str) {
+        edges {
+          node {
+            id name
+          }
+        }
+      }
+    }
+  `,
+    { str: searchString },
+  );
 
   return (
-    <>
-      <ProgressOrError progress={isFetching} />
-      {!isFetching && (
-        <Autocomplete
-          multiple
-          disabled={readOnly}
-          disableCloseOnSelect
-          noOptionsText={formatMessage(intl, "admin.user", "userRoles.noOptions")}
-          id="user-role-select"
-          options={roles}
-          getOptionLabel={(option) => option.name}
-          getOptionSelected={(option, val) => option.id === val.id}
-          onChange={(e, userRoles) => onChange(userRoles)}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              variant="standard"
-              label={`${formatMessage(intl, "admin.user", "userRoles")}${required ? "*" : ""}`}
-              placeholder=""
-            />
-          )}
-          value={value}
-        />
-      )}
-    </>
+    <Autocomplete
+      multiple={multiple}
+      required={required}
+      placeholder={placeholder ?? formatMessage("user.userRoles.placeholder")}
+      label={label ?? formatMessage("user.userRoles")}
+      error={error}
+      withLabel={withLabel}
+      withPlaceholder={withPlaceholder}
+      readOnly={readOnly}
+      options={data?.role?.edges.map((edge) => edge.node) ?? []}
+      isLoading={isLoading}
+      value={value}
+      getOptionLabel={(o) => o?.name}
+      onChange={(option) => onChange(option, option?.name)}
+      filterOptions={filterOptions}
+      filterSelectedOptions={filterSelectedOptions}
+      onInputChange={setSearchString}
+    />
   );
 };
 
-export default withModulesManager(UserRolesPicker);
+export default UserRolesPicker;
