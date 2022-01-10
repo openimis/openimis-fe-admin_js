@@ -47,10 +47,12 @@ const getAligns = () => {
 class UserSearcher extends Component {
   state = {
     deleteUser: null,
+    params: {},
   };
 
-  fetch = (prms) => {
-    this.props.fetchUsersSummaries(this.props.modulesManager, prms);
+  fetch = (params) => {
+    this.setState({ params });
+    this.props.fetchUsersSummaries(this.props.modulesManager, params);
   };
 
   filtersToQueryParams = (state) => {
@@ -75,12 +77,13 @@ class UserSearcher extends Component {
       this.setState({ deleteUser: null });
     } else {
       const user = this.state.deleteUser;
-      this.setState({ deleteUser: null }, () => {
-        this.props.deleteUser(
+      this.setState({ deleteUser: null }, async () => {
+        await this.props.deleteUser(
           this.props.modulesManager,
           user,
           formatMessage(this.props.intl, "admin.user", "deleteDialog.title"),
         );
+        this.fetch(this.state.params);
       });
     }
   };

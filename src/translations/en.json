@@ -69,6 +69,7 @@
   "admin.UserPicker.closeText": "Close",
   "admin.UserMasterPanel.loginDetailsTitle": "Login Details",
   "admin.UserMasterPanel.language.null": "Select a language",
+  "admin.EnrolmentOfficerPicker.label": "Select an Officer",
   "admin.EnrolmentOfficerPicker.loadingText": "Loading...",
   "admin.EnrolmentOfficerPicker.clearText": "Clear",
   "admin.EnrolmentOfficerPicker.openText": "Open",
