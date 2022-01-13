@@ -1,16 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { withTheme, withStyles } from "@material-ui/core/styles";
-import { Autocomplete } from "@material-ui/lab";
-import { TextField } from "@material-ui/core";
-import { withModulesManager, useDebounceCb, useTranslations } from "@openimis/fe-core";
+import { Autocomplete } from "@openimis/fe-core";
 import { fetchEnrolmentOfficers } from "../../actions";
-
-const styles = (theme) => ({
-  label: {
-    color: theme.palette.primary.main,
-  },
-});
 
 const formatSuggestion = (p) => {
   if (!p) return "?";
@@ -31,74 +22,39 @@ const EnrolmentOfficerPicker = (props) => {
     placeholder,
     multiple = false,
   } = props;
-  const minCharLookup = modulesManager.getConf("fe-admin", "usersMinCharLookup", 2);
   const dispatch = useDispatch();
   const [searchString, setSearchString] = useState(null);
-  const { formatMessage } = useTranslations("admin.EnrolmentOfficerPicker", modulesManager);
-  const [open, setOpen] = useState(false);
+
   const isLoading = useSelector((state) => state.admin.enrolmentOfficers.isFetching);
-  const items = useSelector((state) => state.admin.enrolmentOfficers.items);
-
-  const onInputChange = useDebounceCb(setSearchString, modulesManager.getConf("fe-admin", "debounceTime", 400));
-  // eslint-disable-next-line no-shadow
-  const handleChange = (__, value) => {
-    onChange(value);
-    if (!multiple) setOpen(false);
-  };
+  const options = useSelector((state) => state.admin.enrolmentOfficers.items);
 
   useEffect(() => {
-    if (searchString?.length > minCharLookup) {
-      dispatch(
-        fetchEnrolmentOfficers(modulesManager, {
-          searchString,
-        }),
-      );
-    }
+    dispatch(
+      fetchEnrolmentOfficers(modulesManager, {
+        first: searchString ? undefined : 10,
+        searchString,
+      }),
+    );
   }, [searchString]);
-
-  useEffect(() => {
-    if (open) {
-      dispatch(
-        fetchEnrolmentOfficers(modulesManager, {
-          first: 10,
-        }),
-      );
-    }
-  }, [open]);
 
   return (
     <Autocomplete
-      loadingText={formatMessage("loadingText")}
-      openText={formatMessage("openText")}
-      closeText={formatMessage("closeText")}
-      clearText={formatMessage("clearText")}
-      openOnFocus
       multiple={multiple}
-      disabled={readOnly}
-      options={items}
-      loading={isLoading}
-      open={open}
-      onOpen={() => setOpen(true)}
-      onClose={() => setOpen(false)}
-      autoComplete
+      required={required}
+      placeholder={placeholder}
+      label={label}
+      withLabel={withLabel}
+      readOnly={readOnly}
+      options={options}
+      isLoading={isLoading}
       value={value}
-      getOptionLabel={(option) => formatSuggestion(option)}
-      getOptionSelected={(option, v) => option.id === v.id}
-      onChange={handleChange}
+      getOptionLabel={formatSuggestion}
+      onChange={onChange}
       filterOptions={filterOptions}
       filterSelectedOptions={filterSelectedOptions}
-      onInputChange={(__, query) => onInputChange(query)}
-      renderInput={(inputProps) => (
-        <TextField
-          {...inputProps}
-          variant="standard"
-          required={required}
-          label={withLabel && (label || formatMessage("label"))}
-          placeholder={placeholder}
-        />
-      )}
+      onInputChange={setSearchString}
     />
   );
 };
 
-export default withModulesManager(withTheme(withStyles(styles)(EnrolmentOfficerPicker)));
+export default EnrolmentOfficerPicker;
