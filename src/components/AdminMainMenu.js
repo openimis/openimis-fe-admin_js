@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 import { connect } from "react-redux";
 import {
-  AccountBalance,
   LocationCity,
   Healing,
   HealingOutlined,
@@ -24,7 +23,6 @@ import {
   // RIGHT_ENROLMENTOFFICER,
   // RIGHT_CLAIMADMINISTRATOR,
   RIGHT_USERS,
-  RIGHT_PAYERS,
   RIGHT_LOCATIONS,
 } from "../constants";
 
@@ -85,13 +83,6 @@ class AdminMainMenu extends Component {
         text: formatMessage(this.props.intl, "admin", "menu.users"),
         icon: <Person />,
         route: "/admin/users",
-      });
-    }
-    if (rights.includes(RIGHT_PAYERS)) {
-      entries.push({
-        text: formatMessage(this.props.intl, "admin", "menu.payers"),
-        icon: <AccountBalance />,
-        route: "/admin/payers",
       });
     }
     if (rights.includes(RIGHT_LOCATIONS)) {

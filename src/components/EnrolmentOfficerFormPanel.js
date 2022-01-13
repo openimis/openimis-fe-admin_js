@@ -50,7 +50,6 @@ const EnrolmentOfficerFormPanel = (props) => {
               <PublishedComponent
                 pubRef="admin.EnrolmentOfficerPicker"
                 module="admin"
-                healthFacility={edited.healthFacility}
                 readOnly={readOnly}
                 label={formatMessage("substitutionOfficer")}
                 value={edited.substitutionOfficer}
