@@ -20,6 +20,8 @@ const USER_SUMMARY_PROJECTION = [
   "clientMutationId",
 ];
 
+export const USER_PICKER_PROJECTION = ["id", "username", "iUser{id otherNames lastName}"];
+
 export function fetchUsers(mm, filters = [], restrictHealthFacility = true) {
   return (dispatch, getState) => {
     if (restrictHealthFacility) {
