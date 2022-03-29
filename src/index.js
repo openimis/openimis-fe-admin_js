@@ -9,6 +9,7 @@ import EnrolmentOfficerPicker from "./components/pickers/EnrolmentOfficerPicker"
 import UserRolesPicker from "./components/pickers/UserRolesPicker";
 import UserTypesPicker from "./components/pickers/UserTypesPicker";
 import reducer from "./reducer";
+import { USER_PICKER_PROJECTION } from "./actions";
 
 const ROUTE_ADMIN_USERS = "admin/users";
 const ROUTE_ADMIN_USER_OVERVIEW = "admin/users/overview";
@@ -35,11 +36,18 @@ const DEFAULT_CONFIG = {
     { key: "admin.UserTypesPicker", ref: UserTypesPicker },
     {
       key: "admin.UserPicker.projection",
-      ref: ["id", "username", "iUser{id otherNames lastName}"],
+      ref: USER_PICKER_PROJECTION,
     },
     { key: "admin.users", ref: ROUTE_ADMIN_USERS },
     { key: "admin.userOverview", ref: ROUTE_ADMIN_USER_OVERVIEW },
     { key: "admin.userNew", ref: ROUTE_ADMIN_USER_NEW },
+  ],
+  "invoice.SubjectAndThirdpartyPicker": [
+    {
+      type: "user",
+      picker: UserPicker,
+      pickerProjection: USER_PICKER_PROJECTION,
+    }
   ],
 };
 
