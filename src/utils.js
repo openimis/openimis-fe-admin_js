@@ -61,7 +61,7 @@ export const mapUserValuesToInput = (values) => {
     userTypes: values.userTypes,
     lastName: values.lastName,
     otherNames: values.otherNames,
-    phoneNumber: values.phoneNumber,
+    phone: values.phoneNumber,
     email: values.email,
     password: values.password,
     healthFacilityId: values.healthFacility ? decodeId(values.healthFacility.id) : null,
