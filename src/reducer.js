@@ -45,6 +45,7 @@ function reducer(
     user: null,
     submittingMutation: false,
     mutation: {},
+    reg_dst: []
   },
   action,
 ) {
@@ -177,6 +178,33 @@ function reducer(
         ...state,
         usersPageInfo: { totalCount: 0 },
         user: null,
+      };
+    case "LOCATION_REGION_DISTRICTS_REQ":
+      return {
+        ...state,
+        fetching_reg_dst: true,
+        fetched_reg_dst: false,
+        reg_dst: [],
+        errorL1s: null,
+      };
+    case "LOCATION_REGION_DISTRICTS_RESP":
+      return {
+        ...state,
+        fetching_reg_dst: false,
+        fetfetched_reg_dstchedL1s: true,
+        reg_dst: parseData(action.payload.data.locations || action.payload.data.locationsStr),
+        errorL1s: formatGraphQLError(action.payload),
+      };
+    case "LOCATION_REGION_DISTRICTS_ERR":
+      return {
+        ...state,
+        fetching_reg_dst: false,
+        errorL1s: formatServerError(action.payload),
+      };
+    case "LOCATION_REGION_DISTRICTS_CLEAR":
+      return {
+        ...state,
+        reg_dst: []
       };
     case "ADMIN_USER_MUTATION_REQ":
       return dispatchMutationReq(state, action);

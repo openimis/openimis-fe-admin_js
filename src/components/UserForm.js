@@ -19,7 +19,7 @@ import {
 import { CLAIM_ADMIN_USER_TYPE, ENROLMENT_OFFICER_USER_TYPE, INTERACTIVE_USER_TYPE, RIGHT_USERS } from "../constants";
 import EnrolmentOfficerFormPanel from "./EnrolmentOfficerFormPanel";
 import ClaimAdministratorFormPanel from "./ClaimAdministratorFormPanel";
-import { fetchUser, createUser, fetchUserMutation } from "../actions";
+import { fetchUser, createUser, fetchUserMutation, fetchRegionDistricts, clearRegionDistricts } from "../actions";
 import UserMasterPanel from "./UserMasterPanel";
 
 const styles = (theme) => ({
@@ -37,6 +37,8 @@ const setupState = (props) => ({
     : props.user,
 });
 
+
+
 class UserForm extends Component {
   constructor(props) {
     super(props);
@@ -48,8 +50,30 @@ class UserForm extends Component {
       this.props.fetchUser(this.props.modulesManager, this.props.userId);
     }
   }
+  
 
   componentDidUpdate(prevProps) {
+    if (prevProps.region_districts != this.props.region_districts) {
+      if (!!this.props.region_districts) {
+        const combined = [
+            ...(!!this.state.user.districts? this.state.user.districts : []) ,
+            ...this.props.region_districts
+        ]
+        const no_duplicates = [
+            ...new Map(
+              combined.map(x => [x.uuid, x])
+            ).values()
+        ]
+        this.state.user.districts = no_duplicates
+        this.state.user.region = []
+        this.setState((state, props) => ({
+          user: {
+            ...state.user
+          },
+        }));
+      }
+    }
+    
     if (!prevProps.fetchedUser && this.props.fetchedUser) {
       this.setState(setupState(this.props));
     } else if (prevProps.userId && !this.props.userId) {
@@ -116,6 +140,13 @@ class UserForm extends Component {
   };
 
   onEditedChanged = (user) => {
+    if (!!user.region){
+      user.region.forEach((region) => {
+        this.props.fetchRegionDistricts(region)
+      });
+    } else {
+      this.props.clearRegionDistricts()
+    }
     this.setState({ user });
   };
 
@@ -136,6 +167,7 @@ class UserForm extends Component {
       add,
       save,
       back,
+      region_districts
     } = this.props;
     const { user } = this.state;
 
@@ -188,8 +220,10 @@ const mapStateToProps = (state) => ({
   submittingMutation: state.admin.submittingMutation,
   mutation: state.admin.mutation,
   user: state.admin.user,
+  region_districts: state.admin.reg_dst,
   confirmed: state.core.confirmed,
 });
+
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
@@ -197,6 +231,8 @@ const mapDispatchToProps = (dispatch) =>
       fetchUser,
       createUser,
       fetchUserMutation,
+      fetchRegionDistricts,
+      clearRegionDistricts,
       journalize,
       coreConfirm,
     },

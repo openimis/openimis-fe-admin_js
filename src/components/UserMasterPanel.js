@@ -3,6 +3,8 @@ import { withTheme, withStyles } from "@material-ui/core/styles";
 import { Grid, Divider, Typography } from "@material-ui/core";
 import { withModulesManager, useTranslations, TextInput, PublishedComponent, combine } from "@openimis/fe-core";
 import { CLAIM_ADMIN_USER_TYPE } from "../constants";
+// import { fetchRegionDistricts } from "../actions";
+
 
 const styles = (theme) => ({
   tableTitle: theme.table.title,
@@ -20,6 +22,7 @@ const styles = (theme) => ({
 const UserMasterPanel = (props) => {
   const { classes, edited, readOnly, onEditedChanged, modulesManager } = props;
   const { formatMessage } = useTranslations("admin", modulesManager);
+
 
   return (
     <Grid container direction="row">
@@ -98,7 +101,20 @@ const UserMasterPanel = (props) => {
           onChange={(roles) => onEditedChanged({ ...edited, roles })}
         />
       </Grid>
-      <Grid item xs={6} className={classes.item}>
+        <Grid item xs={2} className={classes.item}>
+        <PublishedComponent
+          pubRef="location.LocationPicker"
+          locationLevel={0}
+          value={edited.region}
+          onChange={(region) => onEditedChanged({ ...edited, region })}
+          readOnly={readOnly}
+          required
+          multiple
+          withLabel
+          label={formatMessage("user.regions")}
+        />
+        </Grid>
+        <Grid item xs={4} className={classes.item}>
         <PublishedComponent
           pubRef="location.LocationPicker"
           locationLevel={1}
