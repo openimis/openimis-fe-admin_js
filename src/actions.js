@@ -257,6 +257,17 @@ export function fetchRegionDistricts(parent) {
   return graphql(payload, `LOCATION_REGION_DISTRICTS`);
 }
 
+
+export function fetChObligatoryUserFields() {
+  let payload = "query userObligatoryFields {userObligatoryFields}"
+  return graphql(payload, `OBLIGTORY_USER_FIELDS`);
+}
+
+export function fetChObligatoryEnrolmentOfficerFields() {
+  let payload = "query userObligatoryFields {eoObligatoryFields}"
+  return graphql(payload, `OBLIGTORY_EO_FIELDS`);
+}
+
 export function clearRegionDistricts() {
   return (dispatch) => {
     dispatch({ type: `LOCATION_REGION_DISTRICTS_CLEAR` });
