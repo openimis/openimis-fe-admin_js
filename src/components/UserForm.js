@@ -19,7 +19,7 @@ import {
 import { CLAIM_ADMIN_USER_TYPE, ENROLMENT_OFFICER_USER_TYPE, INTERACTIVE_USER_TYPE, RIGHT_USERS } from "../constants";
 import EnrolmentOfficerFormPanel from "./EnrolmentOfficerFormPanel";
 import ClaimAdministratorFormPanel from "./ClaimAdministratorFormPanel";
-import { fetchUser, createUser, fetchUserMutation, fetchRegionDistricts, clearRegionDistricts, fetChObligatoryUserFields, fetChObligatoryEnrolmentOfficerFields } from "../actions";
+import { fetchUser, createUser, fetchUserMutation, fetchRegionDistricts, clearRegionDistricts, fetchObligatoryUserFields, fetchObligatoryEnrolmentOfficerFields } from "../actions";
 import UserMasterPanel from "./UserMasterPanel";
 
 const styles = (theme) => ({
@@ -50,10 +50,10 @@ class UserForm extends Component {
       this.props.fetchUser(this.props.modulesManager, this.props.userId);
     }
     if (!this.state.obligatory_user_fields) {
-      this.props.fetChObligatoryUserFields();
+      this.props.fetchObligatoryUserFields();
     } 
     if (!this.state.obligatory_eo_fields) {
-      this.props.fetChObligatoryEnrolmentOfficerFields();
+      this.props.fetchObligatoryEnrolmentOfficerFields();
     } 
   }
   
@@ -252,8 +252,8 @@ const mapDispatchToProps = (dispatch) =>
       fetchUserMutation,
       fetchRegionDistricts,
       clearRegionDistricts,
-      fetChObligatoryUserFields,
-      fetChObligatoryEnrolmentOfficerFields,
+      fetchObligatoryUserFields,
+      fetchObligatoryEnrolmentOfficerFields,
       journalize,
       coreConfirm,
     },

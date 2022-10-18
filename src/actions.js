@@ -258,12 +258,12 @@ export function fetchRegionDistricts(parent) {
 }
 
 
-export function fetChObligatoryUserFields() {
+export function fetchObligatoryUserFields() {
   let payload = "query userObligatoryFields {userObligatoryFields}"
   return graphql(payload, `OBLIGTORY_USER_FIELDS`);
 }
 
-export function fetChObligatoryEnrolmentOfficerFields() {
+export function fetchObligatoryEnrolmentOfficerFields() {
   let payload = "query userObligatoryFields {eoObligatoryFields}"
   return graphql(payload, `OBLIGTORY_EO_FIELDS`);
 }
