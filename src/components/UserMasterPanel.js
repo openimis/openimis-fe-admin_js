@@ -3,7 +3,6 @@ import { withTheme, withStyles } from "@material-ui/core/styles";
 import { Grid, Divider, Typography } from "@material-ui/core";
 import { withModulesManager, useTranslations, TextInput, PublishedComponent, combine } from "@openimis/fe-core";
 import { CLAIM_ADMIN_USER_TYPE, ENROLMENT_OFFICER_USER_TYPE } from "../constants";
-// import { fetchRegionDistricts } from "../actions";
 
 const styles = (theme) => ({
   tableTitle: theme.table.title,
@@ -19,7 +18,7 @@ const styles = (theme) => ({
 });
 
 const UserMasterPanel = (props) => {
-  const { classes, edited, readOnly, onEditedChanged, modulesManager, obligatory_user_fields, obligatory_eo_fields } =
+  const { classes, edited, readOnly, onEditedChanged, modulesManager, obligatoryUserFields, obligatoryEOFields } =
     props;
   const { formatMessage } = useTranslations("admin", modulesManager);
 
@@ -56,8 +55,8 @@ const UserMasterPanel = (props) => {
         />
       </Grid>
       {!(
-        obligatory_user_fields?.email == "H" ||
-        (edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && obligatory_eo_fields?.email == "H")
+        obligatoryUserFields?.email == "H" ||
+        (edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && obligatoryEOFields?.email == "H")
       ) && (
         <Grid item xs={4} className={classes.item}>
           <TextInput
@@ -65,8 +64,8 @@ const UserMasterPanel = (props) => {
             type="email"
             label="user.email"
             required={
-              obligatory_user_fields?.email == "M" ||
-              (edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && obligatory_eo_fields?.email == "M")
+              obligatoryUserFields?.email == "M" ||
+              (edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && obligatoryEOFields?.email == "M")
             }
             readOnly={readOnly}
             value={edited?.email ?? ""}
@@ -75,8 +74,8 @@ const UserMasterPanel = (props) => {
         </Grid>
       )}
       {!(
-        obligatory_user_fields?.phone == "H" ||
-        (edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && obligatory_eo_fields?.phone == "H")
+        obligatoryUserFields?.phone == "H" ||
+        (edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && obligatoryEOFields?.phone == "H")
       ) && (
         <Grid item xs={4} className={classes.item}>
           <TextInput
@@ -84,8 +83,8 @@ const UserMasterPanel = (props) => {
             type="phone"
             label="user.phone"
             required={
-              obligatory_user_fields?.phone == "M" ||
-              (edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && obligatory_eo_fields?.phone == "M")
+              obligatoryUserFields?.phone == "M" ||
+              (edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && obligatoryEOFields?.phone == "M")
             }
             readOnly={readOnly}
             value={edited?.phoneNumber ?? ""}
