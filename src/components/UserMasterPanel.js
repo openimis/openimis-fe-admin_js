@@ -3,8 +3,6 @@ import { withTheme, withStyles } from "@material-ui/core/styles";
 import { Grid, Divider, Typography } from "@material-ui/core";
 import { withModulesManager, useTranslations, TextInput, PublishedComponent, combine } from "@openimis/fe-core";
 import { CLAIM_ADMIN_USER_TYPE, ENROLMENT_OFFICER_USER_TYPE } from "../constants";
-// import { fetchRegionDistricts } from "../actions";
-
 
 const styles = (theme) => ({
   tableTitle: theme.table.title,
@@ -20,10 +18,10 @@ const styles = (theme) => ({
 });
 
 const UserMasterPanel = (props) => {
-  const { classes, edited, readOnly, onEditedChanged, modulesManager,  obligatory_user_fields, obligatory_eo_fields} = props;
+  const { classes, edited, readOnly, onEditedChanged, modulesManager, obligatoryUserFields, obligatoryEOFields } =
+    props;
   const { formatMessage } = useTranslations("admin", modulesManager);
 
-  
   return (
     <Grid container direction="row">
       <Grid item xs={4} className={classes.item}>
@@ -56,36 +54,49 @@ const UserMasterPanel = (props) => {
           onChange={(lastName) => onEditedChanged({ ...edited, lastName })}
         />
       </Grid>
-      {!(obligatory_user_fields?.email == 'H' || edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && obligatory_eo_fields?.email == 'H') &&
-            <Grid item xs={4} className={classes.item}>
-            <TextInput
-              module="admin"
-              type="email"
-              label="user.email"
-              required = {obligatory_user_fields?.email == 'M' || (edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && obligatory_eo_fields?.email == 'M')}
-              readOnly={readOnly}
-              value={edited?.email ?? ""}
-              onChange={(email) => onEditedChanged({ ...edited, email })}
-            />
-          </Grid>
-      }
-      {!(obligatory_user_fields?.phone == 'H' || edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && obligatory_eo_fields?.phone == 'H') && 
+      {!(
+        obligatoryUserFields?.email == "H" ||
+        (edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && obligatoryEOFields?.email == "H")
+      ) && (
+        <Grid item xs={4} className={classes.item}>
+          <TextInput
+            module="admin"
+            type="email"
+            label="user.email"
+            required={
+              obligatoryUserFields?.email == "M" ||
+              (edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && obligatoryEOFields?.email == "M")
+            }
+            readOnly={readOnly}
+            value={edited?.email ?? ""}
+            onChange={(email) => onEditedChanged({ ...edited, email })}
+          />
+        </Grid>
+      )}
+      {!(
+        obligatoryUserFields?.phone == "H" ||
+        (edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && obligatoryEOFields?.phone == "H")
+      ) && (
         <Grid item xs={4} className={classes.item}>
           <TextInput
             module="admin"
             type="phone"
             label="user.phone"
-            required = {obligatory_user_fields?.phone == 'M' || (edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && obligatory_eo_fields?.phone == 'M')}
+            required={
+              obligatoryUserFields?.phone == "M" ||
+              (edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && obligatoryEOFields?.phone == "M")
+            }
             readOnly={readOnly}
             value={edited?.phoneNumber ?? ""}
             onChange={(phoneNumber) => onEditedChanged({ ...edited, phoneNumber })}
           />
         </Grid>
-      }
+      )}
       <Grid item xs={4} className={classes.item}>
         <PublishedComponent
           pubRef="location.HealthFacilityPicker"
           value={edited?.healthFacility}
+          district={edited.districts}
           module="admin"
           readOnly={readOnly}
           required={
@@ -106,7 +117,7 @@ const UserMasterPanel = (props) => {
           onChange={(roles) => onEditedChanged({ ...edited, roles })}
         />
       </Grid>
-        <Grid item xs={2} className={classes.item}>
+      <Grid item xs={2} className={classes.item}>
         <PublishedComponent
           pubRef="location.LocationPicker"
           locationLevel={0}
@@ -118,8 +129,8 @@ const UserMasterPanel = (props) => {
           withLabel
           label={formatMessage("user.regions")}
         />
-        </Grid>
-        <Grid item xs={4} className={classes.item}>
+      </Grid>
+      <Grid item xs={4} className={classes.item}>
         <PublishedComponent
           pubRef="location.LocationPicker"
           locationLevel={1}
