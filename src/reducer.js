@@ -7,7 +7,6 @@ import {
   dispatchMutationErr,
   dispatchMutationReq,
 } from "@openimis/fe-core";
-
 import { getUserTypes, mapQueriesUserToStore } from "./utils";
 
 function reducer(
@@ -46,8 +45,9 @@ function reducer(
     submittingMutation: false,
     mutation: {},
     reg_dst: [],
+    dst_mun_vil: [],
     obligatory_user_fields: {},
-    obligatory_eo_fields: {}
+    obligatory_eo_fields: {},
   },
   action,
 ) {
@@ -206,54 +206,80 @@ function reducer(
     case "LOCATION_REGION_DISTRICTS_CLEAR":
       return {
         ...state,
-        reg_dst: []
+        reg_dst: [],
+      };
+    case "LOCATION_DISTRICT_DATA_REQ":
+      return {
+        ...state,
+        fetching_dst_mun_vil: true,
+        fetched_dst_mun_vil: false,
+        error_dst_mun_vil: null,
+      };
+    case "LOCATION_DISTRICT_DATA_RESP":
+      return {
+        ...state,
+        fetching_dst_mun_vil: false,
+        fetched_dst_mun_vil: true,
+        dst_mun_vil: parseData(action.payload.data.locations || action.payload.data.locationsStr),
+        error_dst_mun_vil: formatGraphQLError(action.payload),
+      };
+    case "LOCATION_DISTRICT_DATA_ERR":
+      return {
+        ...state,
+        fetching_dst_mun_vil: false,
+        error_dst_mun_vil: formatServerError(action.payload),
+      };
+    case "LOCATION_DISTRICT_DATA_CLEAR":
+      return {
+        ...state,
+        dst_mun_vil: [],
       };
     case "OBLIGTORY_USER_FIELDS_REQ":
-    return {
-      ...state,
-      fetching_obligatory_user_fields: true,
-      fetched_obligatory_user_fields: false,
-      obligatory_user_fields: null,
-      errorL1s: null,
-    };
-  case "OBLIGTORY_USER_FIELDS_RESP":
-    console.log("USER FILED RESPONSE ", action.payload.data.userObligatoryFields)
-    return {
-      ...state,
-      fetching_obligatory_user_fields: false,
-      fetched_obligatory_user_fields: true,
-      obligatory_user_fields: action.payload.data.userObligatoryFields,
-      errorL1s: formatGraphQLError(action.payload),
-    };
-  case "OBLIGTORY_USER_FIELDS_ERR":
-    return {
-      ...state,
-      fetching_obligatory_user_fields: false,
-      errorL1s: formatServerError(action.payload),
-    };
-  case "OBLIGTORY_EO_FIELDS_REQ":
-    return {
-      ...state,
-      fetching_obligatory_eo_fields: true,
-      fetched_obligatory_eo_fields: false,
-      obligatory_eo_fields: null,
-      errorL1s: null,
-    };
-  case "OBLIGTORY_EO_FIELDS_RESP":
-    console.log("EO FILED RESPONSE ", action.payload.data.eoObligatoryFields);
-    return {
-      ...state,
-      fetching_obligatory_eo_fields: false,
-      fetched_obligatory_eo_fields: true,
-      obligatory_eo_fields: action.payload.data.eoObligatoryFields,
-      errorL1s: formatGraphQLError(action.payload),
-    };
-  case "OBLIGTORY_EO_FIELDS_ERR":
-    return {
-      ...state,
-      fetching_obligatory_eo_fields: false,
-      errorL1s: formatServerError(action.payload),
-    };
+      return {
+        ...state,
+        fetching_obligatory_user_fields: true,
+        fetched_obligatory_user_fields: false,
+        obligatory_user_fields: null,
+        errorL1s: null,
+      };
+    case "OBLIGTORY_USER_FIELDS_RESP":
+      console.log("USER FILED RESPONSE ", action.payload.data.userObligatoryFields);
+      return {
+        ...state,
+        fetching_obligatory_user_fields: false,
+        fetched_obligatory_user_fields: true,
+        obligatory_user_fields: action.payload.data.userObligatoryFields,
+        errorL1s: formatGraphQLError(action.payload),
+      };
+    case "OBLIGTORY_USER_FIELDS_ERR":
+      return {
+        ...state,
+        fetching_obligatory_user_fields: false,
+        errorL1s: formatServerError(action.payload),
+      };
+    case "OBLIGTORY_EO_FIELDS_REQ":
+      return {
+        ...state,
+        fetching_obligatory_eo_fields: true,
+        fetched_obligatory_eo_fields: false,
+        obligatory_eo_fields: null,
+        errorL1s: null,
+      };
+    case "OBLIGTORY_EO_FIELDS_RESP":
+      console.log("EO FILED RESPONSE ", action.payload.data.eoObligatoryFields);
+      return {
+        ...state,
+        fetching_obligatory_eo_fields: false,
+        fetched_obligatory_eo_fields: true,
+        obligatory_eo_fields: action.payload.data.eoObligatoryFields,
+        errorL1s: formatGraphQLError(action.payload),
+      };
+    case "OBLIGTORY_EO_FIELDS_ERR":
+      return {
+        ...state,
+        fetching_obligatory_eo_fields: false,
+        errorL1s: formatServerError(action.payload),
+      };
     case "ADMIN_USER_MUTATION_REQ":
       return dispatchMutationReq(state, action);
     case "ADMIN_USER_MUTATION_ERR":
