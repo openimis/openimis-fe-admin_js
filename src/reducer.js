@@ -211,28 +211,28 @@ function reducer(
     case "LOCATION_DISTRICT_DATA_REQ":
       return {
         ...state,
-        fetching_dst_mun_vil: true,
-        fetched_dst_mun_vil: false,
-        error_dst_mun_vil: null,
+        fetchingDistrictMunAndVil: true,
+        fetchedDistrictMunAndVil: false,
+        errorDistrictMunAndVil: null,
       };
     case "LOCATION_DISTRICT_DATA_RESP":
       return {
         ...state,
-        fetching_dst_mun_vil: false,
-        fetched_dst_mun_vil: true,
-        dst_mun_vil: parseData(action.payload.data.locations || action.payload.data.locationsStr),
-        error_dst_mun_vil: formatGraphQLError(action.payload),
+        fetchingDistrictMunAndVil: false,
+        fetchedDistrictMunAndVil: true,
+        districtMunAndVil: parseData(action.payload.data.locations || action.payload.data.locationsStr),
+        errorDistrictMunAndVil: formatGraphQLError(action.payload),
       };
     case "LOCATION_DISTRICT_DATA_ERR":
       return {
         ...state,
-        fetching_dst_mun_vil: false,
-        error_dst_mun_vil: formatServerError(action.payload),
+        fetchingDistrictMunAndVil: false,
+        errorDistrictMunAndVil: formatServerError(action.payload),
       };
     case "LOCATION_DISTRICT_DATA_CLEAR":
       return {
         ...state,
-        dst_mun_vil: [],
+        districtMunAndVil: [],
       };
     case "OBLIGTORY_USER_FIELDS_REQ":
       return {
