@@ -50,8 +50,8 @@ const EnrolmentVillagesPicker = (props) => {
   const { formatMessage } = useTranslations("admin.EnrolmentZonesPicker", modulesManager);
   const pickedDistrictsUuids = districts && districts.map((district) => district.uuid);
   const dispatch = useDispatch();
-  const data = useSelector((state) => state.admin.dst_mun_vil);
-  const fetchedDistrictDataFlag = useSelector((state) => state.admin.fetched_dst_mun_vil);
+  const data = useSelector((state) => state.admin.districtMunAndVil);
+  const fetchedDistrictDataFlag = useSelector((state) => state.admin.fetchedDistrictMunAndVil);
 
   const handleChange = (newItems) => {
     const villageIds = newItems.reduce((acc, item) => (item.entities ? acc.concat(item.entities) : acc), []);
@@ -71,14 +71,14 @@ const EnrolmentVillagesPicker = (props) => {
   };
 
   const onSelectParent = (item, parent) => {
-    // eslint-disable-next-line no-param-reassign
-    item.parent = parent;
+    const rowItem = item;
+    rowItem.parent = parent;
     setItems([...items]);
   };
 
   const onVillagesChange = (item, entities) => {
-    // eslint-disable-next-line no-param-reassign
-    item.entities = entities;
+    const rowItem = item;
+    rowItem.entities = entities;
     handleChange(items);
   };
 
@@ -88,9 +88,8 @@ const EnrolmentVillagesPicker = (props) => {
     } = parent;
     const entities = edges?.map((edge) => edge.node) ?? [];
     const createdRow = {};
-    // eslint-disable-next-line no-param-reassign
+
     createdRow.parent = parent;
-    // eslint-disable-next-line no-param-reassign
     createdRow.entities = entities;
     return createdRow;
   };
