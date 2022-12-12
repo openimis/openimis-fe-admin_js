@@ -18,6 +18,7 @@ const USER_SUMMARY_PROJECTION = [
   "claimAdmin{id,phone,lastName,otherNames,emailId,dob}",
   "clientMutationId",
 ];
+const DISTRICT_DATA_FETCH_PARAMS = "id, uuid, code, name, parent { id, uuid, name, code }";
 
 export const USER_PICKER_PROJECTION = ["id", "username", "iUser{id otherNames lastName}"];
 
@@ -235,11 +236,11 @@ export function fetchUserMutation(mm, clientMutationId) {
 }
 
 export function fetchRegionDistricts(parent) {
-  let filters = [`type: "D"`];
-  if (!!parent) {
+  const filters = [`type: "D"`];
+  if (parent) {
     filters.push(`parent_Uuid: "${parent.uuid}"`);
   }
-  let payload = formatPageQuery("locations", filters, [
+  const payload = formatPageQuery("locations", filters, [
     "id",
     "uuid",
     "type",
@@ -260,18 +261,18 @@ export function fetchDataFromDistrict(districtUuids) {
     filters.push(`parent_Uuid_In: ["${districtUuids.join('", "')}"]`);
   }
   const payload = formatPageQuery("locations", filters, [
-    "id, uuid, code, name, parent { id, uuid, name, code }, children { edges {node {id, uuid, code, name, parent { id, uuid, code, name}}}}",
+    `${DISTRICT_DATA_FETCH_PARAMS}, children { edges {node {${DISTRICT_DATA_FETCH_PARAMS}}}}`,
   ]);
   return graphql(payload, `LOCATION_DISTRICT_DATA`);
 }
 
 export function fetchObligatoryUserFields() {
-  let payload = "query userObligatoryFields {userObligatoryFields}";
+  const payload = "query userObligatoryFields {userObligatoryFields}";
   return graphql(payload, `OBLIGTORY_USER_FIELDS`);
 }
 
 export function fetchObligatoryEnrolmentOfficerFields() {
-  let payload = "query userObligatoryFields {eoObligatoryFields}";
+  const payload = "query userObligatoryFields {eoObligatoryFields}";
   return graphql(payload, `OBLIGTORY_EO_FIELDS`);
 }
 
