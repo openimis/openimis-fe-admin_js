@@ -45,7 +45,7 @@ const groupVillagesByMunicipality = (villages) => {
 };
 
 const EnrolmentVillagesPicker = (props) => {
-  const { location, modulesManager, readOnly, villages, onChange, classes, districts, isOfficerPanelEnabled } = props;
+  const { modulesManager, readOnly, villages, onChange, classes, districts, isOfficerPanelEnabled } = props;
   const [items, setItems] = useState([]);
   const { formatMessage } = useTranslations("admin.EnrolmentZonesPicker", modulesManager);
   const pickedDistrictsUuids = districts && districts.map((district) => district.uuid);
@@ -159,7 +159,7 @@ const EnrolmentVillagesPicker = (props) => {
                 ) : (
                   <PublishedComponent
                     pubRef="location.LocationPicker"
-                    parentLocation={location}
+                    parentLocations={pickedDistrictsUuids}
                     onChange={(parent) => onSelectParent(item, parent)}
                     required
                     filterOptions={filterParents}
@@ -173,6 +173,7 @@ const EnrolmentVillagesPicker = (props) => {
                   fullWidth
                   pubRef="location.LocationPicker"
                   parentLocation={item.parent}
+                  parentLocations={[item.parent?.uuid]}
                   readOnly={readOnly}
                   required
                   multiple
