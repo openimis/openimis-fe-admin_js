@@ -124,7 +124,6 @@ const UserMasterPanel = (props) => {
           value={edited.region}
           onChange={(region) => onEditedChanged({ ...edited, region })}
           readOnly={readOnly}
-          required
           multiple
           withLabel
           label={formatMessage("user.regions")}
