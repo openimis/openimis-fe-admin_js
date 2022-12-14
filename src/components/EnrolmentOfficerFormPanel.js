@@ -46,7 +46,7 @@ const EnrolmentOfficerFormPanel = (props) => {
   const isValid = !isLoading;
 
   useEffect(() => {
-    const roles = edited.roles ? edited.roles : [];
+    const roles = edited?.roles ?? [];
     const officerRole = data?.role.edges[0].node;
 
     if (isValid && isEnabled && !hasOfficerRole) {
