@@ -1,4 +1,4 @@
-import React, { useState, useEffect }  from "react";
+import React, { useState, useEffect } from "react";
 import { Grid, Typography, Paper, Switch } from "@material-ui/core";
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import { useTranslations, withModulesManager, combine, PublishedComponent, useGraphqlQuery } from "@openimis/fe-core";
@@ -14,35 +14,55 @@ const styles = (theme) => ({
 const ClaimAdministratorFormPanel = (props) => {
   const { edited, classes, modulesManager, onEditedChanged, readOnly } = props;
   const { formatMessage } = useTranslations("admin.ClaimAdministratorFormPanel", modulesManager);
-  const isEnabled = edited.userTypes?.includes(CLAIM_ADMIN_USER_TYPE);
-
-  const has_role = !!edited.roles ? (edited.roles.filter((x) => x.isSystem == 256).length != 0) : false
-  if (isEnabled) {
-    const {isLoading, data, error: graphqlError} = useGraphqlQuery(
-      `
-      query UserRolesPicker ($system_id: Int) {
-        role(systemRoleId: $system_id) {
-          edges {
-            node {
-              id name isSystem
-            }
+  const [isEnabled, setIsEnabled] = useState(false);
+  const hasClaimUserType = edited.userTypes?.includes(CLAIM_ADMIN_USER_TYPE);
+  const hasClaimRole = edited.roles ? edited.roles.filter((x) => x.isSystem === 256).length !== 0 : false;
+  const {
+    isLoading,
+    data,
+    error: graphqlError,
+  } = useGraphqlQuery(
+    `
+    query UserRolesPicker ($system_id: Int) {
+      role(systemRoleId: $system_id) {
+        edges {
+          node {
+            id name isSystem
           }
         }
       }
-    `,
-      { system_id: 256 }, // Claim Admin System Role is 256
-    );
-    const isValid = !isLoading
-    useEffect(() => {
-      if (isValid & isEnabled & !has_role) {
-        const role = data.role.edges[0].node
-        const roles  = !!edited.roles ? edited.roles : [];
-        roles.push(role)
-        edited.roles = roles
-        onEditedChanged(edited)
+    }
+  `,
+    { system_id: 256 }, // Claim Admin System Role is 256
+  );
+  const isValid = !isLoading;
+
+  useEffect(() => {
+    const roles = edited?.roles ?? [];
+    const claimRole = data?.role.edges[0].node;
+
+    if (isValid && isEnabled && !hasClaimRole) {
+      roles.push(claimRole);
+      edited.roles = roles;
+      onEditedChanged(edited);
+    } else if (isValid && !isEnabled) {
+      const filteredRoles = roles.filter((role) => role.isSystem !== 256);
+      edited.roles = filteredRoles;
+      onEditedChanged(edited);
+    }
+  }, [isEnabled]);
+
+  useEffect(() => {
+    if (hasClaimRole) {
+      setIsEnabled(() => true);
+      onEditedChanged(toggleUserType(edited, CLAIM_ADMIN_USER_TYPE));
+    } else {
+      setIsEnabled(() => false);
+      if (hasClaimUserType) {
+        onEditedChanged(toggleUserType(edited, CLAIM_ADMIN_USER_TYPE));
       }
-    }, [isValid]);
-  }
+    }
+  }, [hasClaimRole]);
 
   return (
     <Paper className={classes.paper}>
@@ -54,7 +74,7 @@ const ClaimAdministratorFormPanel = (props) => {
               color="secondary"
               disabled={readOnly}
               checked={isEnabled}
-              onChange={() => onEditedChanged(toggleUserType(edited, CLAIM_ADMIN_USER_TYPE))}
+              onChange={() => setIsEnabled(() => !isEnabled)}
             />
           )}
         </Grid>
