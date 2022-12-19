@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Grid, Typography, Paper, Switch } from "@material-ui/core";
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import { useTranslations, withModulesManager, combine, PublishedComponent, useGraphqlQuery } from "@openimis/fe-core";
-import { CLAIM_ADMIN_USER_TYPE } from "../constants";
-import { toggleUserType } from "../utils";
+import { CLAIM_ADMIN_USER_TYPE, CLAIM_ADMIN_IS_SYSTEM } from "../constants";
+import { toggleUserRoles, toggleSwitchButton } from "../utils";
 
 const styles = (theme) => ({
   item: theme.paper.item,
@@ -14,9 +14,11 @@ const styles = (theme) => ({
 const ClaimAdministratorFormPanel = (props) => {
   const { edited, classes, modulesManager, onEditedChanged, readOnly } = props;
   const { formatMessage } = useTranslations("admin.ClaimAdministratorFormPanel", modulesManager);
-  const [isEnabled, setIsEnabled] = useState(false);
   const hasClaimUserType = edited.userTypes?.includes(CLAIM_ADMIN_USER_TYPE);
-  const hasClaimRole = edited.roles ? edited.roles.filter((x) => x.isSystem === 256).length !== 0 : false;
+  const hasClaimRole = edited.roles
+    ? edited.roles.filter((x) => x.isSystem === CLAIM_ADMIN_IS_SYSTEM).length !== 0
+    : false;
+  const [isEnabled, setIsEnabled] = useState(false);
   const {
     isLoading,
     data,
@@ -33,35 +35,16 @@ const ClaimAdministratorFormPanel = (props) => {
       }
     }
   `,
-    { system_id: 256 }, // Claim Admin System Role is 256
+    { system_id: CLAIM_ADMIN_IS_SYSTEM },
   );
   const isValid = !isLoading;
 
   useEffect(() => {
-    const roles = edited?.roles ?? [];
-    const claimRole = data?.role.edges[0].node;
-
-    if (isValid && isEnabled && !hasClaimRole) {
-      roles.push(claimRole);
-      edited.roles = roles;
-      onEditedChanged(edited);
-    } else if (isValid && !isEnabled) {
-      const filteredRoles = roles.filter((role) => role.isSystem !== 256);
-      edited.roles = filteredRoles;
-      onEditedChanged(edited);
-    }
+    toggleUserRoles(edited, data, isValid, isEnabled, hasClaimRole, onEditedChanged, CLAIM_ADMIN_IS_SYSTEM);
   }, [isEnabled]);
 
   useEffect(() => {
-    if (hasClaimRole) {
-      setIsEnabled(() => true);
-      onEditedChanged(toggleUserType(edited, CLAIM_ADMIN_USER_TYPE));
-    } else {
-      setIsEnabled(() => false);
-      if (hasClaimUserType) {
-        onEditedChanged(toggleUserType(edited, CLAIM_ADMIN_USER_TYPE));
-      }
-    }
+    toggleSwitchButton(edited, hasClaimRole, hasClaimUserType, setIsEnabled, onEditedChanged, CLAIM_ADMIN_USER_TYPE);
   }, [hasClaimRole]);
 
   return (
