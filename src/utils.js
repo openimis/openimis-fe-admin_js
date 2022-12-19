@@ -94,14 +94,14 @@ export const toggleUserType = (user, type) => {
 
 export const toggleUserRoles = (edited, data, isValid, isEnabled, hasRole, onEditedChanged, roleIsSystem) => {
   const roles = edited?.roles ?? [];
-  const claimRole = data?.role.edges[0].node;
+  const role = data?.role.edges?.[0].node;
 
   if (isValid && isEnabled && !hasRole) {
-    roles.push(claimRole);
+    roles.push(role);
     edited.roles = roles;
     onEditedChanged(edited);
   } else if (isValid && !isEnabled) {
-    const filteredRoles = roles.filter((role) => role.isSystem !== roleIsSystem);
+    const filteredRoles = roles.filter((tempRole) => tempRole.isSystem !== roleIsSystem);
     edited.roles = filteredRoles;
     onEditedChanged(edited);
   }
