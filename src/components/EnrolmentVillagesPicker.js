@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { withModulesManager, combine, useTranslations, PublishedComponent } from "@openimis/fe-core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { withTheme, withStyles } from "@material-ui/core/styles";
-
+import { useDispatch, useSelector } from "react-redux";
 import AddIcon from "@material-ui/icons/Add";
-
 import {
   TableContainer,
   TableHead,
@@ -17,7 +16,7 @@ import {
   Button,
   IconButton,
 } from "@material-ui/core";
-import _ from "lodash";
+import { fetchDataFromDistrict, clearDistrictData } from "../actions";
 
 const styles = (theme) => ({
   footer: {
@@ -46,9 +45,13 @@ const groupVillagesByMunicipality = (villages) => {
 };
 
 const EnrolmentVillagesPicker = (props) => {
-  const { location, modulesManager, readOnly, villages, onChange, classes } = props;
+  const { modulesManager, readOnly, villages, onChange, classes, districts, isOfficerPanelEnabled } = props;
   const [items, setItems] = useState([]);
   const { formatMessage } = useTranslations("admin.EnrolmentZonesPicker", modulesManager);
+  const pickedDistrictsUuids = districts && districts.map((district) => district.uuid);
+  const dispatch = useDispatch();
+  const data = useSelector((state) => state.admin.districtMunAndVil);
+  const fetchedDistrictDataFlag = useSelector((state) => state.admin.fetchedDistrictMunAndVil);
 
   const handleChange = (newItems) => {
     const villageIds = newItems.reduce((acc, item) => (item.entities ? acc.concat(item.entities) : acc), []);
@@ -66,19 +69,77 @@ const EnrolmentVillagesPicker = (props) => {
   const onInsertRow = () => {
     setItems([...items, {}]);
   };
+
   const onSelectParent = (item, parent) => {
-    // eslint-disable-next-line no-param-reassign
-    item.parent = parent;
+    const rowItem = item;
+    rowItem.parent = parent;
     setItems([...items]);
   };
+
   const onVillagesChange = (item, entities) => {
-    // eslint-disable-next-line no-param-reassign
-    item.entities = entities;
+    const rowItem = item;
+    rowItem.entities = entities;
     handleChange(items);
   };
 
-  // Only display options for municipalities not already present.
+  const createRow = (parent) => {
+    const {
+      children: { edges },
+    } = parent;
+    const entities = edges?.map((edge) => edge.node) ?? [];
+    const createdRow = {};
+
+    createdRow.parent = parent;
+    createdRow.entities = entities;
+    return createdRow;
+  };
+
+  const rescheduleItems = (rows) => {
+    setItems([...items, ...rows]);
+    handleChange([...items, ...rows]);
+  };
+
+  const clearItems = () => {
+    setItems([]);
+    handleChange([]);
+    dispatch(clearDistrictData());
+  };
+
+  const executeNewRows = (newRows, uniqueRows) => {
+    if (!items.length) {
+      rescheduleItems(newRows);
+    } else {
+      rescheduleItems(uniqueRows);
+    }
+  };
+
   const filterParents = (options) => options.filter((p) => !items.some((i) => i.parent?.id === p.id));
+
+  const filterVillages = (options) =>
+    options.filter((option) => !villages?.some((village) => village?.id === option.id));
+
+  useEffect(() => {
+    if (districts?.length) {
+      clearItems();
+      dispatch(fetchDataFromDistrict(pickedDistrictsUuids));
+    } else {
+      clearItems();
+    }
+  }, [districts]);
+
+  useEffect(() => {
+    if (fetchedDistrictDataFlag) {
+      const createdRows = data.map((mun) => createRow(mun));
+      const uniqueRows = createdRows.filter((row) => !items.some((i) => i.parent.uuid === row.parent.uuid));
+      executeNewRows(createdRows, uniqueRows);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (isOfficerPanelEnabled) {
+      clearItems();
+    }
+  }, [isOfficerPanelEnabled]);
 
   return (
     <TableContainer component={Paper}>
@@ -99,7 +160,7 @@ const EnrolmentVillagesPicker = (props) => {
                 ) : (
                   <PublishedComponent
                     pubRef="location.LocationPicker"
-                    parentLocation={location}
+                    parentLocations={pickedDistrictsUuids}
                     onChange={(parent) => onSelectParent(item, parent)}
                     required
                     filterOptions={filterParents}
@@ -113,12 +174,13 @@ const EnrolmentVillagesPicker = (props) => {
                   fullWidth
                   pubRef="location.LocationPicker"
                   parentLocation={item.parent}
+                  parentLocations={[item.parent?.uuid]}
                   readOnly={readOnly}
                   required
                   multiple
                   value={item.entities}
                   onChange={(value) => onVillagesChange(item, value)}
-                  filterSelectedOptions
+                  filterOptions={filterVillages}
                   locationLevel={3}
                 />
               </TableCell>

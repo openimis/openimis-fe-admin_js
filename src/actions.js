@@ -7,9 +7,7 @@ import {
   prepareMutation,
   graphqlWithVariables,
   fetchMutation,
-  useGraphqlQuery
 } from "@openimis/fe-core";
-import _ from "lodash";
 import { mapUserValuesToInput } from "./utils";
 
 const USER_SUMMARY_PROJECTION = [
@@ -20,6 +18,7 @@ const USER_SUMMARY_PROJECTION = [
   "claimAdmin{id,phone,lastName,otherNames,emailId,dob}",
   "clientMutationId",
 ];
+const DISTRICT_DATA_FETCH_PARAMS = "id, uuid, code, name, parent { id, uuid, name, code }";
 
 export const USER_PICKER_PROJECTION = ["id", "username", "iUser{id otherNames lastName}"];
 
@@ -236,13 +235,12 @@ export function fetchUserMutation(mm, clientMutationId) {
   return graphql(payload, "ADMIN_USER");
 }
 
-
 export function fetchRegionDistricts(parent) {
-  let filters = [`type: "D"`];
-  if (!!parent) {
+  const filters = [`type: "D"`];
+  if (parent) {
     filters.push(`parent_Uuid: "${parent.uuid}"`);
   }
-  let payload = formatPageQuery("locations", filters, [
+  const payload = formatPageQuery("locations", filters, [
     "id",
     "uuid",
     "type",
@@ -257,19 +255,34 @@ export function fetchRegionDistricts(parent) {
   return graphql(payload, `LOCATION_REGION_DISTRICTS`);
 }
 
+export function fetchDataFromDistrict(districtUuids) {
+  const filters = [];
+  if (districtUuids) {
+    filters.push(`parent_Uuid_In: ["${districtUuids.join('", "')}"]`);
+  }
+  const payload = formatPageQuery("locations", filters, [
+    `${DISTRICT_DATA_FETCH_PARAMS}, children { edges {node {${DISTRICT_DATA_FETCH_PARAMS}}}}`,
+  ]);
+  return graphql(payload, `LOCATION_DISTRICT_DATA`);
+}
 
 export function fetchObligatoryUserFields() {
-  let payload = "query userObligatoryFields {userObligatoryFields}"
+  const payload = "query userObligatoryFields {userObligatoryFields}";
   return graphql(payload, `OBLIGTORY_USER_FIELDS`);
 }
 
 export function fetchObligatoryEnrolmentOfficerFields() {
-  let payload = "query userObligatoryFields {eoObligatoryFields}"
+  const payload = "query userObligatoryFields {eoObligatoryFields}";
   return graphql(payload, `OBLIGTORY_EO_FIELDS`);
 }
 
 export function clearRegionDistricts() {
   return (dispatch) => {
     dispatch({ type: `LOCATION_REGION_DISTRICTS_CLEAR` });
+  };
+}
+export function clearDistrictData() {
+  return (dispatch) => {
+    dispatch({ type: `LOCATION_DISTRICT_DATA_CLEAR` });
   };
 }
