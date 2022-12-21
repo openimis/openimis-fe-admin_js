@@ -94,18 +94,22 @@ const EnrolmentVillagesPicker = (props) => {
     return createdRow;
   };
 
+  const rescheduleItems = (rows) => {
+    setItems([...items, ...rows]);
+    handleChange([...items, ...rows]);
+  };
+
   const clearItems = () => {
     setItems([]);
     handleChange([]);
+    dispatch(clearDistrictData());
   };
 
   const executeNewRows = (newRows, uniqueRows) => {
     if (!items.length) {
-      setItems([...items, ...newRows]);
-      handleChange([...items, ...newRows]);
+      rescheduleItems(newRows);
     } else {
-      setItems([...items, ...uniqueRows]);
-      handleChange([...items, ...uniqueRows]);
+      rescheduleItems(uniqueRows);
     }
   };
 
@@ -117,11 +121,9 @@ const EnrolmentVillagesPicker = (props) => {
   useEffect(() => {
     if (districts?.length) {
       clearItems();
-      dispatch(clearDistrictData());
       dispatch(fetchDataFromDistrict(pickedDistrictsUuids));
     } else {
       clearItems();
-      dispatch(clearDistrictData());
     }
   }, [districts]);
 
@@ -136,7 +138,6 @@ const EnrolmentVillagesPicker = (props) => {
   useEffect(() => {
     if (isOfficerPanelEnabled) {
       clearItems();
-      dispatch(clearDistrictData());
     }
   }, [isOfficerPanelEnabled]);
 
