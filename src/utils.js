@@ -1,5 +1,5 @@
-import { CLAIM_ADMIN_USER_TYPE, INTERACTIVE_USER_TYPE, ENROLMENT_OFFICER_USER_TYPE } from "./constants";
 import { decodeId } from "@openimis/fe-core";
+import { CLAIM_ADMIN_USER_TYPE, INTERACTIVE_USER_TYPE, ENROLMENT_OFFICER_USER_TYPE } from "./constants";
 
 export const getUserTypes = (user) => {
   // We force from now on all users to be interactive
@@ -80,16 +80,41 @@ export const mapUserValuesToInput = (values) => {
 
 export const toggleUserType = (user, type) => {
   if (!user.userTypes) {
-    // eslint-disable-next-line no-param-reassign
     user.userTypes = [];
   }
 
   if (user.userTypes.includes(type)) {
-    // eslint-disable-next-line no-param-reassign
     user.userTypes = user.userTypes.filter((x) => x !== type);
   } else {
     user.userTypes.push(type);
   }
 
   return user;
+};
+
+export const toggleUserRoles = (edited, data, isValid, isEnabled, hasRole, onEditedChanged, roleIsSystem) => {
+  const roles = edited?.roles ?? [];
+  const role = data?.role.edges?.[0].node;
+
+  if (isValid && isEnabled && !hasRole) {
+    roles.push(role);
+    edited.roles = roles;
+    onEditedChanged(edited);
+  } else if (isValid && !isEnabled) {
+    const filteredRoles = roles.filter((tempRole) => tempRole.isSystem !== roleIsSystem);
+    edited.roles = filteredRoles;
+    onEditedChanged(edited);
+  }
+};
+
+export const toggleSwitchButton = (edited, hasRole, hasUserType, setIsEnabled, onEditedChanged, userType) => {
+  if (hasRole) {
+    setIsEnabled(() => true);
+    onEditedChanged(toggleUserType(edited, userType));
+  } else {
+    setIsEnabled(() => false);
+    if (hasUserType) {
+      onEditedChanged(toggleUserType(edited, userType));
+    }
+  }
 };

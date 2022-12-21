@@ -23,7 +23,7 @@ const UserRolesPicker = ({
       role(str: $str) {
         edges {
           node {
-            id name
+            id name isSystem
           }
         }
       }

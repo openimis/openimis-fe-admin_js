@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Grid, Typography, Paper, Switch } from "@material-ui/core";
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import {
@@ -9,8 +9,8 @@ import {
   TextInput,
   useGraphqlQuery,
 } from "@openimis/fe-core";
-import { ENROLMENT_OFFICER_USER_TYPE } from "../constants";
-import { toggleUserType } from "../utils";
+import { ENROLMENT_OFFICER_USER_TYPE, OFFICER_ROLE_IS_SYSTEM } from "../constants";
+import { toggleUserRoles, toggleSwitchButton } from "../utils";
 import EnrolmentVillagesPicker from "./EnrolmentVillagesPicker";
 
 const styles = (theme) => ({
@@ -22,16 +22,17 @@ const styles = (theme) => ({
 const EnrolmentOfficerFormPanel = (props) => {
   const { edited, classes, modulesManager, onEditedChanged, readOnly } = props;
   const { formatMessage } = useTranslations("admin.EnrolmentOfficerFormPanel", modulesManager);
-
-  const isEnabled = edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE);
-  const hasRole = !!edited.roles ? edited.roles.filter((x) => x.isSystem == 1).length != 0 : false;
-  if (isEnabled) {
-    const {
-      isLoading,
-      data,
-      error: graphqlError,
-    } = useGraphqlQuery(
-      `
+  const hasOfficerUserType = edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE);
+  const hasOfficerRole = edited.roles
+    ? edited.roles.filter((x) => x.isSystem === OFFICER_ROLE_IS_SYSTEM).length !== 0
+    : false;
+  const [isEnabled, setIsEnabled] = useState(false);
+  const {
+    isLoading,
+    data,
+    error: graphqlError,
+  } = useGraphqlQuery(
+    `
       query UserRolesPicker ($system_id: Int) {
         role(systemRoleId: $system_id) {
           edges {
@@ -42,19 +43,31 @@ const EnrolmentOfficerFormPanel = (props) => {
         }
       }
     `,
-      { system_id: 1 }, // EO System Role is 1
+    { system_id: OFFICER_ROLE_IS_SYSTEM },
+  );
+  const isValid = !isLoading;
+
+  useEffect(() => {
+    toggleUserRoles(
+      edited, 
+      data, 
+      isValid, 
+      isEnabled, 
+      hasOfficerRole, 
+      onEditedChanged, 
+      OFFICER_ROLE_IS_SYSTEM);
+  }, [isEnabled]);
+
+  useEffect(() => {
+    toggleSwitchButton(
+      edited,
+      hasOfficerRole,
+      hasOfficerUserType,
+      setIsEnabled,
+      onEditedChanged,
+      ENROLMENT_OFFICER_USER_TYPE,
     );
-    const isValid = !isLoading;
-    useEffect(() => {
-      if (isValid & isEnabled & !hasRole) {
-        const role = data.role.edges[0].node;
-        const roles = !!edited.roles ? edited.roles : [];
-        roles.push(role);
-        edited.roles = roles;
-        onEditedChanged(edited);
-      }
-    }, [isValid]);
-  }
+  }, [hasOfficerRole]);
 
   return (
     <Paper className={classes.paper}>
@@ -66,7 +79,7 @@ const EnrolmentOfficerFormPanel = (props) => {
               color="secondary"
               disabled={readOnly}
               checked={isEnabled}
-              onChange={() => onEditedChanged(toggleUserType(edited, ENROLMENT_OFFICER_USER_TYPE))}
+              onChange={() => setIsEnabled(() => !isEnabled)}
             />
           )}
         </Grid>
