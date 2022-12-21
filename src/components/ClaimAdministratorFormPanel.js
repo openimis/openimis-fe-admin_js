@@ -92,6 +92,7 @@ const ClaimAdministratorFormPanel = (props) => {
               <PublishedComponent
                 pubRef="location.HealthFacilityPicker"
                 value={edited?.healthFacility}
+                district={edited?.districts}
                 required
                 module="admin"
                 readOnly={readOnly}
