@@ -11,6 +11,7 @@ import {
   Searcher,
   formatDateFromISO,
   ConfirmDialog,
+  decodeId,
 } from "@openimis/fe-core";
 import UserFilter from "./UserFilter";
 
@@ -48,14 +49,35 @@ class UserSearcher extends Component {
   state = {
     deleteUser: null,
     params: {},
+    defaultParams: {},
   };
 
   fetch = (params) => {
     this.setState({ params });
-    this.props.fetchUsersSummaries(this.props.modulesManager, params);
+    console.log("params", params);
+    if (this.props.fetchedUserLocation) {
+      this.props.fetchUsersSummaries(this.props.modulesManager, params);
+    }
+  };
+
+  setRegionIds = (paramsArray) => {
+    const regionIds = this.props.userL0s?.map((region) => decodeId(region.id));
+    paramsArray.push(`regionIds: [${regionIds}]`);
+  };
+
+  componentDidUpdate = (prevState) => {
+    if (prevState.userL0s !== this.props.userL0s) {
+      if (this.props.userL0s && this.props.fetchedUserLocation) {
+        const prms = [...this.state.params];
+        this.setRegionIds(prms);
+        this.props.fetchUsersSummaries(this.props.modulesManager, prms);
+      }
+    }
   };
 
   filtersToQueryParams = (state) => {
+    console.log("state", state);
+    console.log("propsy", this.props);
     const prms = Object.keys(state.filters)
       .filter((contrib) => !!state.filters[contrib].filter)
       .map((contrib) => state.filters[contrib].filter);
@@ -69,6 +91,10 @@ class UserSearcher extends Component {
     if (state.orderBy) {
       prms.push(`orderBy: ["${state.orderBy}"]`);
     }
+    if (this.props.fetchedUserLocation) {
+      this.setRegionIds(prms);
+    }
+    console.log("prms", prms);
     return prms;
   };
 
@@ -176,6 +202,8 @@ const mapStateToProps = (state) => ({
   fetchingUsers: state.admin.usersSummaries.isFetching,
   fetchedUsers: state.admin.usersSummaries.fetched,
   errorUsers: state.admin.usersSummaries.error,
+  userL0s: state.loc.userL0s ?? [],
+  fetchedUserLocation: state.loc.fetchedUserLocation,
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({ fetchUsersSummaries, deleteUser }, dispatch);
