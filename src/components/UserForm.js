@@ -19,7 +19,14 @@ import {
 import { CLAIM_ADMIN_USER_TYPE, ENROLMENT_OFFICER_USER_TYPE, INTERACTIVE_USER_TYPE, RIGHT_USERS } from "../constants";
 import EnrolmentOfficerFormPanel from "./EnrolmentOfficerFormPanel";
 import ClaimAdministratorFormPanel from "./ClaimAdministratorFormPanel";
-import { fetchUser, createUser, fetchUserMutation, fetchRegionDistricts, clearRegionDistricts, fetchObligatoryUserFields, fetchObligatoryEnrolmentOfficerFields } from "../actions";
+import {
+  fetchUser,
+  createUser,
+  fetchUserMutation,
+  fetchRegionDistricts,
+  fetchObligatoryUserFields,
+  fetchObligatoryEnrolmentOfficerFields,
+} from "../actions";
 import UserMasterPanel from "./UserMasterPanel";
 
 const styles = (theme) => ({
@@ -37,8 +44,6 @@ const setupState = (props) => ({
     : props.user,
 });
 
-
-
 class UserForm extends Component {
   constructor(props) {
     super(props);
@@ -51,12 +56,11 @@ class UserForm extends Component {
     }
     if (!this.state.obligatory_user_fields) {
       this.props.fetchObligatoryUserFields();
-    } 
+    }
     if (!this.state.obligatory_eo_fields) {
       this.props.fetchObligatoryEnrolmentOfficerFields();
-    } 
+    }
   }
-  
 
   componentDidUpdate(prevProps) {
     if (prevProps.region_districts != this.props.region_districts) {
@@ -153,12 +157,10 @@ class UserForm extends Component {
   };
 
   onEditedChanged = (user) => {
-    if (!!user.region){
+    if (!!user.region) {
       user.region.forEach((region) => {
-        this.props.fetchRegionDistricts(region)
+        this.props.fetchRegionDistricts(region);
       });
-    } else {
-      this.props.clearRegionDistricts()
     }
     this.setState({ user });
   };
@@ -180,7 +182,6 @@ class UserForm extends Component {
       add,
       save,
       back,
-      region_districts,
       obligatory_user_fields,
       obligatory_eo_fields
     } = this.props;
@@ -251,7 +252,6 @@ const mapDispatchToProps = (dispatch) =>
       createUser,
       fetchUserMutation,
       fetchRegionDistricts,
-      clearRegionDistricts,
       fetchObligatoryUserFields,
       fetchObligatoryEnrolmentOfficerFields,
       journalize,
