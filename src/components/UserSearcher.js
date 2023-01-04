@@ -54,7 +54,6 @@ class UserSearcher extends Component {
 
   fetch = (params) => {
     this.setState({ params });
-    console.log("params", params);
     if (this.props.fetchedUserLocation) {
       this.props.fetchUsersSummaries(this.props.modulesManager, params);
     }
@@ -76,8 +75,6 @@ class UserSearcher extends Component {
   };
 
   filtersToQueryParams = (state) => {
-    console.log("state", state);
-    console.log("propsy", this.props);
     const prms = Object.keys(state.filters)
       .filter((contrib) => !!state.filters[contrib].filter)
       .map((contrib) => state.filters[contrib].filter);
@@ -94,7 +91,6 @@ class UserSearcher extends Component {
     if (this.props.fetchedUserLocation) {
       this.setRegionIds(prms);
     }
-    console.log("prms", prms);
     return prms;
   };
 
