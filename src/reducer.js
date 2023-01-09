@@ -207,6 +207,7 @@ function reducer(
       return {
         ...state,
         reg_dst: [],
+<<<<<<< Updated upstream
       };
     case "LOCATION_DISTRICT_DATA_REQ":
       return {
@@ -233,6 +234,8 @@ function reducer(
       return {
         ...state,
         districtMunAndVil: [],
+=======
+>>>>>>> Stashed changes
       };
     case "OBLIGTORY_USER_FIELDS_REQ":
       return {
@@ -243,7 +246,10 @@ function reducer(
         errorL1s: null,
       };
     case "OBLIGTORY_USER_FIELDS_RESP":
+<<<<<<< Updated upstream
       console.log("USER FILED RESPONSE ", action.payload.data.userObligatoryFields);
+=======
+>>>>>>> Stashed changes
       return {
         ...state,
         fetching_obligatory_user_fields: false,
@@ -266,7 +272,10 @@ function reducer(
         errorL1s: null,
       };
     case "OBLIGTORY_EO_FIELDS_RESP":
+<<<<<<< Updated upstream
       console.log("EO FILED RESPONSE ", action.payload.data.eoObligatoryFields);
+=======
+>>>>>>> Stashed changes
       return {
         ...state,
         fetching_obligatory_eo_fields: false,

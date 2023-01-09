@@ -7,6 +7,10 @@ import {
   prepareMutation,
   graphqlWithVariables,
   fetchMutation,
+<<<<<<< Updated upstream
+=======
+  useGraphqlQuery,
+>>>>>>> Stashed changes
 } from "@openimis/fe-core";
 import { mapUserValuesToInput } from "./utils";
 
@@ -255,6 +259,7 @@ export function fetchRegionDistricts(parent) {
   return graphql(payload, `LOCATION_REGION_DISTRICTS`);
 }
 
+<<<<<<< Updated upstream
 export function fetchDataFromDistrict(districtUuids) {
   const filters = [];
   if (districtUuids) {
@@ -268,11 +273,19 @@ export function fetchDataFromDistrict(districtUuids) {
 
 export function fetchObligatoryUserFields() {
   const payload = "query userObligatoryFields {userObligatoryFields}";
+=======
+export function fetchObligatoryUserFields() {
+  let payload = "query userObligatoryFields {userObligatoryFields}";
+>>>>>>> Stashed changes
   return graphql(payload, `OBLIGTORY_USER_FIELDS`);
 }
 
 export function fetchObligatoryEnrolmentOfficerFields() {
+<<<<<<< Updated upstream
   const payload = "query userObligatoryFields {eoObligatoryFields}";
+=======
+  let payload = "query userObligatoryFields {eoObligatoryFields}";
+>>>>>>> Stashed changes
   return graphql(payload, `OBLIGTORY_EO_FIELDS`);
 }
 

@@ -24,6 +24,10 @@ import {
   createUser,
   fetchUserMutation,
   fetchRegionDistricts,
+<<<<<<< Updated upstream
+=======
+  clearRegionDistricts,
+>>>>>>> Stashed changes
   fetchObligatoryUserFields,
   fetchObligatoryEnrolmentOfficerFields,
 } from "../actions";
@@ -66,24 +70,20 @@ class UserForm extends Component {
     if (prevProps.region_districts != this.props.region_districts) {
       if (!!this.props.region_districts) {
         const combined = [
-            ...(!!this.state.user.districts? this.state.user.districts : []) ,
-            ...this.props.region_districts
-        ]
-        const no_duplicates = [
-            ...new Map(
-              combined.map(x => [x.uuid, x])
-            ).values()
-        ]
-        this.state.user.districts = no_duplicates
-        this.state.user.region = []
+          ...(!!this.state.user.districts ? this.state.user.districts : []),
+          ...this.props.region_districts,
+        ];
+        const no_duplicates = [...new Map(combined.map((x) => [x.uuid, x])).values()];
+        this.state.user.districts = no_duplicates;
+        this.state.user.region = [];
         this.setState((state, props) => ({
           user: {
-            ...state.user
+            ...state.user,
           },
         }));
       }
     }
-    
+
     if (!prevProps.fetchedUser && this.props.fetchedUser) {
       this.setState(setupState(this.props));
     } else if (prevProps.userId && !this.props.userId) {
@@ -142,11 +142,17 @@ class UserForm extends Component {
     if (user.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && !user.officerVillages) return false;
 
     if (
-      (this.props.obligatory_user_fields?.email == 'M' || (user.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && this.props.obligatory_eo_fields?.email == 'M'))
-      && !user.email) return false;
+      (this.props.obligatory_user_fields?.email == "M" ||
+        (user.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && this.props.obligatory_eo_fields?.email == "M")) &&
+      !user.email
+    )
+      return false;
     if (
-      (this.props.obligatory_user_fields?.phone == 'M' || (user.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && this.props.obligatory_eo_fields?.phone == 'M'))
-      && !user.phoneNumber) return false;
+      (this.props.obligatory_user_fields?.phone == "M" ||
+        (user.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && this.props.obligatory_eo_fields?.phone == "M")) &&
+      !user.phoneNumber
+    )
+      return false;
 
     return true;
   };
@@ -241,9 +247,8 @@ const mapStateToProps = (state) => ({
   region_districts: state.admin.reg_dst,
   confirmed: state.core.confirmed,
   obligatory_user_fields: state.admin.obligatory_user_fields,
-  obligatory_eo_fields: state.admin.obligatory_eo_fields
+  obligatory_eo_fields: state.admin.obligatory_eo_fields,
 });
-
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
