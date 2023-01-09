@@ -32,6 +32,9 @@ const UserRolesPicker = ({
     { str: searchString },
   );
 
+  const roles = data?.role?.edges.map((edge) => edge.node) ?? [];
+  const uniqueValues = [...new Map(value?.map((role) => [role.isSystem, role])).values()];
+
   return (
     <Autocomplete
       multiple={multiple}
@@ -42,9 +45,9 @@ const UserRolesPicker = ({
       withLabel={withLabel}
       withPlaceholder={withPlaceholder}
       readOnly={readOnly}
-      options={data?.role?.edges.map((edge) => edge.node) ?? []}
+      options={roles}
       isLoading={isLoading}
-      value={value}
+      value={uniqueValues}
       getOptionLabel={(o) => o?.name}
       onChange={(option) => onChange(option, option?.name)}
       filterOptions={filterOptions}

@@ -193,7 +193,7 @@ export function fetchUser(mm, userId, clientMutationId) {
               languageId
               lastName
               otherNames
-              roles { id name }
+              roles { id name isSystem}
               healthFacility ${mm.getProjection("location.HealthFacilityPicker.projection")}
               validityFrom
               validityTo

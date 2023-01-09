@@ -65,7 +65,7 @@ const ClaimAdministratorFormPanel = (props) => {
       <Grid item xs={12} className={classes.title}>
         <Grid container justifyContent="space-between" alignItems="center">
           <Typography variant="h6">{formatMessage("title")}</Typography>
-          {(!edited.id || !isEnabled) && (
+          {(edited || !isEnabled) && (
             <Switch
               color="secondary"
               disabled={readOnly}
