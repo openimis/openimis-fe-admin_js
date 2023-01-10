@@ -33,7 +33,7 @@ const UserRolesPicker = ({
   );
 
   const roles = data?.role?.edges.map((edge) => edge.node) ?? [];
-  const uniqueValues = [...new Map(value?.map((role) => [role.isSystem, role])).values()];
+  const uniqueValues = [...new Map(value?.map((role) => [role.id, role])).values()];
 
   return (
     <Autocomplete
