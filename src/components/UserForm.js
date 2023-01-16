@@ -131,6 +131,7 @@ class UserForm extends Component {
         user.lastName &&
         user.otherNames &&
         user.username &&
+        user.isValid &&
         user.roles?.length &&
         user.districts?.length > 0 &&
         user.language

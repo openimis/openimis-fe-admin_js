@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import { Grid, Divider, Typography } from "@material-ui/core";
 import { withModulesManager, useTranslations, TextInput, PublishedComponent, combine } from "@openimis/fe-core";
 import { CLAIM_ADMIN_USER_TYPE, ENROLMENT_OFFICER_USER_TYPE } from "../constants";
+import UniqueUsernameInput from "./pickers/UniqueUsernameInput";
 
 const styles = (theme) => ({
   tableTitle: theme.table.title,
@@ -21,17 +22,33 @@ const UserMasterPanel = (props) => {
   const { classes, edited, readOnly, onEditedChanged, modulesManager, obligatoryUserFields, obligatoryEOFields } =
     props;
   const { formatMessage } = useTranslations("admin", modulesManager);
+  const {usernameMaxLength} = props.modulesManager.getConf("fe-admin", "userForm.usernameMaxLength", 8);
+  var {isValid} = false;
+  var {username} = "";
+
+  var changeMultipleData = (dataUpdate) =>{
+    username = dataUpdate["username"];
+    onEditedChanged({ ...edited, username});
+    isValid = dataUpdate["isValid"];
+  }
+
+  // useEffect(() => {
+  //   onEditedChanged({ ...edited, username});
+  // }, [username]);
 
   return (
     <Grid container direction="row">
       <Grid item xs={4} className={classes.item}>
-        <TextInput
+        <UniqueUsernameInput
           module="admin"
           required
           label="user.username"
           readOnly={Boolean(edited.id) || readOnly}
           value={edited?.username ?? ""}
-          onChange={(username) => onEditedChanged({ ...edited, username })}
+          onChange={(dataUpdate) => changeMultipleData(dataUpdate)}
+          inputProps={{
+            "maxLength": usernameMaxLength,
+          }}
         />
       </Grid>
       <Grid item xs={4} className={classes.item}>
