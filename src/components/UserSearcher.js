@@ -34,7 +34,7 @@ const getSorts = () => [
   ["username", true],
   ["iUser_LastName", true],
   ["iUser_OtherNames", true],
-  ["iUser_email", true],
+  ["iUser_Email", true],
   ["iUser_Phone", true],
   ["officer__dob", false],
 ];
