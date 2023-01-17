@@ -286,3 +286,21 @@ export function clearDistrictData() {
     dispatch({ type: `LOCATION_DISTRICT_DATA_CLEAR` });
   };
 }
+
+export function usernameValidationCheck(mm, variables) {
+  return graphqlWithVariables(
+    `
+    query ($username: String!) {
+      isValid: validateUsername(username: $username)
+    }
+    `,
+    variables,
+    `USERNAME_VALIDATION_FIELDS`,
+  );
+}
+
+export function usernameValidationClear() {
+  return (dispatch) => {
+    dispatch({ type: `USERNAME_VALIDATION_FIELDS_CLEAR` });
+  };
+}

@@ -4,6 +4,7 @@ import { Grid, Divider, Typography } from "@material-ui/core";
 import { withModulesManager, useTranslations, TextInput, PublishedComponent, combine } from "@openimis/fe-core";
 import { CLAIM_ADMIN_USER_TYPE, ENROLMENT_OFFICER_USER_TYPE } from "../constants";
 import UniqueUsernameInput from "./pickers/UniqueUsernameInput";
+import { usernameValidationCheck, usernameValidationClear } from "../actions";
 
 const styles = (theme) => ({
   tableTitle: theme.table.title,
@@ -23,19 +24,20 @@ const UserMasterPanel = (props) => {
     props;
   const { formatMessage } = useTranslations("admin", modulesManager);
   const {usernameMaxLength} = props.modulesManager.getConf("fe-admin", "userForm.usernameMaxLength", 8);
-  var {isValid} = false;
-  var {username} = "";
+  // var {isValid} = false;
+  // var {username} = "";
 
-  var changeMultipleData = (dataUpdate) =>{
-    username = dataUpdate["username"];
-    onEditedChanged({ ...edited, username});
-    isValid = dataUpdate["isValid"];
-  }
+  // var changeMultipleData = (dataUpdate) =>{
+  //   username = dataUpdate["username"];
+  //   onEditedChanged({ ...edited, username});
+  //   isValid = dataUpdate["isValid"];
+  // }
 
   // useEffect(() => {
   //   onEditedChanged({ ...edited, username});
   // }, [username]);
 
+  // onChange={(dataUpdate) => changeMultipleData(dataUpdate)}
   return (
     <Grid container direction="row">
       <Grid item xs={4} className={classes.item}>
@@ -45,7 +47,9 @@ const UserMasterPanel = (props) => {
           label="user.username"
           readOnly={Boolean(edited.id) || readOnly}
           value={edited?.username ?? ""}
-          onChange={(dataUpdate) => changeMultipleData(dataUpdate)}
+          action={usernameValidationCheck}
+          clearAction={usernameValidationClear}
+          onChange={(username) => onEditedChanged({ ...edited, username})}
           inputProps={{
             "maxLength": usernameMaxLength,
           }}

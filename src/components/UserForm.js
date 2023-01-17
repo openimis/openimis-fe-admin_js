@@ -131,7 +131,7 @@ class UserForm extends Component {
         user.lastName &&
         user.otherNames &&
         user.username &&
-        user.isValid &&
+        this.props.isValid &&
         user.roles?.length &&
         user.districts?.length > 0 &&
         user.language
@@ -242,7 +242,8 @@ const mapStateToProps = (state) => ({
   region_districts: state.admin.reg_dst,
   confirmed: state.core.confirmed,
   obligatory_user_fields: state.admin.obligatory_user_fields,
-  obligatory_eo_fields: state.admin.obligatory_eo_fields
+  obligatory_eo_fields: state.admin.obligatory_eo_fields,
+  isValid: state.admin.validationFields?.username?.isValid
 });
 
 

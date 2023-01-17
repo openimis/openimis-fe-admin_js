@@ -280,6 +280,54 @@ function reducer(
         fetching_obligatory_eo_fields: false,
         errorL1s: formatServerError(action.payload),
       };
+    case "USERNAME_VALIDATION_FIELDS_REQ":
+      console.log("A");
+      return {
+        ...state,
+        validationFields: {
+          username: {
+            isValidating: true,
+            isValid: false,
+            validationError: null,
+          },
+        },
+      };
+    case "USERNAME_VALIDATION_FIELDS_RESP":
+      console.log("B");
+      return {
+        ...state,
+        validationFields: {
+          username: {
+            isValidating: false,
+            isValid: action.payload?.data.isValid,
+            validationError: formatGraphQLError(action.payload),
+          },
+        },
+      };
+    case "USERNAME_VALIDATION_FIELDS_ERR":
+      console.log("C");
+      return {
+        ...state,
+        validationFields: {
+          username: {
+            isValidating: false,
+            isValid: false,
+            validationError: formatServerError(action.payload),
+          },
+        },
+      };
+    case "USERNAME_VALIDATION_FIELDS_CLEAR":
+      console.log("D");
+      return {
+        ...state,
+        validationFields: {
+          username: {
+            isValidating: true,
+            isValid: false,
+            validationError: null,
+          },
+        },
+      };
     case "ADMIN_USER_MUTATION_REQ":
       return dispatchMutationReq(state, action);
     case "ADMIN_USER_MUTATION_ERR":
