@@ -175,6 +175,14 @@ function reducer(
         fetchedUser: false,
         errorUser: formatServerError(action.payload),
       };
+    case "ADMIN_USER_OVERVIEW_CLEAR":
+      return {
+        ...state,
+        isValidating: false,
+        isValid: false,
+        user: null,
+        validationError: null,
+      };
     case "ADMIN_USER_NEW":
       return {
         ...state,
@@ -281,7 +289,6 @@ function reducer(
         errorL1s: formatServerError(action.payload),
       };
     case "USERNAME_VALIDATION_FIELDS_REQ":
-      console.log("A");
       return {
         ...state,
         validationFields: {
@@ -293,7 +300,6 @@ function reducer(
         },
       };
     case "USERNAME_VALIDATION_FIELDS_RESP":
-      console.log("B");
       return {
         ...state,
         validationFields: {
@@ -305,7 +311,6 @@ function reducer(
         },
       };
     case "USERNAME_VALIDATION_FIELDS_ERR":
-      console.log("C");
       return {
         ...state,
         validationFields: {
@@ -317,7 +322,6 @@ function reducer(
         },
       };
     case "USERNAME_VALIDATION_FIELDS_CLEAR":
-      console.log("D");
       return {
         ...state,
         validationFields: {

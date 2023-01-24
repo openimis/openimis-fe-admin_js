@@ -304,3 +304,9 @@ export function usernameValidationClear() {
     dispatch({ type: `USERNAME_VALIDATION_FIELDS_CLEAR` });
   };
 }
+
+export function clearUser() {
+  return (dispatch) => {
+    dispatch({ type: "ADMIN_USER_OVERVIEW_CLEAR" });
+  };
+}
