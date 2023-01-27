@@ -292,6 +292,7 @@ function reducer(
       return {
         ...state,
         validationFields: {
+          ...state.validationFields,
           username: {
             isValidating: true,
             isValid: false,
@@ -303,6 +304,7 @@ function reducer(
       return {
         ...state,
         validationFields: {
+          ...state.validationFields,
           username: {
             isValidating: false,
             isValid: action.payload?.data.isValid,
@@ -314,6 +316,7 @@ function reducer(
       return {
         ...state,
         validationFields: {
+          ...state.validationFields,
           username: {
             isValidating: false,
             isValid: false,
@@ -325,6 +328,7 @@ function reducer(
       return {
         ...state,
         validationFields: {
+          ...state.validationFields,
           username: {
             isValidating: true,
             isValid: false,
