@@ -1,8 +1,10 @@
 import React from "react";
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import { Grid, Divider, Typography } from "@material-ui/core";
-import { withModulesManager, useTranslations, TextInput, PublishedComponent, combine } from "@openimis/fe-core";
+import { withModulesManager, useTranslations, TextInput, PublishedComponent, ValidatedTextInput } from "@openimis/fe-core";
+import { connect } from "react-redux";
 import { CLAIM_ADMIN_USER_TYPE, ENROLMENT_OFFICER_USER_TYPE } from "../constants";
+import { usernameValidationCheck, usernameValidationClear, clearUser} from "../actions";
 
 const styles = (theme) => ({
   tableTitle: theme.table.title,
@@ -18,20 +20,37 @@ const styles = (theme) => ({
 });
 
 const UserMasterPanel = (props) => {
-  const { classes, edited, readOnly, onEditedChanged, modulesManager, obligatoryUserFields, obligatoryEOFields } =
-    props;
+  const { classes, edited, readOnly, onEditedChanged, modulesManager, obligatoryUserFields, obligatoryEOFields, isUsernameValid,
+          isUsernameValidating, usernameValidationError} = props;
   const { formatMessage } = useTranslations("admin", modulesManager);
+  const {usernameMaxLength} = props.modulesManager.getConf("fe-admin", "userForm.usernameMaxLength", 8);
+
+  const shouldValidate = (inputValue) => {
+    const { savedUsername } = props;
+    const shouldValidate = inputValue !== savedUsername;
+    return shouldValidate;
+  };
 
   return (
     <Grid container direction="row">
       <Grid item xs={4} className={classes.item}>
-        <TextInput
+        <ValidatedTextInput
+          itemQueryIdentifier="username"
+          shouldValidate={shouldValidate}
+          isValid={isUsernameValid}
+          isValidating={isUsernameValidating}
+          validationError={usernameValidationError}
+          action={usernameValidationCheck}
+          clearAction={usernameValidationClear}
           module="admin"
-          required
           label="user.username"
-          readOnly={Boolean(edited.id) || readOnly}
+          codeTakenLabel="user.usernameAlreadyTaken"
+          required={true}
           value={edited?.username ?? ""}
-          onChange={(username) => onEditedChanged({ ...edited, username })}
+          onChange={(username) => onEditedChanged({ ...edited, username})}
+          inputProps={{
+            "maxLength": usernameMaxLength,
+          }}
         />
       </Grid>
       <Grid item xs={4} className={classes.item}>
@@ -185,6 +204,11 @@ const UserMasterPanel = (props) => {
   );
 };
 
-const enhance = combine(withModulesManager, withTheme, withStyles(styles));
+const mapStateToProps = (state) => ({
+  isUsernameValid: state.admin.validationFields?.username?.isValid,
+  isUsernameValidating: state.admin.validationFields?.username.isValidating,
+  usernameValidationError: state.admin.validationFields?.username.validationError,
+  savedUsername: state.admin?.user?.username,
+}); 
 
-export default enhance(UserMasterPanel);
+export default withModulesManager(connect(mapStateToProps)(withTheme(withStyles(styles)(UserMasterPanel))));

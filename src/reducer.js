@@ -175,6 +175,14 @@ function reducer(
         fetchedUser: false,
         errorUser: formatServerError(action.payload),
       };
+    case "ADMIN_USER_OVERVIEW_CLEAR":
+      return {
+        ...state,
+        isValidating: false,
+        isValid: false,
+        user: null,
+        validationError: null,
+      };
     case "ADMIN_USER_NEW":
       return {
         ...state,
@@ -279,6 +287,54 @@ function reducer(
         ...state,
         fetching_obligatory_eo_fields: false,
         errorL1s: formatServerError(action.payload),
+      };
+    case "USERNAME_VALIDATION_FIELDS_REQ":
+      return {
+        ...state,
+        validationFields: {
+          ...state.validationFields,
+          username: {
+            isValidating: true,
+            isValid: false,
+            validationError: null,
+          },
+        },
+      };
+    case "USERNAME_VALIDATION_FIELDS_RESP":
+      return {
+        ...state,
+        validationFields: {
+          ...state.validationFields,
+          username: {
+            isValidating: false,
+            isValid: action.payload?.data.isValid,
+            validationError: formatGraphQLError(action.payload),
+          },
+        },
+      };
+    case "USERNAME_VALIDATION_FIELDS_ERR":
+      return {
+        ...state,
+        validationFields: {
+          ...state.validationFields,
+          username: {
+            isValidating: false,
+            isValid: false,
+            validationError: formatServerError(action.payload),
+          },
+        },
+      };
+    case "USERNAME_VALIDATION_FIELDS_CLEAR":
+      return {
+        ...state,
+        validationFields: {
+          ...state.validationFields,
+          username: {
+            isValidating: true,
+            isValid: false,
+            validationError: null,
+          },
+        },
       };
     case "ADMIN_USER_MUTATION_REQ":
       return dispatchMutationReq(state, action);
