@@ -175,7 +175,7 @@ const UserMasterPanel = (props) => {
           required
           withNull
           nullLabel={formatMessage("UserMasterPanel.language.null")}
-          value=""
+          value={edited?.language}
           onChange={(language) => onEditedChanged({ ...edited, language })}
         />
       </Grid>
