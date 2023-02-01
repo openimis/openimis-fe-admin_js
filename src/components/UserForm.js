@@ -22,6 +22,7 @@ import ClaimAdministratorFormPanel from "./ClaimAdministratorFormPanel";
 import {
   fetchUser,
   createUser,
+  clearUser,
   fetchUserMutation,
   fetchRegionDistricts,
   fetchObligatoryUserFields,
@@ -60,6 +61,10 @@ class UserForm extends Component {
     if (!this.state.obligatory_eo_fields) {
       this.props.fetchObligatoryEnrolmentOfficerFields();
     }
+  }
+
+  componentWillUnmount() {
+    this.props.clearUser();
   }
 
   componentDidUpdate(prevProps) {
@@ -131,6 +136,7 @@ class UserForm extends Component {
         user.lastName &&
         user.otherNames &&
         user.username &&
+        this.props.isValid === true &&
         user.roles?.length &&
         user.districts?.length > 0 &&
         user.language
@@ -241,7 +247,8 @@ const mapStateToProps = (state) => ({
   region_districts: state.admin.reg_dst,
   confirmed: state.core.confirmed,
   obligatory_user_fields: state.admin.obligatory_user_fields,
-  obligatory_eo_fields: state.admin.obligatory_eo_fields
+  obligatory_eo_fields: state.admin.obligatory_eo_fields,
+  isValid: state.admin.validationFields?.username?.isValid
 });
 
 
@@ -250,6 +257,7 @@ const mapDispatchToProps = (dispatch) =>
     {
       fetchUser,
       createUser,
+      clearUser,
       fetchUserMutation,
       fetchRegionDistricts,
       fetchObligatoryUserFields,
