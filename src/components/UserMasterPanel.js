@@ -4,7 +4,7 @@ import { Grid, Divider, Typography } from "@material-ui/core";
 import { withModulesManager, useTranslations, TextInput, PublishedComponent, ValidatedTextInput } from "@openimis/fe-core";
 import { connect } from "react-redux";
 import { CLAIM_ADMIN_USER_TYPE, ENROLMENT_OFFICER_USER_TYPE } from "../constants";
-import { usernameValidationCheck, usernameValidationClear, clearUser} from "../actions";
+import { usernameValidationCheck, usernameValidationClear, setUsernameValid } from "../actions";
 
 const styles = (theme) => ({
   tableTitle: theme.table.title,
@@ -42,6 +42,7 @@ const UserMasterPanel = (props) => {
           validationError={usernameValidationError}
           action={usernameValidationCheck}
           clearAction={usernameValidationClear}
+          setValidAction={setUsernameValid}
           module="admin"
           label="user.username"
           codeTakenLabel="user.usernameAlreadyTaken"
