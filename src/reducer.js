@@ -288,7 +288,7 @@ function reducer(
         fetching_obligatory_eo_fields: false,
         errorL1s: formatServerError(action.payload),
       };
-    case "USERNAME_VALIDATION_FIELDS_REQ":
+    case "USERNAME_FIELDS_VALIDATION_REQ":
       return {
         ...state,
         validationFields: {
@@ -300,7 +300,7 @@ function reducer(
           },
         },
       };
-    case "USERNAME_VALIDATION_FIELDS_RESP":
+    case "USERNAME_FIELDS_VALIDATION_RESP":
       return {
         ...state,
         validationFields: {
@@ -312,7 +312,7 @@ function reducer(
           },
         },
       };
-    case "USERNAME_VALIDATION_FIELDS_ERR":
+    case "USERNAME_FIELDS_VALIDATION_ERR":
       return {
         ...state,
         validationFields: {
@@ -324,7 +324,7 @@ function reducer(
           },
         },
       };
-    case "USERNAME_VALIDATION_FIELDS_CLEAR":
+    case "USERNAME_FIELDS_VALIDATION_CLEAR":
       return {
         ...state,
         validationFields: {
@@ -332,6 +332,18 @@ function reducer(
           username: {
             isValidating: true,
             isValid: false,
+            validationError: null,
+          },
+        },
+      };
+    case "USERNAME_FIELDS_VALIDATION_SET_VALID":
+      return {
+        ...state,
+        validationFields: {
+          ...state.validationFields,
+          username: {
+            isValidating: false,
+            isValid: true,
             validationError: null,
           },
         },

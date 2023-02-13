@@ -295,13 +295,19 @@ export function usernameValidationCheck(mm, variables) {
     }
     `,
     variables,
-    `USERNAME_VALIDATION_FIELDS`,
+    `USERNAME_FIELDS_VALIDATION`,
   );
 }
 
 export function usernameValidationClear() {
   return (dispatch) => {
-    dispatch({ type: `USERNAME_VALIDATION_FIELDS_CLEAR` });
+    dispatch({ type: `USERNAME_FIELDS_VALIDATION_CLEAR` });
+  };
+}
+
+export function setUsernameValid() {
+  return (dispatch) => {
+    dispatch({ type: "USERNAME_FIELDS_VALIDATION_SET_VALID" });
   };
 }
 
