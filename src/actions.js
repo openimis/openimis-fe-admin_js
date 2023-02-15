@@ -316,3 +316,27 @@ export function clearUser() {
     dispatch({ type: "ADMIN_USER_OVERVIEW_CLEAR" });
   };
 }
+
+export function userEmailValidationCheck(mm, variables) {
+  return graphqlWithVariables(
+    `
+    query ($userEmail: String!) {
+      isValid: validateUserEmail(userEmail: $userEmail)
+    }
+    `,
+    variables,
+    `USER_EMAIL_FIELDS_VALIDATION`,
+  );
+}
+
+export function userEmailValidationClear() {
+  return (dispatch) => {
+    dispatch({ type: `USER_EMAIL_FIELDS_VALIDATION_CLEAR` });
+  };
+}
+
+export function setUserEmailValid() {
+  return (dispatch) => {
+    dispatch({ type: "USER_EMAIL_FIELDS_VALIDATION_SET_VALID" });
+  };
+}
