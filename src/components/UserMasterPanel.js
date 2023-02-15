@@ -1,10 +1,25 @@
 import React from "react";
+import { connect } from "react-redux";
+
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import { Grid, Divider, Typography } from "@material-ui/core";
-import { withModulesManager, useTranslations, TextInput, PublishedComponent, ValidatedTextInput } from "@openimis/fe-core";
-import { connect } from "react-redux";
+
+import {
+  withModulesManager,
+  useTranslations,
+  TextInput,
+  PublishedComponent,
+  ValidatedTextInput,
+} from "@openimis/fe-core";
 import { CLAIM_ADMIN_USER_TYPE, ENROLMENT_OFFICER_USER_TYPE } from "../constants";
-import { usernameValidationCheck, usernameValidationClear, setUsernameValid } from "../actions";
+import {
+  usernameValidationCheck,
+  usernameValidationClear,
+  setUsernameValid,
+  userEmailValidationCheck,
+  userEmailValidationClear,
+  setUserEmailValid,
+} from "../actions";
 
 const styles = (theme) => ({
   tableTitle: theme.table.title,
@@ -20,15 +35,34 @@ const styles = (theme) => ({
 });
 
 const UserMasterPanel = (props) => {
-  const { classes, edited, readOnly, onEditedChanged, modulesManager, obligatoryUserFields, obligatoryEOFields, isUsernameValid,
-          isUsernameValidating, usernameValidationError} = props;
+  const {
+    classes,
+    edited,
+    readOnly,
+    onEditedChanged,
+    modulesManager,
+    obligatoryUserFields,
+    obligatoryEOFields,
+    isUsernameValid,
+    isUsernameValidating,
+    usernameValidationError,
+    isUserEmailValid,
+    isUserEmailValidating,
+    emailValidationError,
+    savedUsername,
+    savedUserEmail,
+  } = props;
   const { formatMessage } = useTranslations("admin", modulesManager);
-  const {usernameMaxLength} = props.modulesManager.getConf("fe-admin", "userForm.usernameMaxLength", 8);
+  const { usernameMaxLength } = modulesManager.getConf("fe-admin", "userForm.usernameMaxLength", 8);
 
-  const shouldValidate = (inputValue) => {
-    const { savedUsername } = props;
-    const shouldValidate = inputValue !== savedUsername;
-    return shouldValidate;
+  const shouldValidateUsername = (inputValue) => {
+    const shouldBeValidated = inputValue !== savedUsername;
+    return shouldBeValidated;
+  };
+
+  const shouldValidateEmail = (inputValue) => {
+    const shouldBeValidated = inputValue !== savedUserEmail;
+    return shouldBeValidated;
   };
 
   return (
@@ -36,7 +70,7 @@ const UserMasterPanel = (props) => {
       <Grid item xs={4} className={classes.item}>
         <ValidatedTextInput
           itemQueryIdentifier="username"
-          shouldValidate={shouldValidate}
+          shouldValidate={shouldValidateUsername}
           isValid={isUsernameValid}
           isValidating={isUsernameValidating}
           validationError={usernameValidationError}
@@ -48,7 +82,8 @@ const UserMasterPanel = (props) => {
           codeTakenLabel="user.usernameAlreadyTaken"
           required={true}
           value={edited?.username ?? ""}
-          onChange={(username) => onEditedChanged({ ...edited, username})}
+          readOnly={readOnly}
+          onChange={(username) => onEditedChanged({ ...edited, username })}
           inputProps={{
             "maxLength": usernameMaxLength,
           }}
@@ -79,15 +114,24 @@ const UserMasterPanel = (props) => {
         (edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && obligatoryEOFields?.email == "H")
       ) && (
         <Grid item xs={4} className={classes.item}>
-          <TextInput
-            module="admin"
-            type="email"
-            label="user.email"
-            required={
-              obligatoryUserFields?.email == "M" ||
-              (edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && obligatoryEOFields?.email == "M")
-            }
+          <ValidatedTextInput
+            itemQueryIdentifier="userEmail"
+            shouldValidate={shouldValidateEmail}
+            isValid={isUserEmailValid}
+            isValidating={isUserEmailValidating}
+            validationError={emailValidationError}
+            action={userEmailValidationCheck}
+            clearAction={userEmailValidationClear}
+            setValidAction={setUserEmailValid}
             readOnly={readOnly}
+            module="admin"
+            label="user.email"
+            type="email"
+            codeTakenLabel="user.emailAlreadyTaken"
+            required={
+              obligatoryUserFields?.email === "M" ||
+              (edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && obligatoryEOFields?.email === "M")
+            }
             value={edited?.email ?? ""}
             onChange={(email) => onEditedChanged({ ...edited, email })}
           />
@@ -207,9 +251,13 @@ const UserMasterPanel = (props) => {
 
 const mapStateToProps = (state) => ({
   isUsernameValid: state.admin.validationFields?.username?.isValid,
-  isUsernameValidating: state.admin.validationFields?.username.isValidating,
-  usernameValidationError: state.admin.validationFields?.username.validationError,
+  isUsernameValidating: state.admin.validationFields?.username?.isValidating,
+  usernameValidationError: state.admin.validationFields?.username?.validationError,
   savedUsername: state.admin?.user?.username,
-}); 
+  isUserEmailValid: state.admin.validationFields?.userEmail?.isValid,
+  isUserEmailValidating: state.admin.validationFields?.userEmail?.isValidating,
+  emailValidationError: state.admin.validationFields?.userEmail?.validationError,
+  savedUserEmail: state.admin?.user?.email,
+});
 
 export default withModulesManager(connect(mapStateToProps)(withTheme(withStyles(styles)(UserMasterPanel))));
