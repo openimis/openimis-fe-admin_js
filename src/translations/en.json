@@ -21,6 +21,8 @@
   "admin.user.address": "Address",
   "admin.user.addNewUser.tooltip": "Add new user",
   "admin.user.addNewUserTooltip": "Add new user",
+  "admin.user.usernameAlreadyTaken": "Username already in use",
+  "admin.user.emailAlreadyTaken": "User email already in use",
   "admin.user.createUser.mutationLabel": "Create user",
   "admin.user.deleteDialog.message": "Are you sure you want to delete this user?",
   "admin.user.deleteDialog.title": "Delete user",

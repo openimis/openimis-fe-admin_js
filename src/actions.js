@@ -197,7 +197,7 @@ export function fetchUser(mm, userId, clientMutationId) {
               languageId
               lastName
               otherNames
-              roles { id name }
+              roles { id name isSystem}
               healthFacility ${mm.getProjection("location.HealthFacilityPicker.projection")}
               validityFrom
               validityTo
@@ -297,5 +297,59 @@ export function clearRegionDistricts() {
 export function clearDistrictData() {
   return (dispatch) => {
     dispatch({ type: `LOCATION_DISTRICT_DATA_CLEAR` });
+  };
+}
+
+export function usernameValidationCheck(mm, variables) {
+  return graphqlWithVariables(
+    `
+    query ($username: String!) {
+      isValid: validateUsername(username: $username)
+    }
+    `,
+    variables,
+    `USERNAME_FIELDS_VALIDATION`,
+  );
+}
+
+export function usernameValidationClear() {
+  return (dispatch) => {
+    dispatch({ type: `USERNAME_FIELDS_VALIDATION_CLEAR` });
+  };
+}
+
+export function setUsernameValid() {
+  return (dispatch) => {
+    dispatch({ type: "USERNAME_FIELDS_VALIDATION_SET_VALID" });
+  };
+}
+
+export function clearUser() {
+  return (dispatch) => {
+    dispatch({ type: "ADMIN_USER_OVERVIEW_CLEAR" });
+  };
+}
+
+export function userEmailValidationCheck(mm, variables) {
+  return graphqlWithVariables(
+    `
+    query ($userEmail: String!) {
+      isValid: validateUserEmail(userEmail: $userEmail)
+    }
+    `,
+    variables,
+    `USER_EMAIL_FIELDS_VALIDATION`,
+  );
+}
+
+export function userEmailValidationClear() {
+  return (dispatch) => {
+    dispatch({ type: `USER_EMAIL_FIELDS_VALIDATION_CLEAR` });
+  };
+}
+
+export function setUserEmailValid() {
+  return (dispatch) => {
+    dispatch({ type: "USER_EMAIL_FIELDS_VALIDATION_SET_VALID" });
   };
 }

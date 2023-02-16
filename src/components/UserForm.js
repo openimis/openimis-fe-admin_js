@@ -1,9 +1,11 @@
 import React, { Component } from "react";
-import { injectIntl } from "react-intl";
-import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import { injectIntl } from "react-intl";
+
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import ReplayIcon from "@material-ui/icons/Replay";
+
 import {
   Helmet,
   formatMessageWithValues,
@@ -22,12 +24,10 @@ import ClaimAdministratorFormPanel from "./ClaimAdministratorFormPanel";
 import {
   fetchUser,
   createUser,
+  clearUser,
   fetchUserMutation,
   fetchRegionDistricts,
-<<<<<<< Updated upstream
-=======
   clearRegionDistricts,
->>>>>>> Stashed changes
   fetchObligatoryUserFields,
   fetchObligatoryEnrolmentOfficerFields,
 } from "../actions";
@@ -64,6 +64,10 @@ class UserForm extends Component {
     if (!this.state.obligatory_eo_fields) {
       this.props.fetchObligatoryEnrolmentOfficerFields();
     }
+  }
+
+  componentWillUnmount() {
+    this.props.clearUser();
   }
 
   componentDidUpdate(prevProps) {
@@ -131,6 +135,8 @@ class UserForm extends Component {
         user.lastName &&
         user.otherNames &&
         user.username &&
+        this.props.isUserNameValid === true &&
+        this.props.isUserEmailValid === true &&
         user.roles?.length &&
         user.districts?.length > 0 &&
         user.language
@@ -188,8 +194,8 @@ class UserForm extends Component {
       add,
       save,
       back,
-      obligatory_user_fields,
-      obligatory_eo_fields
+      obligatoryUserFields,
+      obligatoryEoFields,
     } = this.props;
     const { user } = this.state;
 
@@ -227,8 +233,8 @@ class UserForm extends Component {
             canSave={this.canSave}
             save={save ? this.save : null}
             onActionToConfirm={this.onActionToConfirm}
-            obligatory_user_fields={obligatory_user_fields}
-            obligatory_eo_fields={obligatory_eo_fields}
+            obligatory_user_fields={obligatoryUserFields}
+            obligatory_eo_fields={obligatoryEoFields}
           />
         )}
       </div>
@@ -246,8 +252,10 @@ const mapStateToProps = (state) => ({
   user: state.admin.user,
   region_districts: state.admin.reg_dst,
   confirmed: state.core.confirmed,
-  obligatory_user_fields: state.admin.obligatory_user_fields,
-  obligatory_eo_fields: state.admin.obligatory_eo_fields,
+  obligatoryUserFields: state.admin.obligatory_user_fields,
+  obligatoryEoFields: state.admin.obligatory_eo_fields,
+  isUserNameValid: state.admin.validationFields?.username?.isValid,
+  isUserEmailValid: state.admin.validationFields?.userEmail?.isValid,
 });
 
 const mapDispatchToProps = (dispatch) =>
@@ -255,6 +263,7 @@ const mapDispatchToProps = (dispatch) =>
     {
       fetchUser,
       createUser,
+      clearUser,
       fetchUserMutation,
       fetchRegionDistricts,
       fetchObligatoryUserFields,

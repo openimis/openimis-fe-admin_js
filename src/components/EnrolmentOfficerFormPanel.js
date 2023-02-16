@@ -68,7 +68,6 @@ const EnrolmentOfficerFormPanel = (props) => {
     { system_id: OFFICER_ROLE_IS_SYSTEM },
   );
   const isValid = !isLoading;
-
   useEffect(() => {
     toggleUserRoles(
       edited, 
@@ -96,7 +95,7 @@ const EnrolmentOfficerFormPanel = (props) => {
       <Grid item xs={12} className={classes.title}>
         <Grid container justifyContent="space-between" alignItems="center">
           <Typography variant="h6">{formatMessage("title")}</Typography>
-          {(!edited.id || !isEnabled) && (
+          {(edited || !isEnabled) && (
             <Switch
               color="secondary"
               disabled={readOnly}
