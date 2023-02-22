@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 
 import { withTheme, withStyles } from "@material-ui/core/styles";
@@ -62,6 +62,9 @@ const UserMasterPanel = (props) => {
 
   const shouldValidateEmail = (inputValue) => {
     const shouldBeValidated = inputValue !== savedUserEmail;
+    if (!inputValue) {
+      return false;
+    }
     return shouldBeValidated;
   };
 
