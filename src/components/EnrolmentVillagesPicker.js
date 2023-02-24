@@ -33,14 +33,14 @@ const styles = (theme) => ({
 const groupVillagesByMunicipality = (villages) => {
   const result = [];
   villages?.forEach((village) => {
-    if (!result.find((x) => x.parent?.id === village.parent.id)) {
+    if (!result.find((x) => x.parent?.id === village.parent?.id)) {
       result.push({ parent: village.parent, entities: [] });
     }
 
-    result.find((x) => x.parent?.id === village.parent.id).entities.push(village);
+    result.find((x) => x.parent?.id === village.parent?.id).entities.push(village);
   });
 
-  result.sort((a, b) => (a.parent ? a.parent.id > b.parent?.id : -1));
+  result.sort((a, b) => (a.parent ? a.parent?.id > b.parent?.id : -1));
   return result;
 };
 
@@ -52,6 +52,8 @@ const EnrolmentVillagesPicker = (props) => {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.admin.districtMunAndVil);
   const fetchedDistrictDataFlag = useSelector((state) => state.admin.fetchedDistrictMunAndVil);
+  const savedEOVillages = useSelector((store) => store.admin.user?.officerVillages);
+  const isUserEdited = useSelector((store) => store.admin.user?.id);
 
   const handleChange = (newItems) => {
     const villageIds = newItems.reduce((acc, item) => (item.entities ? acc.concat(item.entities) : acc), []);
@@ -87,10 +89,17 @@ const EnrolmentVillagesPicker = (props) => {
       children: { edges },
     } = parent;
     const entities = edges?.map((edge) => edge.node) ?? [];
+    const savedEntities = entities.filter((entity) =>
+      savedEOVillages?.some((village) => entity.uuid === village?.uuid),
+    );
     const createdRow = {};
 
     createdRow.parent = parent;
-    createdRow.entities = entities;
+    if (savedEOVillages && isUserEdited) {
+      createdRow.entities = savedEntities;
+    } else {
+      createdRow.entities = entities;
+    }
     return createdRow;
   };
 
