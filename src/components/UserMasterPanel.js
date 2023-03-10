@@ -194,6 +194,7 @@ const UserMasterPanel = (props) => {
           multiple
           withLabel
           label={formatMessage("user.regions")}
+          restrictedOptions
         />
       </Grid>
       <Grid item xs={4} className={classes.item}>
@@ -207,6 +208,7 @@ const UserMasterPanel = (props) => {
           multiple
           withLabel
           label={formatMessage("user.districts")}
+          restrictedOptions
         />
       </Grid>
 

@@ -268,11 +268,15 @@ export function fetchDataFromDistrict(districtUuids) {
 
 export function fetchObligatoryUserFields() {
   const payload = "query userObligatoryFields {userObligatoryFields}";
+  return graphql(payload, `OBLIGTORY_EO_FIELDS`);
+}
+export function fetchObligatoryUserFields() {
+  let payload = "query userObligatoryFields {userObligatoryFields}";
   return graphql(payload, `OBLIGTORY_USER_FIELDS`);
 }
 
 export function fetchObligatoryEnrolmentOfficerFields() {
-  const payload = "query userObligatoryFields {eoObligatoryFields}";
+  let payload = "query userObligatoryFields {eoObligatoryFields}";
   return graphql(payload, `OBLIGTORY_EO_FIELDS`);
 }
 

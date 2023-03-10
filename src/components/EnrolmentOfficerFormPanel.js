@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Grid, Typography, Paper, Switch } from "@material-ui/core";
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import {
@@ -9,8 +9,10 @@ import {
   TextInput,
   useGraphqlQuery,
 } from "@openimis/fe-core";
+
 import { ENROLMENT_OFFICER_USER_TYPE, OFFICER_ROLE_IS_SYSTEM } from "../constants";
 import { toggleUserRoles, toggleSwitchButton } from "../utils";
+
 import EnrolmentVillagesPicker from "./EnrolmentVillagesPicker";
 
 const styles = (theme) => ({
@@ -22,17 +24,16 @@ const styles = (theme) => ({
 const EnrolmentOfficerFormPanel = (props) => {
   const { edited, classes, modulesManager, onEditedChanged, readOnly } = props;
   const { formatMessage } = useTranslations("admin.EnrolmentOfficerFormPanel", modulesManager);
-  const hasOfficerUserType = edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE);
-  const hasOfficerRole = edited.roles
-    ? edited.roles.filter((x) => x.isSystem === OFFICER_ROLE_IS_SYSTEM).length !== 0
-    : false;
-  const [isEnabled, setIsEnabled] = useState(false);
-  const {
-    isLoading,
-    data,
-    error: graphqlError,
-  } = useGraphqlQuery(
-    `
+
+  const isEnabled = edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE);
+  const has_role = !!edited.roles ? edited.roles.filter((x) => x.isSystem == 1).length != 0 : false;
+  if (isEnabled) {
+    const {
+      isLoading,
+      data,
+      error: graphqlError,
+    } = useGraphqlQuery(
+      `
       query UserRolesPicker ($system_id: Int) {
         role(systemRoleId: $system_id) {
           edges {

@@ -27,6 +27,7 @@ import {
   clearUser,
   fetchUserMutation,
   fetchRegionDistricts,
+  clearRegionDistricts,
   fetchObligatoryUserFields,
   fetchObligatoryEnrolmentOfficerFields,
 } from "../actions";
