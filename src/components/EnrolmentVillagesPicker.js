@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { withModulesManager, combine, useTranslations, PublishedComponent } from "@openimis/fe-core";
+import { withModulesManager, combine, useTranslations, PublishedComponent, ProgressOrError } from "@openimis/fe-core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
@@ -46,14 +46,15 @@ const groupVillagesByMunicipality = (villages) => {
 
 const EnrolmentVillagesPicker = (props) => {
   const { modulesManager, readOnly, villages, onChange, classes, districts, isOfficerPanelEnabled } = props;
+  const dispatch = useDispatch();
   const [items, setItems] = useState([]);
   const { formatMessage } = useTranslations("admin.EnrolmentZonesPicker", modulesManager);
   const pickedDistrictsUuids = districts && districts.map((district) => district.uuid);
-  const dispatch = useDispatch();
-  const data = useSelector((state) => state.admin.districtMunAndVil);
-  const fetchedDistrictDataFlag = useSelector((state) => state.admin.fetchedDistrictMunAndVil);
   const savedEOVillages = useSelector((store) => store.admin.user?.officerVillages);
   const isUserEdited = useSelector((store) => store.admin.user?.id);
+  const [wasEmpty, setWasEmpty] = useState(false);
+  const { districtMunAndVil, fetchedDistrictMunAndVil, fetchingDistrictMunAndVil, errorDistrictMunAndVil } =
+    useSelector((store) => store.admin);
 
   const handleChange = (newItems) => {
     const villageIds = newItems.reduce((acc, item) => (item.entities ? acc.concat(item.entities) : acc), []);
@@ -95,7 +96,18 @@ const EnrolmentVillagesPicker = (props) => {
     const createdRow = {};
 
     createdRow.parent = parent;
-    if (savedEOVillages && isUserEdited) {
+
+    if (!isUserEdited) {
+      createdRow.entities = entities;
+      return createdRow;
+    }
+
+    if (isUserEdited && savedEntities && wasEmpty) {
+      createdRow.entities = entities;
+      return createdRow;
+    }
+
+    if (entities.find((entity) => savedEntities.some((savedEntity) => savedEntity.uuid !== entity.uuid))) {
       createdRow.entities = savedEntities;
     } else {
       createdRow.entities = entities;
@@ -129,20 +141,19 @@ const EnrolmentVillagesPicker = (props) => {
 
   useEffect(() => {
     if (districts?.length) {
-      clearItems();
       dispatch(fetchDataFromDistrict(pickedDistrictsUuids));
-    } else {
-      clearItems();
-    }
+    } else setWasEmpty(true);
+
+    return clearItems();
   }, [districts]);
 
   useEffect(() => {
-    if (fetchedDistrictDataFlag) {
-      const createdRows = data.map((mun) => createRow(mun));
+    if (fetchedDistrictMunAndVil) {
+      const createdRows = districtMunAndVil.map((mun) => createRow(mun));
       const uniqueRows = createdRows.filter((row) => !items.some((i) => i.parent.uuid === row.parent.uuid));
       executeNewRows(createdRows, uniqueRows);
     }
-  }, [data]);
+  }, [districtMunAndVil]);
 
   useEffect(() => {
     if (isOfficerPanelEnabled) {
@@ -161,6 +172,7 @@ const EnrolmentVillagesPicker = (props) => {
           </TableRow>
         </TableHead>
         <TableBody>
+          <ProgressOrError progress={fetchingDistrictMunAndVil} error={errorDistrictMunAndVil} />
           {items.map((item) => (
             <TableRow key={item.parent?.id}>
               <TableCell>
