@@ -143,8 +143,8 @@ const EnrolmentOfficerFormPanel = (props) => {
       )}
     </Paper>
   );
-};
-
+  };
+}
 const enhance = combine(withModulesManager, withTheme, withStyles(styles));
 
 export default enhance(EnrolmentOfficerFormPanel);
