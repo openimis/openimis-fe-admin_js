@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+
 import { Grid, Typography, Paper, Switch } from "@material-ui/core";
 import { withTheme, withStyles } from "@material-ui/core/styles";
+
 import {
   useTranslations,
   withModulesManager,
@@ -9,10 +11,8 @@ import {
   TextInput,
   useGraphqlQuery,
 } from "@openimis/fe-core";
-
 import { ENROLMENT_OFFICER_USER_TYPE, OFFICER_ROLE_IS_SYSTEM } from "../constants";
 import { toggleUserRoles, toggleSwitchButton } from "../utils";
-
 import EnrolmentVillagesPicker from "./EnrolmentVillagesPicker";
 
 const styles = (theme) => ({
@@ -24,16 +24,18 @@ const styles = (theme) => ({
 const EnrolmentOfficerFormPanel = (props) => {
   const { edited, classes, modulesManager, onEditedChanged, readOnly } = props;
   const { formatMessage } = useTranslations("admin.EnrolmentOfficerFormPanel", modulesManager);
+  const [isEnabled, setIsEnabled] = useState(false);
+  const hasOfficerUserType = edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE);
+  const hasOfficerRole = edited.roles
+    ? edited.roles.filter((x) => x.isSystem === OFFICER_ROLE_IS_SYSTEM).length !== 0
+    : false;
 
-  const isEnabled = edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE);
-  const has_role = !!edited.roles ? edited.roles.filter((x) => x.isSystem == 1).length != 0 : false;
-  if (isEnabled) {
-    const {
-      isLoading,
-      data,
-      error: graphqlError,
-    } = useGraphqlQuery(
-      `
+  const {
+    isLoading,
+    data,
+    error: graphqlError,
+  } = useGraphqlQuery(
+    `
       query UserRolesPicker ($system_id: Int) {
         role(systemRoleId: $system_id) {
           edges {
@@ -46,15 +48,16 @@ const EnrolmentOfficerFormPanel = (props) => {
     `,
     { system_id: OFFICER_ROLE_IS_SYSTEM },
   );
+
   const isValid = !isLoading;
   useEffect(() => {
     toggleUserRoles(
-      edited, 
-      data, 
-      isValid, 
-      isEnabled, 
-      hasOfficerRole, 
-      onEditedChanged, 
+      edited,
+      data,
+      isValid,
+      isEnabled,
+      hasOfficerRole,
+      onEditedChanged,
       OFFICER_ROLE_IS_SYSTEM);
   }, [isEnabled]);
 
@@ -143,8 +146,8 @@ const EnrolmentOfficerFormPanel = (props) => {
       )}
     </Paper>
   );
-  };
-}
+};
+
 const enhance = combine(withModulesManager, withTheme, withStyles(styles));
 
 export default enhance(EnrolmentOfficerFormPanel);
