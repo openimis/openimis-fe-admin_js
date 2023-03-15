@@ -66,6 +66,31 @@ export function fetchEnrolmentOfficers(mm, variables) {
   );
 }
 
+export function fetchSubstituteEnrolmentOfficers(mm, variables) {
+  return graphqlWithVariables(
+    `
+      query ($searchString: String, $first: Int) {
+        enrolmentOfficers(str: $searchString, first: $first) {
+          edges {
+            node {
+              id
+              code
+              lastName
+              otherNames
+              
+            }
+          }
+          pageInfo {
+            hasNextPage
+          }
+        }
+      }
+    `,
+    variables,
+    "ADMIN_SUBSTITUTE_ENROLMENT_OFFICERS",
+  );
+}
+
 export function createUser(mm, user, clientMutationLabel) {
   const mutation = prepareMutation(
     `

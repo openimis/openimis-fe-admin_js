@@ -20,6 +20,16 @@ function reducer(
       error: null,
     },
 
+    substituteEnrolmentOfficers: {
+      items: [],
+      isFetching: false,
+      pageInfo: {
+        totalCount: 0,
+      },
+      error: null,
+    },
+
+
     usersSummaries: {
       items: [],
       isFetching: false,
@@ -75,6 +85,33 @@ function reducer(
         ...state,
         enrolmentOfficers: {
           ...state.enrolmentOfficers,
+          isFetching: false,
+          error: formatGraphQLError(action.payload),
+        },
+      };
+    case "ADMIN_SUBSTITUTE_ENROLMENT_OFFICERS_REQ":
+      return {
+        ...state,
+        substituteEnrolmentOfficers: {
+          ...state.substituteEnrolmentOfficers,
+          isFetching: true,
+        },
+      };
+    case "ADMIN_SUBSTITUTE_ENROLMENT_OFFICERS_RESP":
+      return {
+        ...state,
+        substituteEnrolmentOfficers: {
+          ...state.substituteEnrolmentOfficers,
+          isFetching: false,
+          pageInfo: pageInfo(action.payload.data.SubstituteEnrolmentOfficers),
+          items: parseData(action.payload.data.SubstituteEnrolmentOfficers),
+        },
+      };
+    case "ADMIN_SUBSTITUTE_ENROLMENT_OFFICERS_ERR":
+      return {
+        ...state,
+        substituteEnrolmentOfficers: {
+          ...state.substituteEnrolmentOfficers,
           isFetching: false,
           error: formatGraphQLError(action.payload),
         },
