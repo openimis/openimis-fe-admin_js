@@ -107,6 +107,7 @@ const EnrolmentOfficerFormPanel = (props) => {
                 readOnly={readOnly}
                 label={formatMessage("substitutionOfficer")}
                 value={edited.substitutionOfficer}
+                villages={edited.officerVillages}
                 onChange={(substitutionOfficer) => onEditedChanged({ ...edited, substitutionOfficer })}
               />
             </Grid>

@@ -103,8 +103,8 @@ function reducer(
         substituteEnrolmentOfficers: {
           ...state.substituteEnrolmentOfficers,
           isFetching: false,
-          pageInfo: pageInfo(action.payload.data.SubstituteEnrolmentOfficers),
-          items: parseData(action.payload.data.SubstituteEnrolmentOfficers),
+          pageInfo: pageInfo(action.payload.data.substitutionEnrolmentOfficers),
+          items: parseData(action.payload.data.substitutionEnrolmentOfficers),
         },
       };
     case "ADMIN_SUBSTITUTE_ENROLMENT_OFFICERS_ERR":

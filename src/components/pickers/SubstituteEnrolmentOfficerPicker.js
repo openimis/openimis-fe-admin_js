@@ -16,6 +16,7 @@ const SubstituteEnrolmentOfficerPicker = (props) => {
     required = false,
     withLabel = true,
     value,
+    villages,
     label,
     filterOptions,
     filterSelectedOptions,
@@ -27,12 +28,14 @@ const SubstituteEnrolmentOfficerPicker = (props) => {
 
   const isLoading = useSelector((state) => state.admin.substituteEnrolmentOfficers.isFetching);
   const options = useSelector((state) => state.admin.substituteEnrolmentOfficers.items);
+  const officerUuid = useSelector((state) => state.admin?.user?.officer?.uuid) ?? null;
 
   useEffect(() => {
     dispatch(
       fetchSubstituteEnrolmentOfficers(modulesManager, {
-        first: searchString ? undefined : 10,
-        searchString,
+        officerUuid: null,
+        villagesUuids: villages?.map((village) => village.uuid),
+        searchString: null,
       }),
     );
   }, [searchString]);

@@ -69,19 +69,16 @@ export function fetchEnrolmentOfficers(mm, variables) {
 export function fetchSubstituteEnrolmentOfficers(mm, variables) {
   return graphqlWithVariables(
     `
-      query ($searchString: String, $first: Int) {
-        enrolmentOfficers(str: $searchString, first: $first) {
+      query SubstitutionEnrolmentOfficers ($searchString: String, $villagesUuids: [String!], $officerUuid: String) {
+        substitutionEnrolmentOfficers(searchString: $searchString, villagesUuids: $villagesUuids, officerUuid: $officerUuid) {
           edges {
             node {
               id
+              uuid
               code
               lastName
               otherNames
-              
             }
-          }
-          pageInfo {
-            hasNextPage
           }
         }
       }
@@ -176,6 +173,7 @@ export function fetchUser(mm, userId, clientMutationId) {
             username
             officer {
               id
+              uuid
               hasLogin
               phone
               dob
