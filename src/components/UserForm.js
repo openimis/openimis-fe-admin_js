@@ -224,6 +224,7 @@ class UserForm extends Component {
             edited={user}
             back={back}
             add={add}
+            openDirty={save}
             readOnly={readOnly || isInMutation || user?.validityTo}
             actions={actions}
             HeadPanel={UserMasterPanel}
