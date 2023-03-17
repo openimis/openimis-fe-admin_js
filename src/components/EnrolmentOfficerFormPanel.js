@@ -102,7 +102,7 @@ const EnrolmentOfficerFormPanel = (props) => {
             </Grid>
             <Grid item xs={4} className={classes.item}>
               <PublishedComponent
-                pubRef="admin.SubstituteEnrolmentOfficerPicker"
+                pubRef="admin.SubstitutionEnrolmentOfficerPicker"
                 module="admin"
                 readOnly={readOnly}
                 label={formatMessage("substitutionOfficer")}

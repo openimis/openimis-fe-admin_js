@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Autocomplete } from "@openimis/fe-core";
-import { fetchSubstituteEnrolmentOfficers } from "../../actions";
+import { fetchSubstitutionEnrolmentOfficers } from "../../actions";
 
 const formatSuggestion = (p) => {
   if (!p) return "?";
   return [p.code, p.lastName, p.otherNames].filter(Boolean).join(" ");
 };
 
-const SubstituteEnrolmentOfficerPicker = (props) => {
+const SubstitutionEnrolmentOfficerPicker = (props) => {
   const {
     onChange,
     modulesManager,
@@ -26,14 +26,14 @@ const SubstituteEnrolmentOfficerPicker = (props) => {
   const dispatch = useDispatch();
   const [searchString, setSearchString] = useState(null);
 
-  const isLoading = useSelector((state) => state.admin.substituteEnrolmentOfficers.isFetching);
-  const options = useSelector((state) => state.admin.substituteEnrolmentOfficers.items);
+  const isLoading = useSelector((state) => state.admin.substitutionEnrolmentOfficers.isFetching);
+  const options = useSelector((state) => state.admin.substitutionEnrolmentOfficers.items);
   const officerUuid = useSelector((state) => state.admin?.user?.officer?.uuid) ?? null;
 
   useEffect(() => {
     dispatch(
-      fetchSubstituteEnrolmentOfficers(modulesManager, {
-        officerUuid: null,
+      fetchSubstitutionEnrolmentOfficers(modulesManager, {
+        officerUuid: officerUuid,
         villagesUuids: villages?.map((village) => village.uuid),
         searchString: null,
       }),
@@ -60,4 +60,4 @@ const SubstituteEnrolmentOfficerPicker = (props) => {
   );
 };
 
-export default SubstituteEnrolmentOfficerPicker;
+export default SubstitutionEnrolmentOfficerPicker;

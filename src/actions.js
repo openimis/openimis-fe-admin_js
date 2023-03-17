@@ -66,7 +66,7 @@ export function fetchEnrolmentOfficers(mm, variables) {
   );
 }
 
-export function fetchSubstituteEnrolmentOfficers(mm, variables) {
+export function fetchSubstitutionEnrolmentOfficers(mm, variables) {
   return graphqlWithVariables(
     `
       query SubstitutionEnrolmentOfficers ($searchString: String, $villagesUuids: [String!], $officerUuid: String) {
@@ -84,7 +84,7 @@ export function fetchSubstituteEnrolmentOfficers(mm, variables) {
       }
     `,
     variables,
-    "ADMIN_SUBSTITUTE_ENROLMENT_OFFICERS",
+    "ADMIN_SUBSTITUTION_ENROLMENT_OFFICERS",
   );
 }
 

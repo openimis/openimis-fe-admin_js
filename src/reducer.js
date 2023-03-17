@@ -20,7 +20,7 @@ function reducer(
       error: null,
     },
 
-    substituteEnrolmentOfficers: {
+    substitutionEnrolmentOfficers: {
       items: [],
       isFetching: false,
       pageInfo: {
@@ -89,29 +89,29 @@ function reducer(
           error: formatGraphQLError(action.payload),
         },
       };
-    case "ADMIN_SUBSTITUTE_ENROLMENT_OFFICERS_REQ":
+    case "ADMIN_SUBSTITUTION_ENROLMENT_OFFICERS_REQ":
       return {
         ...state,
-        substituteEnrolmentOfficers: {
-          ...state.substituteEnrolmentOfficers,
+        substitutionEnrolmentOfficers: {
+          ...state.substitutionEnrolmentOfficers,
           isFetching: true,
         },
       };
-    case "ADMIN_SUBSTITUTE_ENROLMENT_OFFICERS_RESP":
+    case "ADMIN_SUBSTITUTION_ENROLMENT_OFFICERS_RESP":
       return {
         ...state,
-        substituteEnrolmentOfficers: {
-          ...state.substituteEnrolmentOfficers,
+        substitutionEnrolmentOfficers: {
+          ...state.substitutionEnrolmentOfficers,
           isFetching: false,
           pageInfo: pageInfo(action.payload.data.substitutionEnrolmentOfficers),
           items: parseData(action.payload.data.substitutionEnrolmentOfficers),
         },
       };
-    case "ADMIN_SUBSTITUTE_ENROLMENT_OFFICERS_ERR":
+    case "ADMIN_SUBSTITUTION_ENROLMENT_OFFICERS_ERR":
       return {
         ...state,
-        substituteEnrolmentOfficers: {
-          ...state.substituteEnrolmentOfficers,
+        substitutionEnrolmentOfficers: {
+          ...state.substitutionEnrolmentOfficers,
           isFetching: false,
           error: formatGraphQLError(action.payload),
         },
