@@ -51,9 +51,9 @@ const UserMasterPanel = (props) => {
     emailValidationError,
     savedUsername,
     savedUserEmail,
+    usernameLength,
   } = props;
   const { formatMessage } = useTranslations("admin", modulesManager);
-  const { usernameMaxLength } = modulesManager.getConf("fe-admin", "userForm.usernameMaxLength", 8);
 
   const shouldValidateUsername = (inputValue) => {
     const shouldBeValidated = inputValue !== savedUsername;
@@ -88,7 +88,7 @@ const UserMasterPanel = (props) => {
           readOnly={readOnly}
           onChange={(username) => onEditedChanged({ ...edited, username })}
           inputProps={{
-            "maxLength": usernameMaxLength,
+            "maxLength": usernameLength,
           }}
         />
       </Grid>
