@@ -29,7 +29,7 @@ import {
   fetchRegionDistricts,
   clearRegionDistricts,
   fetchObligatoryUserFields,
-  fetchObligatoryEnrolmentOfficerFields,
+  fetchObligatoryEnrolmentOfficerFields, fetchUsernameLength,
 } from "../actions";
 import UserMasterPanel from "./UserMasterPanel";
 
@@ -63,6 +63,9 @@ class UserForm extends Component {
     }
     if (!this.state.obligatory_eo_fields) {
       this.props.fetchObligatoryEnrolmentOfficerFields();
+    }
+    if (!this.state.usernameLength) {
+      this.props.fetchUsernameLength();
     }
   }
 
@@ -196,6 +199,7 @@ class UserForm extends Component {
       back,
       obligatoryUserFields,
       obligatoryEoFields,
+      usernameLength,
     } = this.props;
     const { user } = this.state;
 
@@ -235,6 +239,7 @@ class UserForm extends Component {
             onActionToConfirm={this.onActionToConfirm}
             obligatory_user_fields={obligatoryUserFields}
             obligatory_eo_fields={obligatoryEoFields}
+            usernameLength={usernameLength}
           />
         )}
       </div>
@@ -256,6 +261,7 @@ const mapStateToProps = (state) => ({
   obligatoryEoFields: state.admin.obligatory_eo_fields,
   isUserNameValid: state.admin.validationFields?.username?.isValid,
   isUserEmailValid: state.admin.validationFields?.userEmail?.isValid,
+  usernameLength: state.admin?.usernameLength,
 });
 
 const mapDispatchToProps = (dispatch) =>
@@ -268,6 +274,7 @@ const mapDispatchToProps = (dispatch) =>
       fetchRegionDistricts,
       fetchObligatoryUserFields,
       fetchObligatoryEnrolmentOfficerFields,
+      fetchUsernameLength,
       journalize,
       coreConfirm,
     },
