@@ -1,12 +1,22 @@
 import React, { Component } from "react";
+import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
+
 import { Fab } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import { withTheme, withStyles } from "@material-ui/core/styles";
-import { historyPush, withModulesManager, withHistory, withTooltip, formatMessage } from "@openimis/fe-core";
-import UserSearcher from "../components/UserSearcher";
+
+import {
+  historyPush,
+  withModulesManager,
+  withHistory,
+  withTooltip,
+  formatMessage,
+  clearCurrentPaginationPage,
+} from "@openimis/fe-core";
 import { RIGHT_USER_ADD } from "../constants";
+import UserSearcher from "../components/UserSearcher";
 
 const styles = (theme) => ({
   page: theme.page,
@@ -20,6 +30,12 @@ class UsersPage extends Component {
 
   onAdd = () => {
     historyPush(this.props.modulesManager, this.props.history, "admin.userNew");
+  };
+
+  componentDidMount = () => {
+    const moduleName = "user";
+    const { module } = this.props;
+    if (module !== moduleName) this.props.clearCurrentPaginationPage();
   };
 
   render() {
@@ -43,8 +59,13 @@ class UsersPage extends Component {
 
 const mapStateToProps = (state) => ({
   rights: state.core?.user?.i_user?.rights ?? [],
+  module: state.core?.savedPagination?.module,
 });
 
+const mapDispatchToProps = (dispatch) => bindActionCreators({ clearCurrentPaginationPage }, dispatch);
+
 export default injectIntl(
-  withModulesManager(withHistory(connect(mapStateToProps)(withTheme(withStyles(styles)(UsersPage))))),
+  withModulesManager(
+    withHistory(connect(mapStateToProps, mapDispatchToProps)(withTheme(withStyles(styles)(UsersPage)))),
+  ),
 );
