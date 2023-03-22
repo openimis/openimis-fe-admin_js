@@ -15,7 +15,7 @@ import {
   formatMessage,
   clearCurrentPaginationPage,
 } from "@openimis/fe-core";
-import { RIGHT_USER_ADD } from "../constants";
+import { RIGHT_USER_ADD, MODULE_NAME } from "../constants";
 import UserSearcher from "../components/UserSearcher";
 
 const styles = (theme) => ({
@@ -33,9 +33,8 @@ class UsersPage extends Component {
   };
 
   componentDidMount = () => {
-    const moduleName = "user";
     const { module } = this.props;
-    if (module !== moduleName) this.props.clearCurrentPaginationPage();
+    if (module !== MODULE_NAME) this.props.clearCurrentPaginationPage();
   };
 
   render() {
