@@ -52,7 +52,7 @@ const UserRolesPicker = ({
       onChange={(option) => onChange(option, option?.name)}
       filterOptions={filterOptions}
       filterSelectedOptions={filterSelectedOptions}
-      onInputChange={setSearchString}
+      onInputChange={() => setSearchString(searchString)}
     />
   );
 };
