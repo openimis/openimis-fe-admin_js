@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import _debounce from "lodash/debounce";
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import { injectIntl } from "react-intl";
-import { Grid } from "@material-ui/core";
-import { withModulesManager, decodeId, PublishedComponent, ControlledField, TextInput } from "@openimis/fe-core";
+import { Grid, Checkbox, FormControlLabel, } from "@material-ui/core";
+import { withModulesManager, decodeId, PublishedComponent, ControlledField, TextInput, formatMessage } from "@openimis/fe-core";
 
 const styles = (theme) => ({
   dialogTitle: theme.dialog.title,
@@ -69,6 +69,7 @@ class UserFilter extends Component {
     currentUserRoles: undefined,
     locationFilters: {},
     selectedDistrict: {},
+    showHistory: false,
   };
 
   debouncedOnChangeFilter = _debounce(
@@ -152,7 +153,7 @@ class UserFilter extends Component {
   };
 
   render() {
-    const { classes, onChangeFilters } = this.props;
+    const { classes, onChangeFilters , intl} = this.props;
     const { locationFilters, currentUserType, currentUserRoles, selectedDistrict } = this.state;
     return (
       <section className={classes.form}>
@@ -378,6 +379,28 @@ class UserFilter extends Component {
                     />
                   </Grid>
                 </Grid>
+              </Grid>
+            }
+          />
+          <ControlledField
+            module="policy"
+            id="PolicyFilter.showHistory"
+            field={
+              <Grid item xs={2} className={classes.item}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      color="primary"
+                      checked={this.state.showHistory}
+                      onChange={(e) => this.onChangeShowHistory()}
+                    />
+                  }
+                  label={formatMessage(
+                    intl,
+                    "admin",
+                    "UserFilter.showHistory"
+                  )}
+                />
               </Grid>
             }
           />
