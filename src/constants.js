@@ -22,6 +22,8 @@ export const CLAIM_ADMIN_USER_TYPE = "CLAIM_ADMIN";
 export const CLAIM_ADMIN_IS_SYSTEM = 256;
 export const MODULE_NAME = "user";
 
+export const EMAIL_REGEX_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export const USER_TYPES = (rights) => {
   const baseTypes = [INTERACTIVE_USER_TYPE];
   if (rights.includes(RIGHT_ENROLMENTOFFICER)) {

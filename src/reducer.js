@@ -408,6 +408,16 @@ function reducer(
           },
         },
       };
+    case "USER_EMAIL_FORMAT_VALIDATION_CHECK":
+      return {
+        ...state,
+        validationFields: {
+          ...state.validationFields,
+          userEmailFormat: {
+            isInvalid: action.payload?.data?.isFormatInvalid,
+          },
+        },
+      };
     case "USERNAME_LENGTH_FIELDS_REQ":
       return {
         ...state,

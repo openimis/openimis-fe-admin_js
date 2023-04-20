@@ -345,3 +345,9 @@ export function setUserEmailValid() {
     dispatch({ type: "USER_EMAIL_FIELDS_VALIDATION_SET_VALID" });
   };
 }
+
+export function saveEmailFormatValidity(isFormatInvalid) {
+  return (dispatch) => {
+    dispatch({ type: "USER_EMAIL_FORMAT_VALIDATION_CHECK", payload: { data: { isFormatInvalid } } });
+  };
+}

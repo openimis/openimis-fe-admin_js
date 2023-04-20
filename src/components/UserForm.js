@@ -27,9 +27,9 @@ import {
   clearUser,
   fetchUserMutation,
   fetchRegionDistricts,
-  clearRegionDistricts,
   fetchObligatoryUserFields,
-  fetchObligatoryEnrolmentOfficerFields, fetchUsernameLength,
+  fetchObligatoryEnrolmentOfficerFields,
+  fetchUsernameLength,
 } from "../actions";
 import UserMasterPanel from "./UserMasterPanel";
 
@@ -140,6 +140,7 @@ class UserForm extends Component {
         user.username &&
         this.props.isUserNameValid === true &&
         this.props.isUserEmailValid === true &&
+        !this.props.isUserEmailFormatInvalid &&
         user.roles?.length &&
         user.districts?.length > 0 &&
         user.language
@@ -263,6 +264,7 @@ const mapStateToProps = (state) => ({
   isUserNameValid: state.admin.validationFields?.username?.isValid,
   isUserEmailValid: state.admin.validationFields?.userEmail?.isValid,
   usernameLength: state.admin?.usernameLength,
+  isUserEmailFormatInvalid: state.admin.validationFields?.userEmailFormat?.isInvalid,
 });
 
 const mapDispatchToProps = (dispatch) =>
