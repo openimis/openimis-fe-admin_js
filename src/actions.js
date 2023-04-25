@@ -69,8 +69,8 @@ export function fetchEnrolmentOfficers(mm, variables) {
 export function fetchSubstitutionEnrolmentOfficers(mm, variables) {
   return graphqlWithVariables(
     `
-      query SubstitutionEnrolmentOfficers ($searchString: String, $villagesUuids: [String!], $officerUuid: String) {
-        substitutionEnrolmentOfficers(searchString: $searchString, villagesUuids: $villagesUuids, officerUuid: $officerUuid) {
+      query SubstitutionEnrolmentOfficers ($str: String, $villagesUuids: [String!], $officerUuid: String) {
+        substitutionEnrolmentOfficers(str: $str, villagesUuids: $villagesUuids, officerUuid: $officerUuid) {
           edges {
             node {
               id

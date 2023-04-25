@@ -35,7 +35,7 @@ const SubstitutionEnrolmentOfficerPicker = (props) => {
       fetchSubstitutionEnrolmentOfficers(modulesManager, {
         officerUuid: officerUuid,
         villagesUuids: villages?.map((village) => village.uuid),
-        searchString: null,
+        str: null,
       }),
     );
   }, [searchString]);
