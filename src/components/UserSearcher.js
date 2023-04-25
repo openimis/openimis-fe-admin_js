@@ -2,8 +2,11 @@ import React, { Component } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
+
 import { IconButton, Tooltip } from "@material-ui/core";
+import { withTheme, withStyles } from "@material-ui/core/styles";
 import { Tab as TabIcon, Delete as DeleteIcon } from "@material-ui/icons";
+
 import {
   withModulesManager,
   formatMessageWithValues,
@@ -13,10 +16,9 @@ import {
   ConfirmDialog,
   decodeId,
 } from "@openimis/fe-core";
-import UserFilter from "./UserFilter";
-
 import { fetchUsersSummaries, deleteUser } from "../actions";
 import { RIGHT_USER_DELETE } from "../constants";
+import UserFilter from "./UserFilter";
 
 const USER_SEARCHER_CONTRIBUTION_KEY = "user.UserSearcher";
 
@@ -44,6 +46,10 @@ const getAligns = () => {
   aligns.splice(-1, 1, "right");
   return aligns;
 };
+
+const styles = (theme) => ({
+  horizontalButtonContainer: theme.buttonContainer.horizontal,
+});
 
 class UserSearcher extends Component {
   state = {
@@ -131,7 +137,7 @@ class UserSearcher extends Component {
         formatDateFromISO(this.props.modulesManager, this.props.intl, this.getUserItem(u, "dob")),
 
       (u) => (
-        <>
+        <div className={this.props.classes.horizontalButtonContainer}>
           <Tooltip title={formatMessage(this.props.intl, "admin.user", "openNewTab")}>
             <IconButton onClick={() => this.props.onDoubleClick(u, true)}>
               <TabIcon />
@@ -144,7 +150,7 @@ class UserSearcher extends Component {
               </IconButton>
             </Tooltip>
           )}
-        </>
+        </div>
       ),
     ];
 
@@ -208,4 +214,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({ fetchUsersSummaries, deleteUser }, dispatch);
 
-export default withModulesManager(connect(mapStateToProps, mapDispatchToProps)(injectIntl(UserSearcher)));
+export default withModulesManager(
+  connect(mapStateToProps, mapDispatchToProps)(injectIntl(withTheme(withStyles(styles)(UserSearcher)))),
+);
