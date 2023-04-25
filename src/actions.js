@@ -52,7 +52,7 @@ export function fetchEnrolmentOfficers(mm, variables) {
               code
               lastName
               otherNames
-              
+
             }
           }
           pageInfo {
@@ -232,7 +232,7 @@ export function fetchUser(mm, userId, clientMutationId) {
               lastName
               otherNames
               healthFacility ${mm.getProjection("location.HealthFacilityPicker.projection")}
-            
+
             }
           }
         }
@@ -320,6 +320,11 @@ export function usernameValidationCheck(mm, variables) {
     variables,
     `USERNAME_FIELDS_VALIDATION`,
   );
+}
+
+export function fetchUsernameLength() {
+  const payload = "query {usernameLength}";
+  return graphql(payload, `USERNAME_LENGTH_FIELDS`);
 }
 
 export function usernameValidationClear() {

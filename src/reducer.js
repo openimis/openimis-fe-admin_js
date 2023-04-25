@@ -445,6 +445,28 @@ function reducer(
           },
         },
       };
+    case "USERNAME_LENGTH_FIELDS_REQ":
+      return {
+        ...state,
+        fetchingUsernameLength: true,
+        fetchedUsernameLength: false,
+        usernameLength: null,
+        errorUsernameLength: null,
+      };
+    case "USERNAME_LENGTH_FIELDS_RESP":
+      return {
+        ...state,
+        fetchingUsernameLength: false,
+        fetchedUsernameLength: true,
+        usernameLength: action.payload.data.usernameLength,
+        errorUsernameLength: formatGraphQLError(action.payload),
+      };
+    case "USERNAME_LENGTH_FIELDS_ERR":
+      return {
+        ...state,
+        fetchingUsernameLength: false,
+        errorUsernameLength: formatServerError(action.payload),
+      };
     case "ADMIN_USER_MUTATION_REQ":
       return dispatchMutationReq(state, action);
     case "ADMIN_USER_MUTATION_ERR":

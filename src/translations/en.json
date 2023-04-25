@@ -75,5 +75,6 @@
   "admin.EnrolmentOfficerPicker.loadingText": "Loading...",
   "admin.EnrolmentOfficerPicker.clearText": "Clear",
   "admin.EnrolmentOfficerPicker.openText": "Open",
-  "admin.EnrolmentOfficerPicker.closeText": "Close"
+  "admin.EnrolmentOfficerPicker.closeText": "Close",
+  "admin.UserFilter.showHistory": "Show History"
 }
