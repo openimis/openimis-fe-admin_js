@@ -27,9 +27,9 @@ import {
   clearUser,
   fetchUserMutation,
   fetchRegionDistricts,
-  clearRegionDistricts,
   fetchObligatoryUserFields,
-  fetchObligatoryEnrolmentOfficerFields, fetchUsernameLength,
+  fetchObligatoryEnrolmentOfficerFields,
+  fetchUsernameLength,
 } from "../actions";
 import UserMasterPanel from "./UserMasterPanel";
 
@@ -138,6 +138,7 @@ class UserForm extends Component {
         user.lastName &&
         user.otherNames &&
         user.username &&
+        user.email &&
         this.props.isUserNameValid === true &&
         this.props.isUserEmailValid === true &&
         user.roles?.length &&
@@ -149,13 +150,6 @@ class UserForm extends Component {
     if (user.password && user.password !== user.confirmPassword) return false;
     if (user.userTypes?.includes(CLAIM_ADMIN_USER_TYPE) && !user.healthFacility) return false;
     if (user.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && !user.officerVillages) return false;
-
-    if (
-      (this.props.obligatory_user_fields?.email == "M" ||
-        (user.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && this.props.obligatory_eo_fields?.email == "M")) &&
-      !user.email
-    )
-      return false;
     if (
       (this.props.obligatory_user_fields?.phone == "M" ||
         (user.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && this.props.obligatory_eo_fields?.phone == "M")) &&
