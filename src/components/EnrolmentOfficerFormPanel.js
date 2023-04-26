@@ -97,6 +97,7 @@ const EnrolmentOfficerFormPanel = (props) => {
                 module="admin"
                 label="user.dob"
                 readOnly={readOnly}
+                maxDate={new Date()}
                 onChange={(birthDate) => onEditedChanged({ ...edited, birthDate })}
               />
             </Grid>

@@ -65,9 +65,6 @@ const UserMasterPanel = (props) => {
 
   const shouldValidateEmail = (inputValue) => {
     const shouldBeValidated = inputValue !== savedUserEmail;
-    if (!inputValue) {
-      return false;
-    }
     return shouldBeValidated;
   };
 
@@ -154,11 +151,7 @@ const UserMasterPanel = (props) => {
             label="user.email"
             type="email"
             codeTakenLabel="user.emailAlreadyTaken"
-            invalidValueFormatLabel="user.emailFormatInvalid"
-            required={
-              obligatoryUserFields?.email === "M" ||
-              (edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && obligatoryEOFields?.email === "M")
-            }
+            required={true}
             value={edited?.email ?? ""}
             onChange={(email) => handleEmailChange(email)}
           />
