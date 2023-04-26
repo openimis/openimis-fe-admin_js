@@ -66,6 +66,28 @@ export function fetchEnrolmentOfficers(mm, variables) {
   );
 }
 
+export function fetchSubstitutionEnrolmentOfficers(mm, variables) {
+  return graphqlWithVariables(
+    `
+      query SubstitutionEnrolmentOfficers ($str: String, $villagesUuids: [String!], $officerUuid: String) {
+        substitutionEnrolmentOfficers(str: $str, villagesUuids: $villagesUuids, officerUuid: $officerUuid) {
+          edges {
+            node {
+              id
+              uuid
+              code
+              lastName
+              otherNames
+            }
+          }
+        }
+      }
+    `,
+    variables,
+    "ADMIN_SUBSTITUTION_ENROLMENT_OFFICERS",
+  );
+}
+
 export function createUser(mm, user, clientMutationLabel) {
   const mutation = prepareMutation(
     `
@@ -151,6 +173,7 @@ export function fetchUser(mm, userId, clientMutationId) {
             username
             officer {
               id
+              uuid
               hasLogin
               phone
               dob
