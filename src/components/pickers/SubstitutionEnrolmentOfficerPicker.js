@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import _ from "lodash";
 
 import { TextField } from "@material-ui/core";
 
