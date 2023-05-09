@@ -51,14 +51,7 @@ const EnrolmentOfficerFormPanel = (props) => {
 
   const isValid = !isLoading;
   useEffect(() => {
-    toggleUserRoles(
-      edited,
-      data,
-      isValid,
-      isEnabled,
-      hasOfficerRole,
-      onEditedChanged,
-      OFFICER_ROLE_IS_SYSTEM);
+    toggleUserRoles(edited, data, isValid, isEnabled, hasOfficerRole, onEditedChanged, OFFICER_ROLE_IS_SYSTEM);
   }, [isEnabled]);
 
   useEffect(() => {
@@ -106,7 +99,8 @@ const EnrolmentOfficerFormPanel = (props) => {
                 pubRef="admin.SubstitutionEnrolmentOfficerPicker"
                 module="admin"
                 readOnly={readOnly}
-                label={formatMessage("substitutionOfficer")}
+                withLabel
+                withPlaceholder
                 value={edited.substitutionOfficer}
                 villages={edited.officerVillages}
                 onChange={(substitutionOfficer) => onEditedChanged({ ...edited, substitutionOfficer })}
