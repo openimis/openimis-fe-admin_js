@@ -66,6 +66,7 @@
   "admin.EnrolmentZonesPicker.table.villages": "Villages",
   "admin.EnrolmentZonesPicker.table.addButton": "Add a municipality",
   "admin.EnrolmentOfficerFormPanel.substitutionOfficer": "Substitution Officer",
+  "admin.EnrolmentOfficerFormPanel.substitutionOfficer.placeholder": "Search for an Officer...",
   "admin.UserPicker.loadingText": "Loading...",
   "admin.UserPicker.clearText": "Clear",
   "admin.UserPicker.openText": "Open",
