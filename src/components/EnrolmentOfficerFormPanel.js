@@ -51,14 +51,7 @@ const EnrolmentOfficerFormPanel = (props) => {
 
   const isValid = !isLoading;
   useEffect(() => {
-    toggleUserRoles(
-      edited,
-      data,
-      isValid,
-      isEnabled,
-      hasOfficerRole,
-      onEditedChanged,
-      OFFICER_ROLE_IS_SYSTEM);
+    toggleUserRoles(edited, data, isValid, isEnabled, hasOfficerRole, onEditedChanged, OFFICER_ROLE_IS_SYSTEM);
   }, [isEnabled]);
 
   useEffect(() => {
@@ -97,16 +90,19 @@ const EnrolmentOfficerFormPanel = (props) => {
                 module="admin"
                 label="user.dob"
                 readOnly={readOnly}
+                maxDate={new Date()}
                 onChange={(birthDate) => onEditedChanged({ ...edited, birthDate })}
               />
             </Grid>
             <Grid item xs={4} className={classes.item}>
               <PublishedComponent
-                pubRef="admin.EnrolmentOfficerPicker"
+                pubRef="admin.SubstitutionEnrolmentOfficerPicker"
                 module="admin"
                 readOnly={readOnly}
-                label={formatMessage("substitutionOfficer")}
+                withLabel
+                withPlaceholder
                 value={edited.substitutionOfficer}
+                villages={edited.officerVillages}
                 onChange={(substitutionOfficer) => onEditedChanged({ ...edited, substitutionOfficer })}
               />
             </Grid>

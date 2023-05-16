@@ -20,6 +20,16 @@ function reducer(
       error: null,
     },
 
+    substitutionEnrolmentOfficers: {
+      items: [],
+      isFetching: false,
+      pageInfo: {
+        totalCount: 0,
+      },
+      error: null,
+    },
+
+
     usersSummaries: {
       items: [],
       isFetching: false,
@@ -75,6 +85,33 @@ function reducer(
         ...state,
         enrolmentOfficers: {
           ...state.enrolmentOfficers,
+          isFetching: false,
+          error: formatGraphQLError(action.payload),
+        },
+      };
+    case "ADMIN_SUBSTITUTION_ENROLMENT_OFFICERS_REQ":
+      return {
+        ...state,
+        substitutionEnrolmentOfficers: {
+          ...state.substitutionEnrolmentOfficers,
+          isFetching: true,
+        },
+      };
+    case "ADMIN_SUBSTITUTION_ENROLMENT_OFFICERS_RESP":
+      return {
+        ...state,
+        substitutionEnrolmentOfficers: {
+          ...state.substitutionEnrolmentOfficers,
+          isFetching: false,
+          pageInfo: pageInfo(action.payload.data.substitutionEnrolmentOfficers),
+          items: parseData(action.payload.data.substitutionEnrolmentOfficers),
+        },
+      };
+    case "ADMIN_SUBSTITUTION_ENROLMENT_OFFICERS_ERR":
+      return {
+        ...state,
+        substitutionEnrolmentOfficers: {
+          ...state.substitutionEnrolmentOfficers,
           isFetching: false,
           error: formatGraphQLError(action.payload),
         },
@@ -405,6 +442,16 @@ function reducer(
             isValidating: false,
             isValid: true,
             validationError: null,
+          },
+        },
+      };
+    case "USER_EMAIL_FORMAT_VALIDATION_CHECK":
+      return {
+        ...state,
+        validationFields: {
+          ...state.validationFields,
+          userEmailFormat: {
+            isInvalid: action.payload?.data?.isFormatInvalid,
           },
         },
       };

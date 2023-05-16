@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import { Grid, Divider, Typography } from "@material-ui/core";
@@ -11,7 +11,7 @@ import {
   PublishedComponent,
   ValidatedTextInput,
 } from "@openimis/fe-core";
-import { CLAIM_ADMIN_USER_TYPE, ENROLMENT_OFFICER_USER_TYPE } from "../constants";
+import { CLAIM_ADMIN_USER_TYPE, ENROLMENT_OFFICER_USER_TYPE, EMAIL_REGEX_PATTERN } from "../constants";
 import {
   usernameValidationCheck,
   usernameValidationClear,
@@ -19,6 +19,7 @@ import {
   userEmailValidationCheck,
   userEmailValidationClear,
   setUserEmailValid,
+  saveEmailFormatValidity,
 } from "../actions";
 
 const styles = (theme) => ({
@@ -48,12 +49,14 @@ const UserMasterPanel = (props) => {
     usernameValidationError,
     isUserEmailValid,
     isUserEmailValidating,
+    isUserEmailFormatInvalid,
     emailValidationError,
     savedUsername,
     savedUserEmail,
     usernameLength,
   } = props;
   const { formatMessage } = useTranslations("admin", modulesManager);
+  const dispatch = useDispatch();
 
   const shouldValidateUsername = (inputValue) => {
     const shouldBeValidated = inputValue !== savedUsername;
@@ -62,11 +65,27 @@ const UserMasterPanel = (props) => {
 
   const shouldValidateEmail = (inputValue) => {
     const shouldBeValidated = inputValue !== savedUserEmail;
-    if (!inputValue) {
-      return false;
-    }
     return shouldBeValidated;
   };
+
+  const checkEmailFormatValidity = (emailInput) => {
+    if (!emailInput) return false;
+
+    const isEmailInvalid = !EMAIL_REGEX_PATTERN.test(emailInput);
+
+    return isEmailInvalid;
+  };
+
+  const handleEmailChange = (email) => {
+    const isFormatValid = checkEmailFormatValidity(email);
+    dispatch(saveEmailFormatValidity(isFormatValid));
+
+    onEditedChanged({ ...edited, email });
+  };
+
+  useEffect(() => {
+    handleEmailChange(edited?.email);
+  }, []);
 
   return (
     <Grid container direction="row">
@@ -123,6 +142,7 @@ const UserMasterPanel = (props) => {
             isValid={isUserEmailValid}
             isValidating={isUserEmailValidating}
             validationError={emailValidationError}
+            invalidValueFormat={isUserEmailFormatInvalid}
             action={userEmailValidationCheck}
             clearAction={userEmailValidationClear}
             setValidAction={setUserEmailValid}
@@ -131,12 +151,9 @@ const UserMasterPanel = (props) => {
             label="user.email"
             type="email"
             codeTakenLabel="user.emailAlreadyTaken"
-            required={
-              obligatoryUserFields?.email === "M" ||
-              (edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && obligatoryEOFields?.email === "M")
-            }
+            required={true}
             value={edited?.email ?? ""}
-            onChange={(email) => onEditedChanged({ ...edited, email })}
+            onChange={(email) => handleEmailChange(email)}
           />
         </Grid>
       )}
@@ -263,6 +280,7 @@ const mapStateToProps = (state) => ({
   isUserEmailValidating: state.admin.validationFields?.userEmail?.isValidating,
   emailValidationError: state.admin.validationFields?.userEmail?.validationError,
   savedUserEmail: state.admin?.user?.email,
+  isUserEmailFormatInvalid: state.admin.validationFields?.userEmailFormat?.isInvalid,
 });
 
 export default withModulesManager(connect(mapStateToProps)(withTheme(withStyles(styles)(UserMasterPanel))));

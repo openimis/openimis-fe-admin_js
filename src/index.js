@@ -4,6 +4,7 @@ import UserPage from "./pages/UserPage";
 import messagesEn from "./translations/en.json";
 import UserPicker from "./components/pickers/UserPicker";
 import EnrolmentOfficerPicker from "./components/pickers/EnrolmentOfficerPicker";
+import SubstitutionEnrolmentOfficerPicker from "./components/pickers/SubstitutionEnrolmentOfficerPicker";
 import UserRolesPicker from "./components/pickers/UserRolesPicker";
 import UserTypesPicker from "./components/pickers/UserTypesPicker";
 import reducer from "./reducer";
@@ -28,6 +29,7 @@ const DEFAULT_CONFIG = {
   refs: [
     { key: "admin.UserPicker", ref: UserPicker },
     { key: "admin.EnrolmentOfficerPicker", ref: EnrolmentOfficerPicker },
+    { key: "admin.SubstitutionEnrolmentOfficerPicker", ref: SubstitutionEnrolmentOfficerPicker },
     { key: "admin.UserRolesPicker", ref: UserRolesPicker },
     { key: "admin.UserTypesPicker", ref: UserTypesPicker },
     {

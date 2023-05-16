@@ -1,4 +1,5 @@
 import { decodeId } from "@openimis/fe-core";
+import { fetchSubstitutionEnrolmentOfficers } from "./actions";
 import {
   CLAIM_ADMIN_USER_TYPE,
   INTERACTIVE_USER_TYPE,
@@ -137,4 +138,15 @@ export const toggleSwitchButton = (edited, hasRole, hasUserType, setIsEnabled, o
       onEditedChanged(toggleUserType(edited, userType));
     }
   }
+};
+
+export const fetchSubstitutionEOs = (dispatch, mm, officerUuid, searchString, villages) => {
+  dispatch(
+    fetchSubstitutionEnrolmentOfficers(mm, {
+      officerUuid,
+      first: searchString ? undefined : 15,
+      villagesUuids: villages?.map((village) => village.uuid),
+      str: searchString,
+    }),
+  );
 };
