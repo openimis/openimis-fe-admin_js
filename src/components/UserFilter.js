@@ -69,7 +69,7 @@ class UserFilter extends Component {
     currentUserRoles: undefined,
     locationFilters: {},
     selectedDistrict: {},
-    showHistory: false,
+    showDeleted: false,
   };
 
   debouncedOnChangeFilter = _debounce(
@@ -89,17 +89,17 @@ class UserFilter extends Component {
     return district;
   };
 
-  onChangeShowHistory = () => {
+  onChangeShowDeleted = () => {
     const filters = [
       {
-        id: "showHistory",
-        value: !this.state.showHistory,
-        filter: `showHistory: ${!this.state.showHistory}`,
+        id: "showDeleted",
+        value: !this.state.showDeleted,
+        filter: `showDeleted: ${!this.state.showDeleted}`,
       },
     ];
     this.props.onChangeFilters(filters);
     this.setState((state) => ({
-      showHistory: !state.showHistory,
+      showDeleted: !state.showDeleted,
     }));
   };
 
@@ -384,21 +384,21 @@ class UserFilter extends Component {
           />
           <ControlledField
             module="policy"
-            id="PolicyFilter.showHistory"
+            id="PolicyFilter.showDeleted"
             field={
               <Grid item xs={2} className={classes.item}>
                 <FormControlLabel
                   control={
                     <Checkbox
                       color="primary"
-                      checked={this.state.showHistory}
-                      onChange={(e) => this.onChangeShowHistory()}
+                      checked={this.state.showDeleted}
+                      onChange={(e) => this.onChangeShowDeleted()}
                     />
                   }
                   label={formatMessage(
                     intl,
                     "admin",
-                    "UserFilter.showHistory"
+                    "UserFilter.showDeleted"
                   )}
                 />
               </Grid>

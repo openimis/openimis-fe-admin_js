@@ -16,6 +16,7 @@ const USER_SUMMARY_PROJECTION = [
   "officer{id,dob,phone,lastName,otherNames,email}",
   "iUser{id,phone,lastName,otherNames,email,roles{id,name}}",
   "claimAdmin{id,phone,lastName,otherNames,emailId,dob}",
+  "validityTo",
   "clientMutationId",
 ];
 const DISTRICT_DATA_FETCH_PARAMS = "id, uuid, code, name, parent { id, uuid, name, code }";
@@ -158,6 +159,7 @@ export function fetchUser(mm, userId, clientMutationId) {
   const filters = [];
   if (userId) {
     filters.push(`id: "${decodeId(userId)}"`);
+    filters.push("showDeleted: true");
   } else if (clientMutationId) {
     filters.push(`clientMutationId: "${clientMutationId}"`);
   }
@@ -171,6 +173,7 @@ export function fetchUser(mm, userId, clientMutationId) {
             clientMutationId
             id
             username
+            validityTo
             officer {
               id
               uuid
