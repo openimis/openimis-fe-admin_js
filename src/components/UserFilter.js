@@ -41,10 +41,6 @@ class UserFilter extends Component {
   state = {
     locationFilters: {},
     selectedDistrict: {},
-<<<<<<< HEAD
-=======
-    showDeleted: false,
->>>>>>> af5530dad6ab0520c7334f9abea455711a761ee1
   };
 
   debouncedOnChangeFilter = _debounce(
@@ -69,7 +65,6 @@ class UserFilter extends Component {
     return district;
   };
 
-<<<<<<< HEAD
   onChangeCheckbox = (key, value) => {
     const filters = [
       {
@@ -79,20 +74,6 @@ class UserFilter extends Component {
       },
     ];
     this.props.onChangeFilters(filters);
-=======
-  onChangeShowDeleted = () => {
-    const filters = [
-      {
-        id: "showDeleted",
-        value: !this.state.showDeleted,
-        filter: `showDeleted: ${!this.state.showDeleted}`,
-      },
-    ];
-    this.props.onChangeFilters(filters);
-    this.setState((state) => ({
-      showDeleted: !state.showDeleted,
-    }));
->>>>>>> af5530dad6ab0520c7334f9abea455711a761ee1
   };
 
   onChangeUserTypes = (currentUserType) => {
@@ -375,23 +356,11 @@ class UserFilter extends Component {
                   control={
                     <Checkbox
                       color="primary"
-<<<<<<< HEAD
                       checked={!!this.filterValue("showHistory")}
                       onChange={(event) => this.onChangeCheckbox("showHistory", event.target.checked)}
                     />
                   }
                   label={formatMessage(intl, "admin", "UserFilter.showHistory")}
-=======
-                      checked={this.state.showDeleted}
-                      onChange={(e) => this.onChangeShowDeleted()}
-                    />
-                  }
-                  label={formatMessage(
-                    intl,
-                    "admin",
-                    "UserFilter.showDeleted"
-                  )}
->>>>>>> af5530dad6ab0520c7334f9abea455711a761ee1
                 />
               </Grid>
             }
