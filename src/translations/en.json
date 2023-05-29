@@ -78,5 +78,6 @@
   "admin.EnrolmentOfficerPicker.clearText": "Clear",
   "admin.EnrolmentOfficerPicker.openText": "Open",
   "admin.EnrolmentOfficerPicker.closeText": "Close",
-  "admin.UserFilter.showHistory": "Show History"
+  "admin.UserFilter.showHistory": "Show History",
+  "admin.UserFilter.showDeleted": "Show Deleted"
 }
