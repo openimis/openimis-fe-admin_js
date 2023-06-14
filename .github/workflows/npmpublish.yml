@@ -21,7 +21,17 @@ jobs:
         run: echo $(jq --arg a "$GIT_TAG_NAME" '.version = ($a)' package.json) >  package.json
       - run: yarn install
       - run: yarn build
-      
+
+  sonarcloud-scan:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_PROJECT_KEY: openimis_openimis-fe-admin_js
+          SONAR_ORGANIZATION: openimis-1
 
   publish-npm:
     needs: build
