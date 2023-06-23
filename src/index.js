@@ -45,7 +45,7 @@ const DEFAULT_CONFIG = {
       type: "user",
       picker: UserPicker,
       pickerProjection: USER_PICKER_PROJECTION,
-    }
+    },
   ],
 };
 
