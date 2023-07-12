@@ -25,7 +25,6 @@ import {
   // RIGHT_CLAIMADMINISTRATOR,
   RIGHT_USERS,
   RIGHT_LOCATIONS,
-  RIGHT_TASK_EXECUTIONER_GROUPS,
 } from "../constants";
 
 const ADMIN_MAIN_MENU_CONTRIBUTION_KEY = "admin.MainMenu";
@@ -85,13 +84,6 @@ class AdminMainMenu extends Component {
         text: formatMessage(this.props.intl, "admin", "menu.users"),
         icon: <Person />,
         route: "/admin/users",
-      });
-    }
-    if (rights.includes(RIGHT_TASK_EXECUTIONER_GROUPS)) {
-      entries.push({
-        text: formatMessage(this.props.intl, "admin", "menu.taskExecutionerGroups"),
-        icon: <People />,
-        route: "/tasks/groups",
       });
     }
     if (rights.includes(RIGHT_LOCATIONS)) {
