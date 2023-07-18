@@ -6,6 +6,12 @@ name: Node.js Package
 on:
   release:
     types: [published]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      comment:
+        description: Just a simple comment to know the purpose of the manual build
+        required: false  
 
 jobs:
   build:
