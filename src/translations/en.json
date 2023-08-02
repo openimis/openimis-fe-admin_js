@@ -57,6 +57,8 @@
   "admin.user.userTypes.none": " ",
   "admin.user.userTypes.null": "Any",
   "admin.user.username": "User name",
+  "admin.PaymentPointManagerPicker.placeholder": "Search for an PPM...",
+  "admin.PaymentPointManagerPicker.label": "Payment Point Manager",
   "admin.user.worksTo": "Works to",
   "admin.EnrolmentOfficerFormPanel.title": "Enrolment Officer",
   "admin.ClaimAdministratorFormPanel.title": "Claim Administrator",

@@ -7,6 +7,7 @@ import EnrolmentOfficerPicker from "./components/pickers/EnrolmentOfficerPicker"
 import SubstitutionEnrolmentOfficerPicker from "./components/pickers/SubstitutionEnrolmentOfficerPicker";
 import UserRolesPicker from "./components/pickers/UserRolesPicker";
 import UserTypesPicker from "./components/pickers/UserTypesPicker";
+import PaymentPointManagerPicker from "./components/pickers/PaymentPointManagerPicker";
 import reducer from "./reducer";
 import { USER_PICKER_PROJECTION } from "./actions";
 
@@ -39,6 +40,7 @@ const DEFAULT_CONFIG = {
     { key: "admin.users", ref: ROUTE_ADMIN_USERS },
     { key: "admin.userOverview", ref: ROUTE_ADMIN_USER_OVERVIEW },
     { key: "admin.userNew", ref: ROUTE_ADMIN_USER_NEW },
+    { key: "admin.PaymentPointManagerPicker", ref: PaymentPointManagerPicker },
   ],
   "invoice.SubjectAndThirdpartyPicker": [
     {
