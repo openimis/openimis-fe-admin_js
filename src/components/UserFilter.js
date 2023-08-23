@@ -356,11 +356,11 @@ class UserFilter extends Component {
                   control={
                     <Checkbox
                       color="primary"
-                      checked={!!this.filterValue("showHistory")}
-                      onChange={(event) => this.onChangeCheckbox("showHistory", event.target.checked)}
+                      checked={!!this.filterValue("showDeleted")}
+                      onChange={(event) => this.onChangeCheckbox("showDeleted", event.target.checked)}
                     />
                   }
-                  label={formatMessage(intl, "admin", "UserFilter.showHistory")}
+                  label={formatMessage(intl, "admin", "UserFilter.showDeleted")}
                 />
               </Grid>
             }
