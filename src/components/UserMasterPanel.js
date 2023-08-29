@@ -1,8 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
 
 import { withTheme, withStyles } from "@material-ui/core/styles";
-import { Grid, Divider, Typography } from "@material-ui/core";
+import { Grid, Divider, Typography, Button, InputAdornment, IconButton, Box } from "@material-ui/core";
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+// import { passwordGenerator } from "../helpers/passwordGenerator";
 
 import {
   withModulesManager,
@@ -86,6 +89,26 @@ const UserMasterPanel = (props) => {
   useEffect(() => {
     handleEmailChange(edited?.email);
   }, []);
+
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
+  const [password, setPassword] = useState('');
+  const generatePassword = () => {
+    let options = {length: 10, numbers: true};
+    const generatedPassword = "123123"//passwordGenerator(options);
+
+    setPassword(generatedPassword);
+  };
+
+  const onChangePassword = () =>{
+    (confirmPassword) => onEditedChanged({ ...edited, confirmPassword })
+  }
 
   return (
     <Grid container direction="row">
@@ -249,24 +272,54 @@ const UserMasterPanel = (props) => {
       <Grid item xs={4} className={classes.item}>
         <TextInput
           module="admin"
-          type="password"
+          type={showPassword ? 'text' : 'password'}
           label="user.newPassword"
           readOnly={readOnly}
-          value=""
+          value={password ?? ""}
           onChange={(password) => onEditedChanged({ ...edited, password })}
+          endAdornment={
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={handleClickShowPassword}
+                onMouseDown={handleMouseDownPassword}
+                edge="end"
+              >
+                  {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+              </IconButton>
+            </InputAdornment>
+          }
         />
       </Grid>
       <Grid item xs={4} className={classes.item}>
         <TextInput
           module="admin"
-          type="password"
+          type={showPassword ? 'text' : 'password'}
           label="user.confirmNewPassword"
           required={edited.password}
           readOnly={readOnly}
-          value=""
-          onChange={(confirmPassword) => onEditedChanged({ ...edited, confirmPassword })}
+          value={password ?? ""}
+          onChange={onChangePassword}
+          endAdornment={
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={handleClickShowPassword}
+                onMouseDown={handleMouseDownPassword}
+                edge="end"
+              >
+                  {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+              </IconButton>
+            </InputAdornment>
+          }
         />
       </Grid>
+        <Button
+          disabled={readOnly}
+          variant="contained"
+          onClick={generatePassword}>
+          {formatMessage("user.generatePassword")}
+        </Button>
     </Grid>
   );
 };
