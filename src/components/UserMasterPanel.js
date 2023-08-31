@@ -5,7 +5,7 @@ import { withTheme, withStyles } from "@material-ui/core/styles";
 import { Grid, Divider, Typography, Button, InputAdornment, IconButton, Box } from "@material-ui/core";
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
-// import { passwordGenerator } from "../helpers/passwordGenerator";
+import { passwordGenerator } from "../helpers/passwordGenerator";
 
 import {
   withModulesManager,
@@ -101,7 +101,7 @@ const UserMasterPanel = (props) => {
   const [password, setPassword] = useState('');
   const generatePassword = () => {
     let options = {length: 10, numbers: true};
-    const generatedPassword = "123123"//passwordGenerator(options);
+    const generatedPassword = passwordGenerator(options);
 
     setPassword(generatedPassword);
   };
@@ -314,12 +314,14 @@ const UserMasterPanel = (props) => {
           }
         />
       </Grid>
-        <Button
-          disabled={readOnly}
-          variant="contained"
-          onClick={generatePassword}>
-          {formatMessage("user.generatePassword")}
-        </Button>
+        <Grid item xs={4} className={classes.item}>
+          <Button
+            disabled={readOnly}
+            variant="contained"
+            onClick={generatePassword}>
+            {formatMessage("user.generatePassword")}
+          </Button>
+        </Grid>
     </Grid>
   );
 };
