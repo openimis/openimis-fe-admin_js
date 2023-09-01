@@ -91,24 +91,17 @@ const UserMasterPanel = (props) => {
   }, []);
 
   const [showPassword, setShowPassword] = React.useState(false);
-
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
 
-  const [password, setPassword] = useState('');
   const generatePassword = () => {
-    let options = {length: 10, numbers: true};
-    const generatedPassword = passwordGenerator(options);
-
-    setPassword(generatedPassword);
+    const passwordGeneratorOptions = modulesManager.getConf("fe-admin", "passwordGeneratorOptions", { length: 10, numbers: true })
+    const generatedPassword = passwordGenerator(passwordGeneratorOptions);
+    onEditedChanged({ ...edited, password: generatedPassword, confirmPassword: generatedPassword});
   };
-
-  const onChangePassword = () =>{
-    (confirmPassword) => onEditedChanged({ ...edited, confirmPassword })
-  }
 
   return (
     <Grid container direction="row">
@@ -275,7 +268,7 @@ const UserMasterPanel = (props) => {
           type={showPassword ? 'text' : 'password'}
           label="user.newPassword"
           readOnly={readOnly}
-          value={password ?? ""}
+          value={edited.password}
           onChange={(password) => onEditedChanged({ ...edited, password })}
           endAdornment={
             <InputAdornment position="end">
@@ -298,8 +291,8 @@ const UserMasterPanel = (props) => {
           label="user.confirmNewPassword"
           required={edited.password}
           readOnly={readOnly}
-          value={password ?? ""}
-          onChange={onChangePassword}
+          value={edited.confirmPassword}
+          onChange={(confirmPassword) => onEditedChanged({ ...edited, confirmPassword })}
           endAdornment={
             <InputAdornment position="end">
               <IconButton
