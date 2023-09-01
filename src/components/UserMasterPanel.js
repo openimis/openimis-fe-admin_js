@@ -98,7 +98,8 @@ const UserMasterPanel = (props) => {
   };
 
   const generatePassword = () => {
-    const passwordGeneratorOptions = modulesManager.getConf("fe-admin", "passwordGeneratorOptions", { length: 10, numbers: true })
+    const passwordGeneratorOptions = modulesManager.getConf("fe-admin", "passwordGeneratorOptions", { length: 10, isNumberRequired: true,
+      isLowerCaseRequired: true, isUpperCaseRequired: true, isSpecialSymbolRequired: true  })
     const generatedPassword = passwordGenerator(passwordGeneratorOptions);
     onEditedChanged({ ...edited, password: generatedPassword, confirmPassword: generatedPassword});
   };
