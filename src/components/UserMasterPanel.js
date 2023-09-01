@@ -3,9 +3,8 @@ import { connect, useDispatch } from "react-redux";
 
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import { Grid, Divider, Typography, Button, InputAdornment, IconButton, Box } from "@material-ui/core";
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
-import { passwordGenerator } from "../helpers/passwordGenerator";
+import VisibilityIcon from "@material-ui/icons/Visibility";
+import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 
 import {
   withModulesManager,
@@ -24,6 +23,7 @@ import {
   setUserEmailValid,
   saveEmailFormatValidity,
 } from "../actions";
+import { passwordGenerator } from "../helpers/passwordGenerator";
 
 const styles = (theme) => ({
   tableTitle: theme.table.title,
@@ -90,7 +90,7 @@ const UserMasterPanel = (props) => {
     handleEmailChange(edited?.email);
   }, []);
 
-  const [showPassword, setShowPassword] = React.useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const handleMouseDownPassword = (event) => {
@@ -98,10 +98,15 @@ const UserMasterPanel = (props) => {
   };
 
   const generatePassword = () => {
-    const passwordGeneratorOptions = modulesManager.getConf("fe-admin", "passwordGeneratorOptions", { length: 10, isNumberRequired: true,
-      isLowerCaseRequired: true, isUpperCaseRequired: true, isSpecialSymbolRequired: true  })
+    const passwordGeneratorOptions = modulesManager.getConf("fe-admin", "passwordGeneratorOptions", {
+      length: 10,
+      isNumberRequired: true,
+      isLowerCaseRequired: true,
+      isUpperCaseRequired: true,
+      isSpecialSymbolRequired: true,
+    });
     const generatedPassword = passwordGenerator(passwordGeneratorOptions);
-    onEditedChanged({ ...edited, password: generatedPassword, confirmPassword: generatedPassword});
+    onEditedChanged({ ...edited, password: generatedPassword, confirmPassword: generatedPassword });
   };
 
   return (
@@ -266,7 +271,7 @@ const UserMasterPanel = (props) => {
       <Grid item xs={4} className={classes.item}>
         <TextInput
           module="admin"
-          type={showPassword ? 'text' : 'password'}
+          type={showPassword ? "text" : "password"}
           label="user.newPassword"
           readOnly={readOnly}
           value={edited.password}
@@ -279,7 +284,7 @@ const UserMasterPanel = (props) => {
                 onMouseDown={handleMouseDownPassword}
                 edge="end"
               >
-                  {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
               </IconButton>
             </InputAdornment>
           }
@@ -288,7 +293,7 @@ const UserMasterPanel = (props) => {
       <Grid item xs={4} className={classes.item}>
         <TextInput
           module="admin"
-          type={showPassword ? 'text' : 'password'}
+          type={showPassword ? "text" : "password"}
           label="user.confirmNewPassword"
           required={edited.password}
           readOnly={readOnly}
@@ -302,20 +307,17 @@ const UserMasterPanel = (props) => {
                 onMouseDown={handleMouseDownPassword}
                 edge="end"
               >
-                  {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
               </IconButton>
             </InputAdornment>
           }
         />
       </Grid>
-        <Grid item xs={4} className={classes.item}>
-          <Button
-            disabled={readOnly}
-            variant="contained"
-            onClick={generatePassword}>
-            {formatMessage("user.generatePassword")}
-          </Button>
-        </Grid>
+      <Grid item xs={4} className={classes.item}>
+        <Button disabled={readOnly} variant="contained" onClick={generatePassword}>
+          {formatMessage("user.generatePassword")}
+        </Button>
+      </Grid>
     </Grid>
   );
 };
