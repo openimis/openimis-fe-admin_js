@@ -44,6 +44,7 @@
   "admin.user.password": "Password",
   "admin.user.newPassword": "New Password",
   "admin.user.confirmNewPassword": "Confirm Password",
+  "admin.user.generatePassword": "Generate Password",
   "admin.user.phone": "Phone",
   "admin.user.updateUser.mutationLabel": "Update user",
   "admin.user.userRoles.placeholder": "Select User Role(s)",
