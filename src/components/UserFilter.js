@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import _debounce from "lodash/debounce";
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import { injectIntl } from "react-intl";
-import { Grid } from "@material-ui/core";
-import { withModulesManager, decodeId, PublishedComponent, ControlledField, TextInput } from "@openimis/fe-core";
+import { Grid, Checkbox, FormControlLabel, } from "@material-ui/core";
+import { withModulesManager, decodeId, PublishedComponent, ControlledField, TextInput, formatMessage } from "@openimis/fe-core";
 
 const styles = (theme) => ({
   dialogTitle: theme.dialog.title,
@@ -18,35 +18,46 @@ const styles = (theme) => ({
   paperDivider: theme.paper.divider,
 });
 
-const getParentLocation = (locations) => {
+const extractLocations = (locations) => {
   const locationsArray = Object.values(locations).map((l) => l.value);
   const region = locationsArray.find((l) => !l.parent);
   const district = region && locationsArray.find((l) => l.parent && l.parent.id === region.id);
   const municipality = district && locationsArray.find((l) => l.parent && l.parent.id === district.id);
   const village = municipality && locationsArray.find((l) => l.parent && l.parent.id === municipality.id);
+
+  return { region, district, municipality, village };
+};
+
+const getParentLocation = (locations) => {
+  const extractedLocations = extractLocations(locations);
+  const { region, district, municipality, village } = extractedLocations;
   if (!region) {
     return null;
   }
   let newLocation = {
     key: "regionId",
     id: decodeId(region.id),
+    value: region,
   };
   if (district) {
     newLocation = {
       key: "districtId",
       id: decodeId(district.id),
+      value: district,
     };
   }
   if (municipality) {
     newLocation = {
       key: "municipalityId",
       id: decodeId(municipality.id),
+      value: municipality,
     };
   }
   if (village) {
     newLocation = {
       key: "villageId",
       id: decodeId(village.id),
+      value: village,
     };
   }
   return newLocation;
@@ -57,6 +68,8 @@ class UserFilter extends Component {
     currentUserType: undefined,
     currentUserRoles: undefined,
     locationFilters: {},
+    selectedDistrict: {},
+    showHistory: false,
   };
 
   debouncedOnChangeFilter = _debounce(
@@ -67,6 +80,13 @@ class UserFilter extends Component {
   filterValue = (k) => {
     const { filters } = this.props;
     return !!filters && !!filters[k] ? filters[k].value : null;
+  };
+
+  filterDistrict = (locations) => {
+    const extractedLocations = extractLocations(locations);
+    const { district } = extractedLocations;
+
+    return district;
   };
 
   onChangeShowHistory = () => {
@@ -120,9 +140,9 @@ class UserFilter extends Component {
         };
       }
     });
-    this.setState({ locationFilters });
+    const selectedDistrict = this.filterDistrict(locationFilters);
+    this.setState({ locationFilters, selectedDistrict });
     const parentLocation = getParentLocation(locationFilters);
-
     const filters = [
       {
         id: "parentLocation",
@@ -133,8 +153,8 @@ class UserFilter extends Component {
   };
 
   render() {
-    const { classes, onChangeFilters } = this.props;
-    const { locationFilters, currentUserType, currentUserRoles } = this.state;
+    const { classes, onChangeFilters , intl} = this.props;
+    const { locationFilters, currentUserType, currentUserRoles, selectedDistrict } = this.state;
     return (
       <section className={classes.form}>
         <Grid container>
@@ -173,6 +193,7 @@ class UserFilter extends Component {
                   pubRef="location.HealthFacilityPicker"
                   withNull={true}
                   value={this.filterValue("healthFacilityId") || ""}
+                  district={selectedDistrict}
                   onChange={(v) => {
                     onChangeFilters([
                       {
@@ -358,6 +379,28 @@ class UserFilter extends Component {
                     />
                   </Grid>
                 </Grid>
+              </Grid>
+            }
+          />
+          <ControlledField
+            module="policy"
+            id="PolicyFilter.showHistory"
+            field={
+              <Grid item xs={2} className={classes.item}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      color="primary"
+                      checked={this.state.showHistory}
+                      onChange={(e) => this.onChangeShowHistory()}
+                    />
+                  }
+                  label={formatMessage(
+                    intl,
+                    "admin",
+                    "UserFilter.showHistory"
+                  )}
+                />
               </Grid>
             }
           />
