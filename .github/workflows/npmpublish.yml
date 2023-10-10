@@ -6,11 +6,6 @@ name: Node.js Package
 on:
   release:
     types: [published]
-  workflow_dispatch:
-    inputs:
-      comment:
-        description: Just a simple comment to know the purpose of the manual build
-        required: false  
 
 jobs:
   build:
@@ -26,7 +21,6 @@ jobs:
         run: echo $(jq --arg a "$GIT_TAG_NAME" '.version = ($a)' package.json) >  package.json
       - run: yarn install
       - run: yarn build
-      
 
   publish-npm:
     needs: build
