@@ -183,7 +183,7 @@ class UserSearcher extends Component {
           errorItems={errorUsers}
           contributionKey={USER_SEARCHER_CONTRIBUTION_KEY}
           tableTitle={formatMessageWithValues(intl, "admin.user", "userSummaries", {
-            count: usersPageInfo.totalCount?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+            count: usersPageInfo.totalCount?.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,"),
           })}
           fetch={this.fetch}
           rowIdentifier={(r) => r.uuid}
