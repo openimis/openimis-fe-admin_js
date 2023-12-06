@@ -164,7 +164,7 @@ class UserFilter extends Component {
   };
 
   render() {
-    const { classes, filter, onChangeFilters , intl} = this.props;
+    const { classes, filters, onChangeFilters , intl} = this.props;
     const { locationFilters, currentUserType, currentUserRoles, selectedDistrict } = this.state;
     return (
       <section className={classes.form}>
