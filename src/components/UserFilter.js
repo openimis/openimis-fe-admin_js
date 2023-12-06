@@ -3,6 +3,7 @@ import { injectIntl } from "react-intl";
 import _debounce from "lodash/debounce";
 
 import { withTheme, withStyles } from "@material-ui/core/styles";
+import { injectIntl } from "react-intl";
 import { Grid, Checkbox, FormControlLabel } from "@material-ui/core";
 
 import {
@@ -35,6 +36,43 @@ const extractLocations = (locations) => {
   const village = municipality && locationsArray.find((l) => l.parent && l.parent.id === municipality.id);
 
   return { region, district, municipality, village };
+
+};
+
+const getParentLocation = (locations) => {
+  const extractedLocations = extractLocations(locations);
+  const { region, district, municipality, village } = extractedLocations;
+  if (!region) {
+    return null;
+  }
+  let newLocation = {
+    key: "regionId",
+    id: decodeId(region.id),
+    value: region,
+  };
+  if (district) {
+    newLocation = {
+      key: "districtId",
+      id: decodeId(district.id),
+      value: district,
+    };
+  }
+  if (municipality) {
+    newLocation = {
+      key: "municipalityId",
+      id: decodeId(municipality.id),
+      value: municipality,
+    };
+  }
+  if (village) {
+    newLocation = {
+      key: "villageId",
+      id: decodeId(village.id),
+      value: village,
+    };
+  }
+  return newLocation;
+
 };
 
 class UserFilter extends Component {
@@ -53,6 +91,7 @@ class UserFilter extends Component {
     return !!filters && !!filters[k] ? filters[k].value : null;
   };
 
+
   filterTextFieldValue = (k) => {
     const { filters } = this.props;
     return !!filters && !!filters[k] ? filters[k].value : "";
@@ -64,6 +103,7 @@ class UserFilter extends Component {
 
     return district;
   };
+
 
   onChangeCheckbox = (key, value) => {
     const filters = [
@@ -114,13 +154,19 @@ class UserFilter extends Component {
     });
     const selectedDistrict = this.filterDistrict(locationFilters);
     this.setState({ locationFilters, selectedDistrict });
-
-    onChangeFilters(newLocationFilters);
+    const parentLocation = getParentLocation(locationFilters);
+    const filters = [
+      {
+        id: "parentLocation",
+        filter: parentLocation && `${parentLocation.key}: ${parentLocation.id}`,
+      },
+    ];
+    onChangeFilters(filters);
   };
 
   render() {
-    const { classes, filters, onChangeFilters, intl } = this.props;
-    const { selectedDistrict } = this.state;
+    const { classes, onChangeFilters , intl} = this.props;
+    const { locationFilters, currentUserType, currentUserRoles, selectedDistrict } = this.state;
     return (
       <section className={classes.form}>
         <Grid container>
@@ -158,7 +204,8 @@ class UserFilter extends Component {
                 <PublishedComponent
                   pubRef="location.HealthFacilityPicker"
                   withNull={true}
-                  value={this.filterValue("healthFacility")}
+                  value={this.filterValue("healthFacilityId") || ""}
+
                   district={selectedDistrict}
                   onChange={(v) => {
                     onChangeFilters([
@@ -361,6 +408,7 @@ class UserFilter extends Component {
                     />
                   }
                   label={formatMessage(intl, "admin", "UserFilter.showDeleted")}
+
                 />
               </Grid>
             }

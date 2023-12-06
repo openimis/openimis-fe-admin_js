@@ -23,6 +23,7 @@ import {
   setUserEmailValid,
   saveEmailFormatValidity,
 } from "../actions";
+
 import { passwordGenerator } from "../helpers/passwordGenerator";
 
 const styles = (theme) => ({
@@ -89,6 +90,7 @@ const UserMasterPanel = (props) => {
   useEffect(() => {
     handleEmailChange(edited?.email);
   }, []);
+
 
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
