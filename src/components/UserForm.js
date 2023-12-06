@@ -212,7 +212,7 @@ class UserForm extends Component {
       },
     ].filter(Boolean);
     return (
-      <div className={isInMutation ? classes.lockedPage : null}>
+      <div className={isInMutation || !!user?.validityTo ? classes.lockedPage : null}>
         <Helmet title={formatMessageWithValues(this.props.intl, "admin.user", "UserOverview.title", { label: "" })} />
         <ProgressOrError progress={fetchingUser} error={errorUser} />
         {(!userId || user?.id === userId) && (
@@ -230,8 +230,8 @@ class UserForm extends Component {
             Panels={[EnrolmentOfficerFormPanel, ClaimAdministratorFormPanel]}
             user={user}
             onEditedChanged={this.onEditedChanged}
-            canSave={this.canSave}
-            save={save ? this.save : null}
+            canSave={!user.validityTo && this.canSave}
+            save={save && !user.validityTo ? this.save : null}
             onActionToConfirm={this.onActionToConfirm}
             obligatory_user_fields={obligatoryUserFields}
             obligatory_eo_fields={obligatoryEoFields}

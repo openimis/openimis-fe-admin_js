@@ -1,9 +1,19 @@
 import React, { Component } from "react";
+import { injectIntl } from "react-intl";
 import _debounce from "lodash/debounce";
+
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import { injectIntl } from "react-intl";
-import { Grid, Checkbox, FormControlLabel, } from "@material-ui/core";
-import { withModulesManager, decodeId, PublishedComponent, ControlledField, TextInput, formatMessage } from "@openimis/fe-core";
+import { Grid, Checkbox, FormControlLabel } from "@material-ui/core";
+
+import {
+  withModulesManager,
+  decodeId,
+  PublishedComponent,
+  ControlledField,
+  TextInput,
+  formatMessage,
+} from "@openimis/fe-core";
 
 const styles = (theme) => ({
   dialogTitle: theme.dialog.title,
@@ -26,6 +36,7 @@ const extractLocations = (locations) => {
   const village = municipality && locationsArray.find((l) => l.parent && l.parent.id === municipality.id);
 
   return { region, district, municipality, village };
+
 };
 
 const getParentLocation = (locations) => {
@@ -61,25 +72,29 @@ const getParentLocation = (locations) => {
     };
   }
   return newLocation;
+
 };
 
 class UserFilter extends Component {
   state = {
-    currentUserType: undefined,
-    currentUserRoles: undefined,
     locationFilters: {},
     selectedDistrict: {},
-    showHistory: false,
   };
 
   debouncedOnChangeFilter = _debounce(
     this.props.onChangeFilters,
-    this.props.modulesManager.getConf("fe-admin", "debounceTime", 800),
+    this.props.modulesManager.getConf("fe-admin", "debounceTime", 200),
   );
 
   filterValue = (k) => {
     const { filters } = this.props;
     return !!filters && !!filters[k] ? filters[k].value : null;
+  };
+
+
+  filterTextFieldValue = (k) => {
+    const { filters } = this.props;
+    return !!filters && !!filters[k] ? filters[k].value : "";
   };
 
   filterDistrict = (locations) => {
@@ -89,28 +104,25 @@ class UserFilter extends Component {
     return district;
   };
 
-  onChangeShowHistory = () => {
+
+  onChangeCheckbox = (key, value) => {
     const filters = [
       {
-        id: "showHistory",
-        value: !this.state.showHistory,
-        filter: `showHistory: ${!this.state.showHistory}`,
+        id: key,
+        value,
+        filter: `${key}: ${value}`,
       },
     ];
     this.props.onChangeFilters(filters);
-    this.setState((state) => ({
-      showHistory: !state.showHistory,
-    }));
   };
 
   onChangeUserTypes = (currentUserType) => {
     const { onChangeFilters } = this.props;
-    this.setState({ currentUserType });
     onChangeFilters([
       {
         id: "userTypes",
         value: currentUserType,
-        filter: currentUserType ? `userTypes: [${currentUserType}]` : null,
+        filter: currentUserType ? `userTypes: [${currentUserType}]` : [],
       },
     ]);
   };
@@ -122,7 +134,7 @@ class UserFilter extends Component {
       {
         id: "roles",
         value: currentUserRoles,
-        filter: currentUserRoles ? `roles: [${currentUserRoles.map((ur) => decodeId(ur.id)).join(",")}]` : null,
+        filter: currentUserRoles ? `roles: [${currentUserRoles.map((ur) => decodeId(ur.id)).join(",")}]` : [],
       },
     ]);
   };
@@ -165,7 +177,7 @@ class UserFilter extends Component {
               <Grid item xs={3} className={classes.item}>
                 <PublishedComponent
                   pubRef="admin.UserTypesPicker"
-                  value={currentUserType}
+                  value={this.filterValue("userTypes")}
                   onChange={(v) => this.onChangeUserTypes(v)}
                 />
               </Grid>
@@ -178,7 +190,7 @@ class UserFilter extends Component {
               <Grid item xs={3} className={classes.item}>
                 <PublishedComponent
                   pubRef="admin.UserRolesPicker"
-                  value={currentUserRoles}
+                  value={this.filterValue("roles")}
                   onChange={(v) => this.onChangeUserRoles(v)}
                 />
               </Grid>
@@ -193,6 +205,7 @@ class UserFilter extends Component {
                   pubRef="location.HealthFacilityPicker"
                   withNull={true}
                   value={this.filterValue("healthFacilityId") || ""}
+
                   district={selectedDistrict}
                   onChange={(v) => {
                     onChangeFilters([
@@ -208,13 +221,12 @@ class UserFilter extends Component {
             }
           />
         </Grid>
-
         <Grid container>
           <Grid item xs={12}>
             <PublishedComponent
               pubRef="location.DetailedLocationFilter"
               withNull={true}
-              filters={locationFilters}
+              filters={filters}
               onChangeFilters={this.onChangeLocation}
               anchor="parentLocation"
             />
@@ -230,7 +242,7 @@ class UserFilter extends Component {
                   module="user"
                   label="admin.user.username"
                   name="username"
-                  value={this.filterValue("username")}
+                  value={this.filterTextFieldValue("username")}
                   onChange={(v) =>
                     this.debouncedOnChangeFilter([
                       {
@@ -253,7 +265,7 @@ class UserFilter extends Component {
                   module="user"
                   label="admin.user.lastName"
                   name="lastName"
-                  value={this.filterValue("lastName")}
+                  value={this.filterTextFieldValue("lastName")}
                   onChange={(v) =>
                     this.debouncedOnChangeFilter([
                       {
@@ -276,7 +288,7 @@ class UserFilter extends Component {
                   module="user"
                   label="admin.user.otherNames"
                   name="otherNames"
-                  value={this.filterValue("otherNames")}
+                  value={this.filterTextFieldValue("otherNames")}
                   onChange={(v) =>
                     this.debouncedOnChangeFilter([
                       {
@@ -299,7 +311,7 @@ class UserFilter extends Component {
                   module="user"
                   label="admin.user.email"
                   name="email"
-                  value={this.filterValue("email")}
+                  value={this.filterTextFieldValue("email")}
                   onChange={(v) =>
                     this.debouncedOnChangeFilter([
                       {
@@ -324,7 +336,7 @@ class UserFilter extends Component {
                   module="user"
                   label="admin.user.phone"
                   name="phone"
-                  value={this.filterValue("phone")}
+                  value={this.filterTextFieldValue("phone")}
                   onChange={(v) =>
                     this.debouncedOnChangeFilter([
                       {
@@ -384,22 +396,19 @@ class UserFilter extends Component {
           />
           <ControlledField
             module="policy"
-            id="PolicyFilter.showHistory"
+            id="PolicyFilter.showDeleted"
             field={
               <Grid item xs={2} className={classes.item}>
                 <FormControlLabel
                   control={
                     <Checkbox
                       color="primary"
-                      checked={this.state.showHistory}
-                      onChange={(e) => this.onChangeShowHistory()}
+                      checked={!!this.filterValue("showDeleted")}
+                      onChange={(event) => this.onChangeCheckbox("showDeleted", event.target.checked)}
                     />
                   }
-                  label={formatMessage(
-                    intl,
-                    "admin",
-                    "UserFilter.showHistory"
-                  )}
+                  label={formatMessage(intl, "admin", "UserFilter.showDeleted")}
+
                 />
               </Grid>
             }

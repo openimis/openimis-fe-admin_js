@@ -44,6 +44,7 @@
   "admin.user.password": "Password",
   "admin.user.newPassword": "New Password",
   "admin.user.confirmNewPassword": "Confirm Password",
+  "admin.user.generatePassword": "Generate Password",
   "admin.user.phone": "Phone",
   "admin.user.updateUser.mutationLabel": "Update user",
   "admin.user.userRoles.placeholder": "Select User Role(s)",
@@ -57,6 +58,8 @@
   "admin.user.userTypes.none": " ",
   "admin.user.userTypes.null": "Any",
   "admin.user.username": "User name",
+  "admin.PaymentPointManagerPicker.placeholder": "Search for an PPM...",
+  "admin.PaymentPointManagerPicker.label": "Payment Point Manager",
   "admin.user.worksTo": "Works to",
   "admin.EnrolmentOfficerFormPanel.title": "Enrolment Officer",
   "admin.ClaimAdministratorFormPanel.title": "Claim Administrator",
@@ -78,5 +81,6 @@
   "admin.EnrolmentOfficerPicker.clearText": "Clear",
   "admin.EnrolmentOfficerPicker.openText": "Open",
   "admin.EnrolmentOfficerPicker.closeText": "Close",
-  "admin.UserFilter.showHistory": "Show History"
+  "admin.UserFilter.showHistory": "Show History",
+  "admin.UserFilter.showDeleted": "Show Deleted"
 }

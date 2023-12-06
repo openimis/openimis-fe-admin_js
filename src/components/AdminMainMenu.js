@@ -9,6 +9,7 @@ import {
   LocalPharmacy,
   LocalPharmacyOutlined,
   Person,
+  People,
   PinDrop,
   Tune,
 } from "@material-ui/icons";
