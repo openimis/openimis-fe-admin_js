@@ -143,14 +143,17 @@ class UserSearcher extends Component {
               <TabIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip title={formatMessage(this.props.intl, "admin.user", "deleteUser.tooltip")}>
-            <IconButton
-              onClick={() => this.setState({ deleteUser: u })}
-              disabled={u.validityTo}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </Tooltip>
+          {this.props.rights.includes(RIGHT_USER_DELETE) && u.validityTo ? null : (
+            <Tooltip title={formatMessage(this.props.intl, "admin.user", "deleteUser.tooltip")}>
+              <IconButton 
+                onClick={() => this.setState({ deleteUser: u })}
+                disabled={u.validityTo}
+               >
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+          )}
+
         </div>
       ),
     ];
@@ -184,6 +187,7 @@ class UserSearcher extends Component {
           contributionKey={USER_SEARCHER_CONTRIBUTION_KEY}
           tableTitle={formatMessageWithValues(intl, "admin.user", "userSummaries", {
             count: usersPageInfo.totalCount?.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,"),
+
           })}
           fetch={this.fetch}
           rowIdentifier={(r) => r.uuid}
