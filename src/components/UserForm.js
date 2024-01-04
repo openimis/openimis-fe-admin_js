@@ -41,11 +41,12 @@ const USER_OVERVIEW_MUTATIONS_KEY = "user.UserOverview.mutations";
 
 const setupState = (props) => ({
   isLocked: false,
-  user: !props.userId
+  user: !props?.userId
     ? {
         userTypes: [INTERACTIVE_USER_TYPE],
       }
     : props.user,
+  isSaved: false,
 });
 
 class UserForm extends Component {
@@ -74,18 +75,20 @@ class UserForm extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.region_districts != this.props.region_districts) {
-      if (!!this.props.region_districts) {
+    if (prevProps.region_districts !== this.props.region_districts) {
+      if (this.props.region_districts) {
         const combined = [
-          ...(!!this.state.user.districts ? this.state.user.districts : []),
+          ...(this.state.user.districts ? this.state.user.districts : []),
           ...this.props.region_districts,
         ];
-        const no_duplicates = [...new Map(combined.map((x) => [x.uuid, x])).values()];
-        this.state.user.districts = no_duplicates;
-        this.state.user.region = [];
-        this.setState((state, props) => ({
+
+        const noDuplicates = [...new Map(combined.map((x) => [x.uuid, x])).values()];
+
+        this.setState((prevState) => ({
           user: {
-            ...state.user,
+            ...prevState.user,
+            districts: noDuplicates,
+            region: [],
           },
         }));
       }
@@ -108,25 +111,37 @@ class UserForm extends Component {
     }
   }
 
-  reload = () => {
-    const { clientMutationId } = this.props.mutation;
-    if (clientMutationId) {
-      this.props.fetchUserMutation(this.props.modulesManager, clientMutationId).then((res) => {
-        const mutationLogs = parseData(res.payload.data.mutationLogs);
-        if (
-          mutationLogs &&
-          mutationLogs[0] &&
-          mutationLogs[0].users &&
-          mutationLogs[0].users[0] &&
-          mutationLogs[0].users[0].coreUser
-        ) {
-          const { id } = parseData(res.payload.data.mutationLogs)[0].users[0].coreUser;
-          if (id) {
-            historyPush(this.props.modulesManager, this.props.history, "admin.userOverview", [id]);
-          }
-        }
-      });
+  reload = async () => {
+    const { isSaved } = this.state;
+    // eslint-disable-next-line no-shadow
+    const { modulesManager, history, mutation, fetchUserMutation, userId, fetchUser } = this.props;
+
+    if (userId) {
+      try {
+        await fetchUser(modulesManager, userId);
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(`[RELOAD_USER]: Fetching user details failed. ${error}`);
+      }
+      return;
     }
+
+    if (isSaved) {
+      try {
+        const { clientMutationId } = mutation;
+        const response = await fetchUserMutation(modulesManager, clientMutationId);
+        const createdUserId = parseData(response.payload.data.mutationLogs)[0].users[0].coreUser.id;
+
+        await fetchUser(modulesManager, createdUserId);
+        historyPush(modulesManager, history, "admin.userOverview", [createdUserId]);
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(`[RELOAD_USER]: Fetching user details failed. ${error}`);
+      }
+      return;
+    }
+
+    this.setState(setupState(this.props));
   };
 
   canSave = () => {
@@ -152,8 +167,8 @@ class UserForm extends Component {
     if (user.userTypes?.includes(CLAIM_ADMIN_USER_TYPE) && !user.healthFacility) return false;
     if (user.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && !user.officerVillages) return false;
     if (
-      (this.props.obligatory_user_fields?.phone == "M" ||
-        (user.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && this.props.obligatory_eo_fields?.phone == "M")) &&
+      (this.props.obligatory_user_fields?.phone === "M" ||
+        (user.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && this.props.obligatory_eo_fields?.phone === "M")) &&
       !user.phoneNumber
     )
       return false;
@@ -162,12 +177,11 @@ class UserForm extends Component {
   };
 
   save = (user) => {
-    this.setState({ isLocked: true });
-    this.props.save(user);
+    this.setState({ isLocked: !user?.id, isSaved: true }, this.props.save(user));
   };
 
   onEditedChanged = (user) => {
-    if (!!user.region) {
+    if (user.region) {
       user.region.forEach((region) => {
         this.props.fetchRegionDistricts(region);
       });
@@ -196,7 +210,7 @@ class UserForm extends Component {
       obligatoryEoFields,
       usernameLength,
     } = this.props;
-    const { user } = this.state;
+    const { user, isSaved } = this.state;
 
     if (!rights.includes(RIGHT_USERS)) return null;
 
@@ -205,12 +219,13 @@ class UserForm extends Component {
       modulesManager.getContribs(USER_OVERVIEW_MUTATIONS_KEY).some((mutation) => mutation(state));
 
     const actions = [
-      !userId && {
+      {
         doIt: this.reload,
         icon: <ReplayIcon />,
-        onlyIfDirty: !readOnly && !isInMutation,
+        onlyIfDirty: !readOnly && !isInMutation && !isSaved,
       },
-    ].filter(Boolean);
+    ];
+
     return (
       <div className={isInMutation || !!user?.validityTo ? classes.lockedPage : null}>
         <Helmet title={formatMessageWithValues(this.props.intl, "admin.user", "UserOverview.title", { label: "" })} />
