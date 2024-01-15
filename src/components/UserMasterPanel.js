@@ -264,7 +264,7 @@ const UserMasterPanel = (props) => {
           label="user.language"
           readOnly={readOnly}
           required
-          withNull
+          withNull={false}
           nullLabel={formatMessage("UserMasterPanel.language.null")}
           value={edited.language ?? ""}
           onChange={(language) => onEditedChanged({ ...edited, language })}
