@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { injectIntl } from "react-intl";
 import _debounce from "lodash/debounce";
 
 import { withTheme, withStyles } from "@material-ui/core/styles";
@@ -165,7 +164,7 @@ class UserFilter extends Component {
   };
 
   render() {
-    const { classes, onChangeFilters , intl} = this.props;
+    const { classes, filters, onChangeFilters , intl} = this.props;
     const { locationFilters, currentUserType, currentUserRoles, selectedDistrict } = this.state;
     return (
       <section className={classes.form}>
