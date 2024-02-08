@@ -22,6 +22,10 @@ export const CLAIM_ADMIN_USER_TYPE = "CLAIM_ADMIN";
 export const CLAIM_ADMIN_IS_SYSTEM = 256;
 export const MODULE_NAME = "user";
 
+export const DEFAULT = {
+  RENDER_LAST_NAME_FIRST: true,
+};
+
 // https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address
 export const EMAIL_REGEX_PATTERN =
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;

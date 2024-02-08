@@ -13,6 +13,7 @@ import {
   TextInput,
   formatMessage,
 } from "@openimis/fe-core";
+import { DEFAULT } from "../constants";
 
 const styles = (theme) => ({
   dialogTitle: theme.dialog.title,
@@ -35,7 +36,6 @@ const extractLocations = (locations) => {
   const village = municipality && locationsArray.find((l) => l.parent && l.parent.id === municipality.id);
 
   return { region, district, municipality, village };
-
 };
 
 const getParentLocation = (locations) => {
@@ -71,10 +71,18 @@ const getParentLocation = (locations) => {
     };
   }
   return newLocation;
-
 };
 
 class UserFilter extends Component {
+  constructor(props) {
+    super(props);
+    this.renderLastNameFirst = props.modulesManager.getConf(
+      "fe-insuree",
+      "renderLastNameFirst",
+      DEFAULT.RENDER_LAST_NAME_FIRST,
+    );
+  }
+
   state = {
     locationFilters: {},
     selectedDistrict: {},
@@ -90,7 +98,6 @@ class UserFilter extends Component {
     return !!filters && !!filters[k] ? filters[k].value : null;
   };
 
-
   filterTextFieldValue = (k) => {
     const { filters } = this.props;
     return !!filters && !!filters[k] ? filters[k].value : "";
@@ -102,7 +109,6 @@ class UserFilter extends Component {
 
     return district;
   };
-
 
   onChangeCheckbox = (key, value) => {
     const filters = [
@@ -163,8 +169,60 @@ class UserFilter extends Component {
     onChangeFilters(filters);
   };
 
+  renderLastNameField = (classes) => (
+    <ControlledField
+      module="admin"
+      id="userFilter.LastName"
+      field={
+        <Grid item xs={3} className={classes.item}>
+          <TextInput
+            module="user"
+            label="admin.user.lastName"
+            name="lastName"
+            value={this.filterTextFieldValue("lastName")}
+            onChange={(v) =>
+              this.debouncedOnChangeFilter([
+                {
+                  id: "lastName",
+                  value: v,
+                  filter: `lastName: "${v}"`,
+                },
+              ])
+            }
+          />
+        </Grid>
+      }
+    />
+  );
+
+  renderGivenNameField = (classes) => (
+    <ControlledField
+      module="admin"
+      id="userFilter.OtherNames"
+      field={
+        <Grid item xs={3} className={classes.item}>
+          <TextInput
+            module="user"
+            label="admin.user.otherNames"
+            name="otherNames"
+            value={this.filterTextFieldValue("otherNames")}
+            onChange={(v) =>
+              this.debouncedOnChangeFilter([
+                {
+                  id: "otherNames",
+                  value: v,
+                  filter: `otherNames: "${v}"`,
+                },
+              ])
+            }
+          />
+        </Grid>
+      }
+    />
+  );
+
   render() {
-    const { classes, filters, onChangeFilters , intl} = this.props;
+    const { classes, filters, onChangeFilters, intl } = this.props;
     const { locationFilters, currentUserType, currentUserRoles, selectedDistrict } = this.state;
     return (
       <section className={classes.form}>
@@ -204,7 +262,6 @@ class UserFilter extends Component {
                   pubRef="location.HealthFacilityPicker"
                   withNull={true}
                   value={this.filterValue("healthFacilityId") || ""}
-
                   district={selectedDistrict}
                   onChange={(v) => {
                     onChangeFilters([
@@ -255,52 +312,17 @@ class UserFilter extends Component {
               </Grid>
             }
           />
-          <ControlledField
-            module="admin"
-            id="userFilter.LastName"
-            field={
-              <Grid item xs={3} className={classes.item}>
-                <TextInput
-                  module="user"
-                  label="admin.user.lastName"
-                  name="lastName"
-                  value={this.filterTextFieldValue("lastName")}
-                  onChange={(v) =>
-                    this.debouncedOnChangeFilter([
-                      {
-                        id: "lastName",
-                        value: v,
-                        filter: `lastName: "${v}"`,
-                      },
-                    ])
-                  }
-                />
-              </Grid>
-            }
-          />
-          <ControlledField
-            module="admin"
-            id="userFilter.OtherNames"
-            field={
-              <Grid item xs={3} className={classes.item}>
-                <TextInput
-                  module="user"
-                  label="admin.user.otherNames"
-                  name="otherNames"
-                  value={this.filterTextFieldValue("otherNames")}
-                  onChange={(v) =>
-                    this.debouncedOnChangeFilter([
-                      {
-                        id: "otherNames",
-                        value: v,
-                        filter: `otherNames: "${v}"`,
-                      },
-                    ])
-                  }
-                />
-              </Grid>
-            }
-          />
+          {this.renderLastNameFirst ? (
+            <>
+              {this.renderLastNameField(classes)}
+              {this.renderGivenNameField(classes)}
+            </>
+          ) : (
+            <>
+              {this.renderGivenNameField(classes)}
+              {this.renderLastNameField(classes)}
+            </>
+          )}
           <ControlledField
             module="admin"
             id="userFilter.Email"
@@ -407,7 +429,6 @@ class UserFilter extends Component {
                     />
                   }
                   label={formatMessage(intl, "admin", "UserFilter.showDeleted")}
-
                 />
               </Grid>
             }
