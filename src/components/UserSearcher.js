@@ -17,45 +17,54 @@ import {
   decodeId,
 } from "@openimis/fe-core";
 import { fetchUsersSummaries, deleteUser } from "../actions";
-import { RIGHT_USER_DELETE } from "../constants";
+import { DEFAULT, RIGHT_USER_DELETE } from "../constants";
 import UserFilter from "./UserFilter";
 
 const USER_SEARCHER_CONTRIBUTION_KEY = "user.UserSearcher";
-
-const getHeaders = () => [
-  "admin.user.username",
-  "admin.user.lastName",
-  "admin.user.otherNames",
-  "admin.user.email",
-  "admin.user.phone",
-  "admin.user.dob",
-  "",
-];
-
-const getSorts = () => [
-  ["username", true],
-  ["iUser_LastName", true],
-  ["iUser_OtherNames", true],
-  ["iUser_Email", true],
-  ["iUser_Phone", true],
-  ["officer__dob", false],
-];
-
-const getAligns = () => {
-  const aligns = getHeaders().map(() => null);
-  aligns.splice(-1, 1, "right");
-  return aligns;
-};
 
 const styles = (theme) => ({
   horizontalButtonContainer: theme.buttonContainer.horizontal,
 });
 
 class UserSearcher extends Component {
+  constructor(props) {
+    super(props);
+    this.renderLastNameFirst = props.modulesManager.getConf(
+      "fe-insuree",
+      "renderLastNameFirst",
+      DEFAULT.RENDER_LAST_NAME_FIRST,
+    );
+  }
+
   state = {
     deleteUser: null,
     params: {},
     defaultParams: {},
+  };
+
+  getHeaders = () => [
+    "admin.user.username",
+    this.renderLastNameFirst ? "admin.user.lastName" : "admin.user.otherNames",
+    !this.renderLastNameFirst ? "admin.user.lastName" : "admin.user.otherNames",
+    "admin.user.email",
+    "admin.user.phone",
+    "admin.user.dob",
+    "",
+  ];
+
+  getSorts = () => [
+    ["username", true],
+    this.renderLastNameFirst ? ["iUser_LastName", true] : ["iUser_OtherNames", true],
+    !this.renderLastNameFirst ? ["iUser_LastName", true] : ["iUser_OtherNames", true],
+    ["iUser_Email", true],
+    ["iUser_Phone", true],
+    ["officer__dob", false],
+  ];
+
+  getAligns = () => {
+    const aligns = this.getHeaders().map(() => null);
+    aligns.splice(-1, 1, "right");
+    return aligns;
   };
 
   fetch = (params) => {
@@ -128,8 +137,8 @@ class UserSearcher extends Component {
   itemFormatters = () => {
     const formatters = [
       (u) => u.username,
-      (u) => this.getUserItem(u, "lastName"),
-      (u) => this.getUserItem(u, "otherNames"),
+      (u) => (this.renderLastNameFirst ? this.getUserItem(u, "lastName") : this.getUserItem(u, "otherNames")),
+      (u) => (!this.renderLastNameFirst ? this.getUserItem(u, "lastName") : this.getUserItem(u, "otherNames")),
       (u) => this.getUserItem(u, "email") || this.getUserItem(u, "emailId"),
       (u) => this.getUserItem(u, "phone"),
       (u) =>
@@ -145,15 +154,11 @@ class UserSearcher extends Component {
           </Tooltip>
           {this.props.rights.includes(RIGHT_USER_DELETE) && u.validityTo ? null : (
             <Tooltip title={formatMessage(this.props.intl, "admin.user", "deleteUser.tooltip")}>
-              <IconButton 
-                onClick={() => this.setState({ deleteUser: u })}
-                disabled={u.validityTo}
-               >
+              <IconButton onClick={() => this.setState({ deleteUser: u })} disabled={u.validityTo}>
                 <DeleteIcon />
               </IconButton>
             </Tooltip>
           )}
-
         </div>
       ),
     ];
@@ -187,16 +192,15 @@ class UserSearcher extends Component {
           contributionKey={USER_SEARCHER_CONTRIBUTION_KEY}
           tableTitle={formatMessageWithValues(intl, "admin.user", "userSummaries", {
             count: usersPageInfo.totalCount?.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,"),
-
           })}
           fetch={this.fetch}
           rowIdentifier={(r) => r.uuid}
           filtersToQueryParams={this.filtersToQueryParams}
           defaultOrderBy="-username"
-          headers={getHeaders}
-          aligns={getAligns}
+          headers={this.getHeaders}
+          aligns={this.getAligns}
           itemFormatters={this.itemFormatters}
-          sorts={getSorts}
+          sorts={this.getSorts}
           rowDisabled={(_, i) => i.validityTo || i.clientMutationId}
           rowLocked={(_, i) => i.clientMutationId}
           onDoubleClick={onDoubleClick}

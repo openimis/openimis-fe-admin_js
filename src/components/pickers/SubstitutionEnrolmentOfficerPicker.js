@@ -3,13 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { TextField } from "@material-ui/core";
 
-import { Autocomplete, useTranslations } from "@openimis/fe-core";
+import { withModulesManager, Autocomplete, useTranslations } from "@openimis/fe-core";
 import { fetchSubstitutionEOs } from "../../utils";
-
-const formatSuggestion = (p) => {
-  if (!p) return "?";
-  return [p.code, p.lastName, p.otherNames].filter(Boolean).join(" ");
-};
+import { DEFAULT } from "../../constants";
 
 const SubstitutionEnrolmentOfficerPicker = (props) => {
   const {
@@ -36,6 +32,23 @@ const SubstitutionEnrolmentOfficerPicker = (props) => {
   const handleInputChange = (str) => {
     setSearchString(str);
     fetchSubstitutionEOs(dispatch, modulesManager, officerUuid, searchString, villages);
+  };
+
+  const formatSuggestion = (p) => {
+    const renderLastNameFirst = modulesManager.getConf(
+      "fe-insuree",
+      "renderLastNameFirst",
+      DEFAULT.RENDER_LAST_NAME_FIRST,
+    );
+
+    if (!p) return "?";
+    return [
+      p.username,
+      renderLastNameFirst ? p.lastName : p.otherNames,
+      !renderLastNameFirst ? p.lastName : p.otherNames,
+    ]
+      .filter(Boolean)
+      .join(" ");
   };
 
   return (
@@ -68,4 +81,4 @@ const SubstitutionEnrolmentOfficerPicker = (props) => {
   );
 };
 
-export default SubstitutionEnrolmentOfficerPicker;
+export default withModulesManager(SubstitutionEnrolmentOfficerPicker);
