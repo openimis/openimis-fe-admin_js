@@ -39,14 +39,12 @@ class AdminMainMenu extends Component {
     const { rights } = this.props;
     const entries = [];
 
-    if (this.isWorker) {
-      if (rights.includes(RIGHT_USERS)) {
-        entries.push({
-          text: formatMessage(this.props.intl, "admin", "menu.users"),
-          icon: <Person />,
-          route: "/admin/users",
-        });
-      }
+    if (this.isWorker && rights.includes(RIGHT_USERS)) {
+      entries.push({
+        text: formatMessage(this.props.intl, "admin", "menu.users"),
+        icon: <Person />,
+        route: "/admin/users",
+      });
 
       if (!entries.length) return null;
 
