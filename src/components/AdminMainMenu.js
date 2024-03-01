@@ -30,9 +30,33 @@ import {
 const ADMIN_MAIN_MENU_CONTRIBUTION_KEY = "admin.MainMenu";
 
 class AdminMainMenu extends Component {
+  constructor(props) {
+    super(props);
+    this.isWorker = props.modulesManager.getConf("fe-core", "isWorker", false);
+  }
+
   render() {
     const { rights } = this.props;
     const entries = [];
+
+    if (this.isWorker && rights.includes(RIGHT_USERS)) {
+      entries.push({
+        text: formatMessage(this.props.intl, "admin", "menu.users"),
+        icon: <Person />,
+        route: "/admin/users",
+      });
+
+      if (!entries.length) return null;
+
+      return (
+        <MainMenuContribution
+          {...this.props}
+          header={formatMessage(this.props.intl, "admin", "mainMenu")}
+          icon={<LocationCity />}
+          entries={entries}
+        />
+      );
+    }
 
     if (rights.includes(RIGHT_PRODUCTS)) {
       entries.push({
