@@ -28,6 +28,7 @@ import {
 } from "../constants";
 
 const ADMIN_MAIN_MENU_CONTRIBUTION_KEY = "admin.MainMenu";
+const ADMIN_VOUCHER_MAIN_MENU_CONTRIBUTION_KEY = "admin.voucher.MainMenu";
 
 class AdminMainMenu extends Component {
   constructor(props) {
@@ -50,7 +51,7 @@ class AdminMainMenu extends Component {
 
       entries.push(
         ...this.props.modulesManager
-          .getContribs(ADMIN_MAIN_MENU_CONTRIBUTION_KEY)
+          .getContribs(ADMIN_VOUCHER_MAIN_MENU_CONTRIBUTION_KEY)
           .filter((c) => !c.filter || c.filter(rights)),
       );
 
