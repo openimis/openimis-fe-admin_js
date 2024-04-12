@@ -229,11 +229,7 @@ const UserMasterPanel = (props) => {
           district={edited.districts}
           module="admin"
           readOnly={readOnly}
-          required={
-            edited.userTypes.includes(
-              CLAIM_ADMIN_USER_TYPE,
-            ) /* This field is also present in the claim administrator panel */
-          }
+          required={edited.userTypes.includes(CLAIM_ADMIN_USER_TYPE)}
           onChange={(healthFacility) => onEditedChanged({ ...edited, healthFacility })}
         />
       </Grid>
@@ -264,7 +260,7 @@ const UserMasterPanel = (props) => {
         <PublishedComponent
           pubRef="location.LocationPicker"
           locationLevel={1}
-          value={edited.districts}
+          value={edited?.districts ?? []}
           onChange={(districts) => onEditedChanged({ ...edited, districts })}
           readOnly={readOnly}
           required

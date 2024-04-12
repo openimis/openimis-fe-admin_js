@@ -47,6 +47,7 @@ const setupState = (props) => ({
       }
     : props.user,
   isSaved: false,
+  reset: 0,
 });
 
 class UserForm extends Component {
@@ -123,6 +124,7 @@ class UserForm extends Component {
         // eslint-disable-next-line no-console
         console.error(`[RELOAD_USER]: Fetching user details failed. ${error}`);
       }
+      this.setState((state) => ({ ...state, reset: state.reset + 1 }));
       return;
     }
 
@@ -138,6 +140,7 @@ class UserForm extends Component {
         // eslint-disable-next-line no-console
         console.error(`[RELOAD_USER]: Fetching user details failed. ${error}`);
       }
+      this.setState((state) => ({ ...state, reset: state.reset + 1 }));
       return;
     }
 
@@ -210,7 +213,7 @@ class UserForm extends Component {
       obligatoryEoFields,
       usernameLength,
     } = this.props;
-    const { user, isSaved } = this.state;
+    const { user, isSaved, reset } = this.state;
 
     if (!rights.includes(RIGHT_USERS)) return null;
 
@@ -236,6 +239,7 @@ class UserForm extends Component {
             title={userId ? "admin.user.UserOverview.title" : "admin.user.UserOverview.newTitle"}
             edited_id={userId}
             edited={user}
+            reset={reset}
             back={back}
             add={add}
             openDirty={save}
