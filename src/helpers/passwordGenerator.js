@@ -32,7 +32,7 @@ export const passwordGenerator = (options) => {
 
   // Fill the rest of the password with random characters
   for (let i = categoriesArray.length; i < length; i++) {
-    const randomCategory = categoriesArray[Math.floor(Math.random() * categoriesArray.length)];
+    const randomCategory = categoriesArray[getSafeRandomNumberArray(1, categoriesArray.length)];
     password += getRandomOfType(randomCategory);
   }
 
@@ -43,7 +43,7 @@ export const passwordGenerator = (options) => {
 };
 
 function shuffle(str) {
-  return str.split('').sort(() => Math.random() - 0.5).join('');
+  return str.split('').sort(() => getSafeRandomNumberArray(1, 3) - 0.5).join('');
 }
 
 function getRandomOfType(charset) {
