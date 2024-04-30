@@ -106,7 +106,7 @@ const UserMasterPanel = (props) => {
 
   const generatePassword = () => {
     const passwordGeneratorOptions = modulesManager.getConf("fe-admin", "passwordGeneratorOptions", {
-      length: 10,
+      length: 12,
       isNumberRequired: true,
       isLowerCaseRequired: true,
       isUpperCaseRequired: true,

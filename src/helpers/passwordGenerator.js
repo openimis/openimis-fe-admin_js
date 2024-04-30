@@ -6,7 +6,7 @@ export const passwordGenerator = (options) => {
   const lowercase = uppercase.toLowerCase();
   const numbers = "0123456789";
   const specialCharacters = "!@#$%^&*()_+-=[]{}|;:,.<>?";
-  const length = options?.length ?? 10;
+  const length = options?.length ?? 12;
   const isNumberRequired = options?.isNumberRequired ?? true;
   const isLowerCaseRequired = options?.isLowerCaseRequired ?? true;
   const isUpperCaseRequired = options?.isUpperCaseRequired ?? true;
@@ -25,20 +25,34 @@ export const passwordGenerator = (options) => {
 
   const categoriesArray = getCategoriesArray();
 
-  getSafeRandomNumberArray(length, categoriesArray.length).forEach((category) => {
-    password += getRandomOfType(categoriesArray[category]);
+  // Select at least one character from each selected category
+  categoriesArray.forEach((category) => {
+    password += getRandomOfType(category);
   });
+
+  // Fill the rest of the password with random characters
+  for (let i = categoriesArray.length; i < length; i++) {
+    const randomCategory = categoriesArray[Math.floor(Math.random() * categoriesArray.length)];
+    password += getRandomOfType(randomCategory);
+  }
+
+  // Shuffle the password to randomize the positions of characters
+  password = shuffle(password);
 
   return password;
 };
+
+function shuffle(str) {
+  return str.split('').sort(() => Math.random() - 0.5).join('');
+}
+
+function getRandomOfType(charset) {
+  return charset.charAt(getSafeRandomNumberArray(1, charset.length));
+}
 
 function getSafeRandomNumberArray(length, modulo) {
   // crypto.getRandomValues is coded in a way that is cryptographically secure
   // do not use Math.Random to generate password
   const seedArray = self.crypto.getRandomValues(new Uint32Array(length));
   return Array.from(seedArray, (value) => value % modulo);
-}
-
-function getRandomOfType(charset) {
-  return charset.charAt(getSafeRandomNumberArray(1, charset.length));
 }
