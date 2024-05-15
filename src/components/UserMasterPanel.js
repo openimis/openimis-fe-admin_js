@@ -23,9 +23,11 @@ import {
   userEmailValidationClear,
   setUserEmailValid,
   saveEmailFormatValidity,
+  fetchPasswordPolicy,
 } from "../actions";
 
 import { passwordGenerator } from "../helpers/passwordGenerator";
+import { validatePassword } from "../helpers/passwordValidator"; // Updated import
 
 const styles = (theme) => ({
   tableTitle: theme.table.title,
@@ -59,9 +61,15 @@ const UserMasterPanel = (props) => {
     savedUsername,
     savedUserEmail,
     usernameLength,
+    passwordPolicy,
   } = props;
-  const { formatMessage } = useTranslations("admin", modulesManager);
+  const { formatMessage, formatMessageWithValues } = useTranslations("admin", modulesManager);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchPasswordPolicy());
+  }, [dispatch]);
+
   const renderLastNameFirst = modulesManager.getConf(
     "fe-insuree",
     "renderLastNameFirst",
@@ -97,11 +105,20 @@ const UserMasterPanel = (props) => {
     handleEmailChange(edited?.email);
   }, []);
 
+  const [passwordFeedback, setPasswordFeedback] = useState("");
+  const [passwordScore, setPasswordScore] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
+  };
+
+  const handlePasswordChange = (password) => {
+    const { feedback, score } = validatePassword(password, passwordPolicy, formatMessage, formatMessageWithValues); // Updated function call
+    setPasswordFeedback(feedback);
+    setPasswordScore(score);
+    onEditedChanged({ ...edited, password });
   };
 
   const generatePassword = () => {
@@ -295,7 +312,9 @@ const UserMasterPanel = (props) => {
           label="user.newPassword"
           readOnly={readOnly}
           value={edited.password}
-          onChange={(password) => onEditedChanged({ ...edited, password })}
+          onChange={(password) => {
+            handlePasswordChange(password);
+          }}
           endAdornment={
             <InputAdornment position="end">
               <IconButton
@@ -309,6 +328,9 @@ const UserMasterPanel = (props) => {
             </InputAdornment>
           }
         />
+        <Typography color={passwordScore >= 2 ? "primary" : "error"} className={classes.passwordFeedback}>
+          {passwordFeedback}
+        </Typography>
       </Grid>
       <Grid item xs={4} className={classes.item}>
         <TextInput

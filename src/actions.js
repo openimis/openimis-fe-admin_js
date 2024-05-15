@@ -330,6 +330,13 @@ export function fetchUsernameLength() {
   return graphql(payload, `USERNAME_LENGTH_FIELDS`);
 }
 
+export function fetchPasswordPolicy() {
+  const payload = `query {
+    passwordPolicy
+  }`;
+  return graphql(payload, "PASSWORD_POLICY_FIELDS");
+}
+
 export function usernameValidationClear() {
   return (dispatch) => {
     dispatch({ type: `USERNAME_FIELDS_VALIDATION_CLEAR` });
