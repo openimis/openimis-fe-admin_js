@@ -27,7 +27,7 @@ import {
 } from "../actions";
 
 import { passwordGenerator } from "../helpers/passwordGenerator";
-import { validatePassword } from "../helpers/passwordValidator"; // Updated import
+import { validatePassword } from "../helpers/passwordValidator";
 
 const styles = (theme) => ({
   tableTitle: theme.table.title,
@@ -108,6 +108,7 @@ const UserMasterPanel = (props) => {
   const [passwordFeedback, setPasswordFeedback] = useState("");
   const [passwordScore, setPasswordScore] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
+  const IS_PASSWORD_SECURED = passwordScore >= 2;
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const handleMouseDownPassword = (event) => {
@@ -115,7 +116,7 @@ const UserMasterPanel = (props) => {
   };
 
   const handlePasswordChange = (password) => {
-    const { feedback, score } = validatePassword(password, passwordPolicy, formatMessage, formatMessageWithValues); // Updated function call
+    const { feedback, score } = validatePassword(password, passwordPolicy, formatMessage, formatMessageWithValues);
     setPasswordFeedback(feedback);
     setPasswordScore(score);
     onEditedChanged({ ...edited, password });
@@ -198,47 +199,47 @@ const UserMasterPanel = (props) => {
         obligatoryUserFields?.email == "H" ||
         (edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && obligatoryEOFields?.email == "H")
       ) && (
-        <Grid item xs={4} className={classes.item}>
-          <ValidatedTextInput
-            itemQueryIdentifier="userEmail"
-            shouldValidate={shouldValidateEmail}
-            isValid={isUserEmailValid}
-            isValidating={isUserEmailValidating}
-            validationError={emailValidationError}
-            invalidValueFormat={isUserEmailFormatInvalid}
-            action={userEmailValidationCheck}
-            clearAction={userEmailValidationClear}
-            setValidAction={setUserEmailValid}
-            readOnly={readOnly}
-            module="admin"
-            label="user.email"
-            type="email"
-            codeTakenLabel="user.emailAlreadyTaken"
-            required={true}
-            value={edited?.email ?? ""}
-            onChange={(email) => handleEmailChange(email)}
-          />
-        </Grid>
-      )}
+          <Grid item xs={4} className={classes.item}>
+            <ValidatedTextInput
+              itemQueryIdentifier="userEmail"
+              shouldValidate={shouldValidateEmail}
+              isValid={isUserEmailValid}
+              isValidating={isUserEmailValidating}
+              validationError={emailValidationError}
+              invalidValueFormat={isUserEmailFormatInvalid}
+              action={userEmailValidationCheck}
+              clearAction={userEmailValidationClear}
+              setValidAction={setUserEmailValid}
+              readOnly={readOnly}
+              module="admin"
+              label="user.email"
+              type="email"
+              codeTakenLabel="user.emailAlreadyTaken"
+              required={true}
+              value={edited?.email ?? ""}
+              onChange={(email) => handleEmailChange(email)}
+            />
+          </Grid>
+        )}
       {!(
         obligatoryUserFields?.phone == "H" ||
         (edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && obligatoryEOFields?.phone == "H")
       ) && (
-        <Grid item xs={4} className={classes.item}>
-          <TextInput
-            module="admin"
-            type="phone"
-            label="user.phone"
-            required={
-              obligatoryUserFields?.phone == "M" ||
-              (edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && obligatoryEOFields?.phone == "M")
-            }
-            readOnly={readOnly}
-            value={edited?.phoneNumber ?? ""}
-            onChange={(phoneNumber) => onEditedChanged({ ...edited, phoneNumber })}
-          />
-        </Grid>
-      )}
+          <Grid item xs={4} className={classes.item}>
+            <TextInput
+              module="admin"
+              type="phone"
+              label="user.phone"
+              required={
+                obligatoryUserFields?.phone == "M" ||
+                (edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && obligatoryEOFields?.phone == "M")
+              }
+              readOnly={readOnly}
+              value={edited?.phoneNumber ?? ""}
+              onChange={(phoneNumber) => onEditedChanged({ ...edited, phoneNumber })}
+            />
+          </Grid>
+        )}
       <Grid item xs={4} className={classes.item}>
         <PublishedComponent
           pubRef="location.HealthFacilityPicker"
@@ -328,7 +329,7 @@ const UserMasterPanel = (props) => {
             </InputAdornment>
           }
         />
-        <Typography color={passwordScore >= 2 ? "primary" : "error"} className={classes.passwordFeedback}>
+        <Typography color={IS_PASSWORD_SECURED ? "primary" : "error"} className={classes.passwordFeedback}>
           {passwordFeedback}
         </Typography>
       </Grid>
