@@ -30,6 +30,7 @@ import {
   fetchObligatoryUserFields,
   fetchObligatoryEnrolmentOfficerFields,
   fetchUsernameLength,
+  fetchPasswordPolicy,
 } from "../actions";
 import UserMasterPanel from "./UserMasterPanel";
 
@@ -68,6 +69,9 @@ class UserForm extends Component {
     }
     if (!this.state.usernameLength) {
       this.props.fetchUsernameLength();
+    }
+    if (!this.state.passwordPolicy) {
+      this.props.fetchPasswordPolicy();
     }
   }
 
@@ -212,6 +216,7 @@ class UserForm extends Component {
       obligatoryUserFields,
       obligatoryEoFields,
       usernameLength,
+      passwordPolicy
     } = this.props;
     const { user, isSaved, reset } = this.state;
 
@@ -255,6 +260,7 @@ class UserForm extends Component {
             obligatory_user_fields={obligatoryUserFields}
             obligatory_eo_fields={obligatoryEoFields}
             usernameLength={usernameLength}
+            passwordPolicy={passwordPolicy}
           />
         )}
       </div>
@@ -277,6 +283,7 @@ const mapStateToProps = (state) => ({
   isUserNameValid: state.admin.validationFields?.username?.isValid,
   isUserEmailValid: state.admin.validationFields?.userEmail?.isValid,
   usernameLength: state.admin?.usernameLength,
+  passwordPolicy: state.admin?.passwordPolicy,
   isUserEmailFormatInvalid: state.admin.validationFields?.userEmailFormat?.isInvalid,
 });
 
@@ -291,6 +298,7 @@ const mapDispatchToProps = (dispatch) =>
       fetchObligatoryUserFields,
       fetchObligatoryEnrolmentOfficerFields,
       fetchUsernameLength,
+      fetchPasswordPolicy,
       journalize,
       coreConfirm,
     },

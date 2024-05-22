@@ -477,6 +477,28 @@ function reducer(
         fetchingUsernameLength: false,
         errorUsernameLength: formatServerError(action.payload),
       };
+    case "PASSWORD_POLICY_FIELDS_REQ":
+      return {
+        ...state,
+        fetchingPasswordPolicy: true,
+        fetchedPasswordPolicy: false,
+        passwordPolicy: null,
+        errorPasswordPolicy: null,
+      };
+    case "PASSWORD_POLICY_FIELDS_RESP":
+      return {
+        ...state,
+        fetchingPasswordPolicy: false,
+        fetchedPasswordPolicy: true,
+        passwordPolicy: action.payload.data.passwordPolicy,
+        errorPasswordPolicy: formatGraphQLError(action.payload),
+      };
+    case "PASSWORD_POLICY_FIELDS_ERR":
+      return {
+        ...state,
+        fetchingPasswordPolicy: false,
+        errorPasswordPolicy: formatServerError(action.payload),
+      };
     case "ADMIN_USER_MUTATION_REQ":
       return dispatchMutationReq(state, action);
     case "ADMIN_USER_MUTATION_ERR":

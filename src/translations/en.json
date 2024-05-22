@@ -82,5 +82,16 @@
   "admin.EnrolmentOfficerPicker.openText": "Open",
   "admin.EnrolmentOfficerPicker.closeText": "Close",
   "admin.UserFilter.showHistory": "Show History",
-  "admin.UserFilter.showDeleted": "Show Deleted"
+  "admin.UserFilter.showDeleted": "Show Deleted",
+  "admin.password.minLength": "at least {count} characters",
+  "admin.password.lowerCase": "{count, plural, one {# lowercase letter} other {# lowercase letters}}",
+  "admin.password.upperCase": "{count, plural, one {# uppercase letter} other {# uppercase letters}}",
+  "admin.password.numbers": "{count, plural, one {# number} other {# numbers}}",
+  "admin.password.specialCharacters": "{count, plural, one {# special character} other {# special characters}}",
+  "admin.password.requirements": "Password must include: {requirements}.",
+  "admin.password.weak": "Weak",
+  "admin.password.medium": "Medium",
+  "admin.password.strong": "Password is strong.",
+  "admin.password.veryStrong": "Password is very strong.",
+  "admin.password.unknownScore": "Unknown score."
 }
