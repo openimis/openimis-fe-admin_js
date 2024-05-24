@@ -59,6 +59,7 @@
     ]
   },
   "dependencies": {
-    "@material-ui/lab": "^4.0.0-alpha.60"
+    "@material-ui/lab": "^4.0.0-alpha.60",
+    "zxcvbn": "^4.4.2"
   }
 }
