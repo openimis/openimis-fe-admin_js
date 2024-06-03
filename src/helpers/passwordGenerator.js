@@ -25,18 +25,15 @@ export const passwordGenerator = (options) => {
 
   const categoriesArray = getCategoriesArray();
 
-  // Select at least one character from each selected category
   categoriesArray.forEach((category) => {
     password += getRandomOfType(category);
   });
 
-  // Fill the rest of the password with random characters
   for (let i = categoriesArray.length; i < length; i++) {
     const randomCategory = categoriesArray[getSafeRandomNumberArray(1, categoriesArray.length)];
     password += getRandomOfType(randomCategory);
   }
 
-  // Shuffle the password to randomize the positions of characters
   password = shuffle(password);
 
   return password;
