@@ -13,6 +13,8 @@ import {
   TextInput,
   PublishedComponent,
   ValidatedTextInput,
+  passwordGenerator,
+  validatePassword,
 } from "@openimis/fe-core";
 import { CLAIM_ADMIN_USER_TYPE, ENROLMENT_OFFICER_USER_TYPE, EMAIL_REGEX_PATTERN, DEFAULT } from "../constants";
 import {
@@ -26,8 +28,6 @@ import {
   fetchPasswordPolicy,
 } from "../actions";
 
-import { passwordGenerator } from "../helpers/passwordGenerator";
-import { validatePassword } from "../helpers/passwordValidator";
 
 const styles = (theme) => ({
   tableTitle: theme.table.title,
