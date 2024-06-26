@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 import React, { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
 
@@ -13,7 +14,7 @@ import {
   PublishedComponent,
   ValidatedTextInput,
 } from "@openimis/fe-core";
-import { CLAIM_ADMIN_USER_TYPE, ENROLMENT_OFFICER_USER_TYPE, EMAIL_REGEX_PATTERN } from "../constants";
+import { CLAIM_ADMIN_USER_TYPE, ENROLMENT_OFFICER_USER_TYPE, EMAIL_REGEX_PATTERN, DEFAULT } from "../constants";
 import {
   usernameValidationCheck,
   usernameValidationClear,
@@ -61,6 +62,11 @@ const UserMasterPanel = (props) => {
   } = props;
   const { formatMessage } = useTranslations("admin", modulesManager);
   const dispatch = useDispatch();
+  const renderLastNameFirst = modulesManager.getConf(
+    "fe-insuree",
+    "renderLastNameFirst",
+    DEFAULT.RENDER_LAST_NAME_FIRST,
+  );
 
   const shouldValidateUsername = (inputValue) => {
     const shouldBeValidated = inputValue !== savedUsername;
@@ -91,7 +97,6 @@ const UserMasterPanel = (props) => {
     handleEmailChange(edited?.email);
   }, []);
 
-
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -110,6 +115,32 @@ const UserMasterPanel = (props) => {
     const generatedPassword = passwordGenerator(passwordGeneratorOptions);
     onEditedChanged({ ...edited, password: generatedPassword, confirmPassword: generatedPassword });
   };
+
+  const renderLastNameField = (edited, classes, readOnly) => (
+    <Grid item xs={4} className={classes.item}>
+      <TextInput
+        module="admin"
+        label="user.lastName"
+        required
+        readOnly={readOnly}
+        value={edited?.lastName ?? ""}
+        onChange={(lastName) => onEditedChanged({ ...edited, lastName })}
+      />
+    </Grid>
+  );
+
+  const renderGivenNameField = (edited, classes, readOnly) => (
+    <Grid item xs={4} className={classes.item}>
+      <TextInput
+        module="admin"
+        label="user.givenNames"
+        required
+        readOnly={readOnly}
+        value={edited?.otherNames ?? ""}
+        onChange={(otherNames) => onEditedChanged({ ...edited, otherNames })}
+      />
+    </Grid>
+  );
 
   return (
     <Grid container direction="row">
@@ -135,26 +166,17 @@ const UserMasterPanel = (props) => {
           }}
         />
       </Grid>
-      <Grid item xs={4} className={classes.item}>
-        <TextInput
-          module="admin"
-          label="user.givenNames"
-          required
-          readOnly={readOnly}
-          value={edited?.otherNames ?? ""}
-          onChange={(otherNames) => onEditedChanged({ ...edited, otherNames })}
-        />
-      </Grid>
-      <Grid item xs={4} className={classes.item}>
-        <TextInput
-          module="admin"
-          label="user.lastName"
-          required
-          readOnly={readOnly}
-          value={edited?.lastName ?? ""}
-          onChange={(lastName) => onEditedChanged({ ...edited, lastName })}
-        />
-      </Grid>
+      {renderLastNameFirst ? (
+        <>
+          {renderLastNameField(edited, classes, readOnly)}
+          {renderGivenNameField(edited, classes, readOnly)}
+        </>
+      ) : (
+        <>
+          {renderGivenNameField(edited, classes, readOnly)}
+          {renderLastNameField(edited, classes, readOnly)}
+        </>
+      )}
       {!(
         obligatoryUserFields?.email == "H" ||
         (edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && obligatoryEOFields?.email == "H")
@@ -207,11 +229,7 @@ const UserMasterPanel = (props) => {
           district={edited.districts}
           module="admin"
           readOnly={readOnly}
-          required={
-            edited.userTypes.includes(
-              CLAIM_ADMIN_USER_TYPE,
-            ) /* This field is also present in the claim administrator panel */
-          }
+          required={edited.userTypes.includes(CLAIM_ADMIN_USER_TYPE)}
           onChange={(healthFacility) => onEditedChanged({ ...edited, healthFacility })}
         />
       </Grid>
@@ -242,7 +260,7 @@ const UserMasterPanel = (props) => {
         <PublishedComponent
           pubRef="location.LocationPicker"
           locationLevel={1}
-          value={edited.districts}
+          value={edited?.districts ?? []}
           onChange={(districts) => onEditedChanged({ ...edited, districts })}
           readOnly={readOnly}
           required
@@ -264,7 +282,7 @@ const UserMasterPanel = (props) => {
           label="user.language"
           readOnly={readOnly}
           required
-          withNull
+          withNull={false}
           nullLabel={formatMessage("UserMasterPanel.language.null")}
           value={edited.language ?? ""}
           onChange={(language) => onEditedChanged({ ...edited, language })}
