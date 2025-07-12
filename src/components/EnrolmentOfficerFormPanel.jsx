@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
-import { Grid, Typography, Paper, Switch } from "@material-ui/core";
-import { withTheme, withStyles } from "@material-ui/core/styles";
+import { Grid, Typography, Paper, Switch } from "@mui/material";
+import { withTheme, withStyles } from "@mui/styles";
 
 import {
   useTranslations,

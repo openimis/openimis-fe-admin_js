@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Grid, Typography, Paper, Switch } from "@material-ui/core";
-import { withTheme, withStyles } from "@material-ui/core/styles";
+import { Grid, Typography, Paper, Switch } from "@mui/material";
+import { withTheme, withStyles } from "@mui/styles";
 import { useTranslations, withModulesManager, combine, PublishedComponent, useGraphqlQuery } from "@openimis/fe-core";
 import { CLAIM_ADMIN_USER_TYPE, CLAIM_ADMIN_IS_SYSTEM } from "../constants";
 import { toggleUserRoles, toggleSwitchButton } from "../utils";

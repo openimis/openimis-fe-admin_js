@@ -12,7 +12,7 @@ import {
   People,
   PinDrop,
   Tune,
-} from "@material-ui/icons";
+} from "@mui/icons-material";
 import { formatMessage, MainMenuContribution, withModulesManager } from "@openimis/fe-core";
 import {
   RIGHT_PRODUCTS,

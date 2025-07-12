@@ -2,10 +2,10 @@
 import React, { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
 
-import { withTheme, withStyles } from "@material-ui/core/styles";
-import { Grid, Divider, Typography, Button, InputAdornment, IconButton, Box } from "@material-ui/core";
-import VisibilityIcon from "@material-ui/icons/Visibility";
-import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
+import { withTheme, withStyles } from "@mui/styles";
+import { Grid, Divider, Typography, Button, InputAdornment, IconButton, Box } from "@mui/material";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 import {
   withModulesManager,

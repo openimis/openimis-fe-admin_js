@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { withModulesManager, combine, useTranslations, PublishedComponent, ProgressOrError } from "@openimis/fe-core";
-import DeleteIcon from "@material-ui/icons/Delete";
-import { withTheme, withStyles } from "@material-ui/core/styles";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { withTheme, withStyles } from "@mui/styles";
 import { useDispatch, useSelector } from "react-redux";
-import AddIcon from "@material-ui/icons/Add";
+import AddIcon from "@mui/icons-material/Add";
 import {
   TableContainer,
   TableHead,
@@ -15,7 +15,7 @@ import {
   Paper,
   Button,
   IconButton,
-} from "@material-ui/core";
+} from "@mui/material";
 import { fetchDataFromDistrict, clearDistrictData } from "../actions";
 
 const styles = (theme) => ({

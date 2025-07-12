@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { withTheme, withStyles } from "@material-ui/core/styles";
+import { withTheme, withStyles } from "@mui/styles";
 import { withModulesManager, combine, withHistory, historyPush, useTranslations } from "@openimis/fe-core";
 import UserForm from "../components/UserForm";
 import { createUser, updateUser } from "../actions";

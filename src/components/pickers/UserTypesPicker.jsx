@@ -1,8 +1,9 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { useIntl } from "react-intl";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import TextField from "@material-ui/core/TextField";
+
+import Autocomplete from "@mui/lab/Autocomplete";
+import TextField from "@mui/material/TextField";
 import { formatMessage } from "@openimis/fe-core";
 
 import { USER_TYPES } from "../../constants";

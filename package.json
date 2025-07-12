@@ -55,7 +55,10 @@
     ]
   },
   "dependencies": {
-    "@material-ui/lab": "^4.0.0-alpha.60",
+    "@mui/material": "^5.15.0",
+    "@mui/icons-material": "^5.15.0",
+    "@mui/lab": "^5.0.0-alpha.125",
+    "@mui/styles": "^5.15.0",
     "zxcvbn": "^4.4.2"
   }
 }

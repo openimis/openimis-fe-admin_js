@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { withTheme, withStyles } from "@material-ui/core/styles";
-import { Autocomplete } from "@material-ui/lab";
-import { TextField } from "@material-ui/core";
+import { withTheme, withStyles } from "@mui/styles";
+import { Autocomplete } from "@mui/lab";
+import { TextField } from "@mui/material";
 import { withModulesManager, useDebounceCb, useTranslations } from "@openimis/fe-core";
 import { fetchUsers } from "../../actions";
 import { DEFAULT } from "../../constants";

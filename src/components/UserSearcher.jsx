@@ -3,9 +3,10 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
 
-import { IconButton, Tooltip } from "@material-ui/core";
-import { withTheme, withStyles } from "@material-ui/core/styles";
-import { Tab as TabIcon, Delete as DeleteIcon } from "@material-ui/icons";
+
+import { IconButton, Tooltip } from "@mui/material";
+import { withTheme, withStyles } from "@mui/styles";
+import { Tab as TabIcon, Delete as DeleteIcon } from "@mui/icons-material";
 
 import {
   withModulesManager,

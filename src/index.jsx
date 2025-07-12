@@ -10,7 +10,7 @@ import {
   People,
   PinDrop,
   Tune,
-} from "@material-ui/icons";
+} from "@mui/icons-material";
 import { FormattedMessage } from "@openimis/fe-core";
 import AdminMainMenu from "./components/AdminMainMenu";
 import UsersPage from "./pages/UsersPage";
