@@ -61,6 +61,7 @@
     "@mui/icons-material": "^5.15.0",
     "@mui/lab": "^5.0.0-alpha.125",
     "@mui/material": "^5.18.0",
+    "@mui/styled-engine": "^7.2.0",
     "@mui/styles": "^5.15.0",
     "zxcvbn": "^4.4.2"
   }

@@ -48,6 +48,7 @@ export default defineConfig({
         '@emotion/react',    
         '@emotion/styled',
         '@emotion/cache',
+        '@mui/styled-engine',
       ],
       output: {
         globals: {
