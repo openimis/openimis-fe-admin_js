@@ -3,9 +3,10 @@ import react from '@vitejs/plugin-react'
 import { resolve } from 'path'
 
 export default defineConfig({
-  plugins: [
-    react()
-  ],
+  plugins: [react()],
+  optimizeDeps: {
+    include: ['@emotion/react', '@emotion/cache'], 
+  },
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.jsx'),
@@ -43,7 +44,10 @@ export default defineConfig({
         /^@mui\/core\/.*/,
         /^@mui\/lab\/.*/,
         /^@babel-.*/,
-        /^@openimis.*/
+        /^@openimis.*/,
+        '@emotion/react',    
+        '@emotion/styled',
+        '@emotion/cache',
       ],
       output: {
         globals: {
@@ -58,4 +62,4 @@ export default defineConfig({
       '@': resolve(__dirname, 'src')
     }
   }
-})
+});
