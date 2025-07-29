@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { useIntl } from "react-intl";
 
-import Autocomplete from "@mui/lab/Autocomplete";
+import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { formatMessage } from "@openimis/fe-core";
 

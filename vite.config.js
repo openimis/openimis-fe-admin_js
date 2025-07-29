@@ -33,7 +33,7 @@ export default defineConfig({
         'history',
         '@mui/material',
         '@mui/icons-material',
-        '@mui/lab',
+        '@mui/material',
         '@mui/x-date-pickers',
         '@mui/styles',
         '@date-io/core',
