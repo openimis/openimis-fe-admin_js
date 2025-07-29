@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
 
 
-import { withTheme, withStyles } from "@mui/styles";
+import { useTheme, styled } from "@mui/material/styles";
 import ReplayIcon from "@mui/icons-material/Replay";
 
 import {
@@ -42,9 +42,9 @@ import {
 } from "../actions";
 import UserMasterPanel from "./UserMasterPanel";
 
-const styles = (theme) => ({
-  lockedPage: theme.page.locked,
-});
+const StyledDiv = styled('div')(({ theme }) => ({
+  '&.locked': theme.page.locked,
+}));
 
 const USER_OVERVIEW_MUTATIONS_KEY = "user.UserOverview.mutations";
 
@@ -215,7 +215,7 @@ class UserForm extends Component {
   render() {
     const {
       modulesManager,
-      classes,
+      
       state,
       rights,
       userId,
@@ -247,7 +247,7 @@ class UserForm extends Component {
     ];
 
     return (
-      <div className={isInMutation || !!user?.validityTo ? classes.lockedPage : null}>
+      <StyledDiv className={isInMutation || !!user?.validityTo ? "locked" : null}>
         <Helmet title={formatMessageWithValues(this.props.intl, "admin.user", "UserOverview.title", { label: "" })} />
         <ProgressOrError progress={fetchingUser} error={errorUser} />
         {(!userId || user?.id === userId) && (
@@ -278,7 +278,7 @@ class UserForm extends Component {
             passwordPolicy={passwordPolicy}
           />
         )}
-      </div>
+      </StyledDiv>
     );
   }
 }
@@ -320,6 +320,6 @@ const mapDispatchToProps = (dispatch) =>
     dispatch,
   );
 
-export default withHistory(
-  withModulesManager(connect(mapStateToProps, mapDispatchToProps)(injectIntl(withTheme(withStyles(styles)(UserForm))))),
-);
+  export default withHistory(
+    withModulesManager(connect(mapStateToProps, mapDispatchToProps)(injectIntl(UserForm))),
+  );

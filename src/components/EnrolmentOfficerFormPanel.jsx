@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import { Grid, Typography, Paper, Switch } from "@mui/material";
-import { withTheme, withStyles } from "@mui/styles";
+import { useTheme, styled } from "@mui/material/styles";
 
 import {
   useTranslations,
@@ -15,16 +15,18 @@ import { ENROLMENT_OFFICER_USER_TYPE, OFFICER_ROLE_IS_SYSTEM } from "../constant
 import { toggleUserRoles, toggleSwitchButton } from "../utils";
 import EnrolmentVillagesPicker from "./EnrolmentVillagesPicker";
 
-const styles = (theme) => ({
-  item: theme.paper.item,
-  paper: theme.paper.paper,
-  title: theme.paper.title,
-});
+const StyledPaper = styled(Paper)(({ theme }) => ({
+  ...theme.paper.paper,
+  '& .title': theme.paper.title,
+  '& .item': theme.paper.item,
+}));
 
 const EnrolmentOfficerFormPanel = (props) => {
-  const { edited, classes, modulesManager, onEditedChanged, readOnly } = props;
+  const theme = useTheme();
+  const { edited, modulesManager, onEditedChanged, readOnly } = props;
   const { formatMessage } = useTranslations("admin.EnrolmentOfficerFormPanel", modulesManager);
   const [isEnabled, setIsEnabled] = useState(false);
+
   const hasOfficerUserType = edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE);
   const hasOfficerRole = edited.roles
     ? edited.roles.filter((x) => x.isSystem === OFFICER_ROLE_IS_SYSTEM).length !== 0
@@ -66,8 +68,8 @@ const EnrolmentOfficerFormPanel = (props) => {
   }, [hasOfficerRole]);
 
   return (
-    <Paper className={classes.paper}>
-      <Grid item xs={12} className={classes.title}>
+    <StyledPaper>
+      <Grid item xs={12} className="title">
         <Grid container justifyContent="space-between" alignItems="center">
           <Typography variant="h6">{formatMessage("title")}</Typography>
           {(edited || !isEnabled) && (
@@ -83,7 +85,7 @@ const EnrolmentOfficerFormPanel = (props) => {
       {isEnabled && (
         <Grid item xs={12}>
           <Grid container>
-            <Grid item xs={4} className={classes.item}>
+            <Grid item xs={4} className="item">
               <PublishedComponent
                 pubRef="core.DatePicker"
                 value={edited?.birthDate}
@@ -94,7 +96,7 @@ const EnrolmentOfficerFormPanel = (props) => {
                 onChange={(birthDate) => onEditedChanged({ ...edited, birthDate })}
               />
             </Grid>
-            <Grid item xs={4} className={classes.item}>
+            <Grid item xs={4} className="item">
               <PublishedComponent
                 pubRef="admin.SubstitutionEnrolmentOfficerPicker"
                 module="admin"
@@ -106,7 +108,7 @@ const EnrolmentOfficerFormPanel = (props) => {
                 onChange={(substitutionOfficer) => onEditedChanged({ ...edited, substitutionOfficer })}
               />
             </Grid>
-            <Grid item xs={4} className={classes.item}>
+            <Grid item xs={4} className="item">
               <PublishedComponent
                 pubRef="core.DatePicker"
                 value={edited?.worksTo ?? ""}
@@ -116,7 +118,7 @@ const EnrolmentOfficerFormPanel = (props) => {
                 onChange={(worksTo) => onEditedChanged({ ...edited, worksTo })}
               />
             </Grid>
-            <Grid item xs={12} className={classes.item}>
+            <Grid item xs={12} className="item">
               <TextInput
                 module="admin"
                 label="user.address"
@@ -128,7 +130,7 @@ const EnrolmentOfficerFormPanel = (props) => {
                 onChange={(address) => onEditedChanged({ ...edited, address })}
               />
             </Grid>
-            <Grid item xs={12} className={classes.item}>
+            <Grid item xs={12} className="item">
               <EnrolmentVillagesPicker
                 isOfficerPanelEnabled={isEnabled}
                 readOnly={readOnly}
@@ -140,10 +142,8 @@ const EnrolmentOfficerFormPanel = (props) => {
           </Grid>
         </Grid>
       )}
-    </Paper>
+    </StyledPaper>
   );
 };
 
-const enhance = combine(withModulesManager, withTheme, withStyles(styles));
-
-export default enhance(EnrolmentOfficerFormPanel);
+export default withModulesManager(EnrolmentOfficerFormPanel);
