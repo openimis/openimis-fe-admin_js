@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { withTheme, withStyles } from "@mui/styles";
+import { useTheme, styled } from "@mui/material/styles";
 import { Autocomplete } from "@mui/material";
 import { TextField } from "@mui/material";
 import { withModulesManager, useDebounceCb, useTranslations } from "@openimis/fe-core";
@@ -114,4 +114,4 @@ const UserPicker = (props) => {
   );
 };
 
-export default withModulesManager(withTheme(withStyles(styles)(UserPicker)));
+export default withModulesManager(UserPicker);

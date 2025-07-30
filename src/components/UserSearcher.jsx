@@ -5,7 +5,7 @@ import { injectIntl } from "react-intl";
 
 
 import { IconButton, Tooltip } from "@mui/material";
-import { withTheme, withStyles } from "@mui/styles";
+import { useTheme, styled } from "@mui/material/styles";
 import { Tab as TabIcon, Delete as DeleteIcon } from "@mui/icons-material";
 
 import {
@@ -147,7 +147,7 @@ class UserSearcher extends Component {
         formatDateFromISO(this.props.modulesManager, this.props.intl, this.getUserItem(u, "dob")),
 
       (u) => (
-        <div className={this.props.classes.horizontalButtonContainer}>
+                    <div className="horizontalButtonContainer">
           <Tooltip title={formatMessage(this.props.intl, "admin.user", "openNewTab")}>
             <IconButton onClick={() => this.props.onDoubleClick(u, true)}>
               <TabIcon />
@@ -225,5 +225,5 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => bindActionCreators({ fetchUsersSummaries, deleteUser }, dispatch);
 
 export default withModulesManager(
-  connect(mapStateToProps, mapDispatchToProps)(injectIntl(withTheme(withStyles(styles)(UserSearcher)))),
+  connect(mapStateToProps, mapDispatchToProps)(injectIntl(UserSearcher)),
 );

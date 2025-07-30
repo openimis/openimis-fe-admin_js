@@ -35,14 +35,14 @@ export default defineConfig({
         '@mui/icons-material',
         '@mui/material',
         '@mui/x-date-pickers',
-        '@mui/styles',
+
         '@date-io/core',
         '@date-io/moment',
         'zxcvbn',
         'lodash/debounce',
         /^@mui\/icons-material\/.*/,
         /^@mui\/core\/.*/,
-        /^@mui\/lab\/.*/,
+
         /^@babel-.*/,
         /^@openimis.*/,
         '@emotion/react',    

@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { withTheme, withStyles } from "@mui/styles";
+import { useTheme, styled } from "@mui/material/styles";
 import { withModulesManager, combine, withHistory, historyPush, useTranslations } from "@openimis/fe-core";
 import UserForm from "../components/UserForm";
 import { createUser, updateUser } from "../actions";
 import { RIGHT_USER_ADD, RIGHT_USER_EDIT } from "../constants";
 
-const styles = (theme) => ({
-  page: theme.page,
-});
+const StyledDiv = styled('div')(({ theme }) => ({
+  ...theme.page,
+}));
 
 const UserPage = (props) => {
-  const { modulesManager, history, match, classes } = props;
+  const { modulesManager, history, match } = props;
   const rights = useSelector((state) => state.core?.user?.i_user?.rights ?? []);
   const [resetKey, setResetKey] = useState(Date.now());
   const { formatMessageWithValues } = useTranslations("admin", modulesManager);
@@ -29,7 +29,7 @@ const UserPage = (props) => {
     }
   };
   return (
-    <div className={classes.page}>
+    <StyledDiv>
       <UserForm
         key={resetKey}
         readOnly={match.params.user_id ? !rights.includes(RIGHT_USER_EDIT) : !rights.includes(RIGHT_USER_ADD)}
@@ -38,10 +38,10 @@ const UserPage = (props) => {
         add={rights.includes(RIGHT_USER_ADD) ? add : null}
         save={rights.includes(RIGHT_USER_EDIT) ? save : null}
       />
-    </div>
+    </StyledDiv>
   );
 };
 
-const enhance = combine(withHistory, withModulesManager, withTheme, withStyles(styles));
+const enhance = combine(withHistory, withModulesManager);
 
 export default enhance(UserPage);

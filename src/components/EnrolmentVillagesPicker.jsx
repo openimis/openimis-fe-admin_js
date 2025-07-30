@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { withModulesManager, combine, useTranslations, PublishedComponent, ProgressOrError } from "@openimis/fe-core";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { withTheme, withStyles } from "@mui/styles";
+import { useTheme, styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 import AddIcon from "@mui/icons-material/Add";
 import {
@@ -164,8 +164,8 @@ const EnrolmentVillagesPicker = (props) => {
   return (
     <TableContainer component={Paper}>
       <Table size="small">
-        <TableHead className={classes.header}>
-          <TableRow className={classes.headerTitle}>
+                    <TableHead className="header">
+              <TableRow className="headerTitle">
             <TableCell>{formatMessage("table.municipality")}</TableCell>
             <TableCell>{formatMessage("table.villages")}</TableCell>
             <TableCell></TableCell>
@@ -205,7 +205,7 @@ const EnrolmentVillagesPicker = (props) => {
                   locationLevel={3}
                 />
               </TableCell>
-              <TableCell className={classes.actionCell}>
+                                <TableCell className="actionCell">
                 <IconButton disabled={readOnly} onClick={() => onRemoveRow(item)}>
                   <DeleteIcon />
                 </IconButton>
@@ -219,7 +219,7 @@ const EnrolmentVillagesPicker = (props) => {
             variant="contained"
             onClick={onInsertRow}
             startIcon={<AddIcon />}
-            className={classes.footer}
+            className="footer"
           >
             {formatMessage("table.newRow")}
           </Button>
@@ -229,6 +229,6 @@ const EnrolmentVillagesPicker = (props) => {
   );
 };
 
-const enhance = combine(withModulesManager, withTheme, withStyles(styles));
+const enhance = combine(withModulesManager);
 
 export default enhance(EnrolmentVillagesPicker);

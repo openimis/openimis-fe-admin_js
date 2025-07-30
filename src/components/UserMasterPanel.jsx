@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
 
-import { withTheme, withStyles } from "@mui/styles";
+import { useTheme, styled } from "@mui/material/styles";
 import { Grid, Divider, Typography, Button, InputAdornment, IconButton, Box } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -29,22 +29,20 @@ import {
 } from "../actions";
 
 
-const styles = (theme) => ({
-  tableTitle: theme.table.title,
-  item: theme.paper.item,
-  fullHeight: {
-    height: "100%",
-  },
-  sectionHeader: {
+const StyledGrid = styled(Grid)(({ theme }) => ({
+  '& .item': theme.paper.item,
+  '& .sectionHeader': {
     ...theme.paper.item,
     paddingBottom: 0,
   },
-  sectionTitle: theme.typography.title,
-});
+  '& .sectionTitle': theme.typography.title,
+  '& .passwordFeedback': {
+    // Add password feedback styles if needed
+  },
+}));
 
 const UserMasterPanel = (props) => {
   const {
-    classes,
     edited,
     readOnly,
     onEditedChanged,
@@ -138,8 +136,8 @@ const UserMasterPanel = (props) => {
     onEditedChanged({ ...edited, password: generatedPassword, confirmPassword: generatedPassword, isPasswordValid: IS_PASSWORD_SECURED });
   };
 
-  const renderLastNameField = (edited, classes, readOnly) => (
-    <Grid item xs={4} className={classes.item}>
+  const renderLastNameField = (edited, readOnly) => (
+    <Grid item xs={4} className="item">
       <TextInput
         module="admin"
         label="user.lastName"
@@ -151,8 +149,8 @@ const UserMasterPanel = (props) => {
     </Grid>
   );
 
-  const renderGivenNameField = (edited, classes, readOnly) => (
-    <Grid item xs={4} className={classes.item}>
+  const renderGivenNameField = (edited, readOnly) => (
+    <Grid item xs={4} className="item">
       <TextInput
         module="admin"
         label="user.givenNames"
@@ -165,8 +163,8 @@ const UserMasterPanel = (props) => {
   );
 
   return (
-    <Grid container direction="row">
-      <Grid item xs={4} className={classes.item}>
+    <StyledGrid container direction="row">
+      <Grid item xs={4} className="item">
         <ValidatedTextInput
           itemQueryIdentifier="username"
           shouldValidate={shouldValidateUsername}
@@ -190,20 +188,20 @@ const UserMasterPanel = (props) => {
       </Grid>
       {renderLastNameFirst ? (
         <>
-          {renderLastNameField(edited, classes, readOnly)}
-          {renderGivenNameField(edited, classes, readOnly)}
+          {renderLastNameField(edited, readOnly)}
+          {renderGivenNameField(edited, readOnly)}
         </>
       ) : (
         <>
-          {renderGivenNameField(edited, classes, readOnly)}
-          {renderLastNameField(edited, classes, readOnly)}
+          {renderGivenNameField(edited, readOnly)}
+          {renderLastNameField(edited, readOnly)}
         </>
       )}
       {!(
         obligatoryUserFields?.email == "H" ||
         (edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && obligatoryEOFields?.email == "H")
       ) && (
-          <Grid item xs={4} className={classes.item}>
+          <Grid item xs={4} className="item">
             <ValidatedTextInput
               itemQueryIdentifier="userEmail"
               shouldValidate={shouldValidateEmail}
@@ -229,7 +227,7 @@ const UserMasterPanel = (props) => {
         obligatoryUserFields?.phone == "H" ||
         (edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && obligatoryEOFields?.phone == "H")
       ) && (
-          <Grid item xs={4} className={classes.item}>
+          <Grid item xs={4} className="item">
             <TextInput
               module="admin"
               type="phone"
@@ -244,7 +242,7 @@ const UserMasterPanel = (props) => {
             />
           </Grid>
         )}
-      {rights.includes(RIGHT_HEALTHFACILITIES) && (<Grid item xs={4} className={classes.item}>
+      {rights.includes(RIGHT_HEALTHFACILITIES) && (<Grid item xs={4} className="item">
         <PublishedComponent
           pubRef="location.HealthFacilityPicker"
           value={edited?.healthFacility}
@@ -256,7 +254,7 @@ const UserMasterPanel = (props) => {
         />
       </Grid>
       )}
-      <Grid item xs={6} className={classes.item}>
+      <Grid item xs={6} className="item">
         <PublishedComponent
           pubRef="admin.UserRolesPicker"
           required
@@ -266,7 +264,7 @@ const UserMasterPanel = (props) => {
           onChange={(roles) => onEditedChanged({ ...edited, roles })}
         />
       </Grid>
-      <Grid item xs={2} className={classes.item}>
+      <Grid item xs={2} className="item">
         <PublishedComponent
           pubRef="location.LocationPicker"
           locationLevel={0}
@@ -279,7 +277,7 @@ const UserMasterPanel = (props) => {
           restrictedOptions
         />
       </Grid>
-      <Grid item xs={4} className={classes.item}>
+      <Grid item xs={4} className="item">
         <PublishedComponent
           pubRef="location.LocationPicker"
           locationLevel={1}
@@ -294,11 +292,11 @@ const UserMasterPanel = (props) => {
         />
       </Grid>
 
-      <Grid item xs={12} className={classes.sectionHeader}>
-        <Typography className={classes.sectionTitle}>{formatMessage("UserMasterPanel.loginDetailsTitle")}</Typography>
+      <Grid item xs={12} className="sectionHeader">
+        <Typography className="sectionTitle">{formatMessage("UserMasterPanel.loginDetailsTitle")}</Typography>
         <Divider variant="fullWidth" />
       </Grid>
-      <Grid item xs={4} className={classes.item}>
+      <Grid item xs={4} className="item">
         <PublishedComponent
           pubRef="core.LanguagePicker"
           module="admin"
@@ -311,7 +309,7 @@ const UserMasterPanel = (props) => {
           onChange={(language) => onEditedChanged({ ...edited, language })}
         />
       </Grid>
-      <Grid item xs={4} className={classes.item}>
+      <Grid item xs={4} className="item">
         <TextInput
           module="admin"
           type={showPassword ? "text" : "password"}
@@ -334,11 +332,11 @@ const UserMasterPanel = (props) => {
             </InputAdornment>
           }
         />
-        <Typography color={IS_PASSWORD_SECURED ? "primary" : "error"} className={classes.passwordFeedback}>
+        <Typography color={IS_PASSWORD_SECURED ? "primary" : "error"} className="passwordFeedback">
           {passwordFeedback}
         </Typography>
       </Grid>
-      <Grid item xs={4} className={classes.item}>
+      <Grid item xs={4} className="item">
         <TextInput
           module="admin"
           type={showPassword ? "text" : "password"}
@@ -362,12 +360,12 @@ const UserMasterPanel = (props) => {
           }
         />
       </Grid>
-      <Grid item xs={4} className={classes.item}>
+      <Grid item xs={4} className="item">
         <Button disabled={readOnly} variant="contained" onClick={generatePassword}>
           {formatMessage("user.generatePassword")}
         </Button>
       </Grid>
-    </Grid>
+    </StyledGrid>
   );
 };
 
@@ -384,4 +382,4 @@ const mapStateToProps = (state) => ({
   isUserEmailFormatInvalid: state.admin.validationFields?.userEmailFormat?.isInvalid,
 });
 
-export default withModulesManager(connect(mapStateToProps)(withTheme(withStyles(styles)(UserMasterPanel))));
+export default withModulesManager(connect(mapStateToProps)(UserMasterPanel));
