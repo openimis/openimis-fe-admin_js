@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { withModulesManager, combine, useTranslations, PublishedComponent, ProgressOrError } from "@openimis/fe-core";
+import { withModulesManager, useTranslations, PublishedComponent, ProgressOrError } from "@openimis/fe-core";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useTheme, styled } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 import AddIcon from "@mui/icons-material/Add";
 import {
@@ -18,17 +18,17 @@ import {
 } from "@mui/material";
 import { fetchDataFromDistrict, clearDistrictData } from "../actions";
 
-const styles = (theme) => ({
-  footer: {
+const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
+  '& .footer': {
     marginInline: 16,
     marginBlock: 12,
   },
-  headerTitle: theme.table.title,
-  actionCell: {
+  '& .headerTitle': theme.table.title,
+  '& .actionCell': {
     width: 60,
   },
-  header: theme.table.header,
-});
+  '& .header': theme.table.header,
+}));
 
 const groupVillagesByMunicipality = (villages) => {
   const result = [];
@@ -45,7 +45,7 @@ const groupVillagesByMunicipality = (villages) => {
 };
 
 const EnrolmentVillagesPicker = (props) => {
-  const { modulesManager, readOnly, villages, onChange, classes, districts, isOfficerPanelEnabled } = props;
+  const { modulesManager, readOnly, villages, onChange, districts, isOfficerPanelEnabled } = props;
   const dispatch = useDispatch();
   const [items, setItems] = useState([]);
   const { formatMessage } = useTranslations("admin.EnrolmentZonesPicker", modulesManager);
@@ -162,7 +162,7 @@ const EnrolmentVillagesPicker = (props) => {
   }, [isOfficerPanelEnabled]);
 
   return (
-    <TableContainer component={Paper}>
+    <StyledTableContainer component={Paper}>
       <Table size="small">
                     <TableHead className="header">
               <TableRow className="headerTitle">
@@ -225,10 +225,8 @@ const EnrolmentVillagesPicker = (props) => {
           </Button>
         </TableFooter>
       </Table>
-    </TableContainer>
+    </StyledTableContainer>
   );
 };
 
-const enhance = combine(withModulesManager);
-
-export default enhance(EnrolmentVillagesPicker);
+export default withModulesManager(EnrolmentVillagesPicker);

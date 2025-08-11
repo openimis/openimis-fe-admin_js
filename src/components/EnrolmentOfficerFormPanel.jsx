@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 
 import { Grid, Typography, Paper, Switch } from "@mui/material";
-import { useTheme, styled } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 
 import {
   useTranslations,
   withModulesManager,
-  combine,
   PublishedComponent,
   TextInput,
   useGraphqlQuery,
@@ -22,7 +21,6 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
 }));
 
 const EnrolmentOfficerFormPanel = (props) => {
-  const theme = useTheme();
   const { edited, modulesManager, onEditedChanged, readOnly } = props;
   const { formatMessage } = useTranslations("admin.EnrolmentOfficerFormPanel", modulesManager);
   const [isEnabled, setIsEnabled] = useState(false);
