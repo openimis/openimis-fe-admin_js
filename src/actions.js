@@ -10,15 +10,20 @@ import {
 } from "@openimis/fe-core";
 import { mapUserValuesToInput } from "./utils";
 
-const USER_SUMMARY_PROJECTION = [
+const USER_SUMMARY_PROJECTION_BASE = [
   "id",
   "username",
   "officer{id,dob,phone,lastName,otherNames,email}",
   "iUser{id,phone,lastName,otherNames,email,roles{id,name}}",
-  "claimAdmin{id,phone,lastName,otherNames,emailId,dob}",
   "validityTo",
   "clientMutationId",
 ];
+const USER_SUMMARY_PROJECTION = (mm) => {
+  const includeClaimAdmin = mm.getConf("fe-admin", "enableClaimAdminFields", false);
+  return includeClaimAdmin
+    ? [...USER_SUMMARY_PROJECTION_BASE, "claimAdmin{id,phone,lastName,otherNames,emailId,dob}"]
+    : USER_SUMMARY_PROJECTION_BASE;
+};
 const DISTRICT_DATA_FETCH_PARAMS = "id, uuid, code, name, parent { id, uuid, name, code }";
 
 export const USER_PICKER_PROJECTION = ["id", "username", "iUser{id otherNames lastName}"];
@@ -38,7 +43,7 @@ export function fetchUsers(mm, filters = [], restrictHealthFacility = true) {
   };
 }
 export function fetchUsersSummaries(mm, filters) {
-  const payload = formatPageQueryWithCount("users", filters, USER_SUMMARY_PROJECTION);
+  const payload = formatPageQueryWithCount("users", filters, USER_SUMMARY_PROJECTION(mm));
   return graphql(payload, "ADMIN_USERS_SUMMARIES");
 }
 
@@ -226,17 +231,7 @@ export function fetchUser(mm, userId, clientMutationId) {
               email
               districts: userdistrictSet { location { id name code uuid parent { id code uuid name }}}
             }
-            claimAdmin{
-              id
-              hasLogin
-              emailId
-              phone
-              dob
-              lastName
-              otherNames
-              healthFacility ${mm.getProjection("location.HealthFacilityPicker.projection")}
-
-            }
+            ${mm.getConf("fe-admin", "enableClaimAdminFields", false) ? `claimAdmin{ id hasLogin emailId phone dob lastName otherNames healthFacility ${mm.getProjection("location.HealthFacilityPicker.projection")} }` : ``}
           }
         }
       }

@@ -170,12 +170,12 @@ class UserFilter extends Component {
     onChangeFilters(filters);
   };
 
-  renderLastNameField = (classes) => (
+  renderLastNameField = () => (
     <ControlledField
       module="admin"
       id="userFilter.LastName"
       field={
-        <Grid item xs={3} className={classes.item}>
+        <Grid item xs={3} className="item">
           <TextInput
             module="user"
             label="admin.user.lastName"
@@ -196,12 +196,12 @@ class UserFilter extends Component {
     />
   );
 
-  renderGivenNameField = (classes) => (
+  renderGivenNameField = () => (
     <ControlledField
       module="admin"
       id="userFilter.OtherNames"
       field={
-        <Grid item xs={3} className={classes.item}>
+        <Grid item xs={3} className="item">
           <TextInput
             module="user"
             label="admin.user.otherNames"
@@ -316,13 +316,13 @@ class UserFilter extends Component {
           />
           {this.renderLastNameFirst ? (
             <>
-              {this.renderLastNameField(classes)}
-              {this.renderGivenNameField(classes)}
+              {this.renderLastNameField()}
+              {this.renderGivenNameField()}
             </>
           ) : (
             <>
-              {this.renderGivenNameField(classes)}
-              {this.renderLastNameField(classes)}
+              {this.renderGivenNameField()}
+              {this.renderLastNameField()}
             </>
           )}
           <ControlledField

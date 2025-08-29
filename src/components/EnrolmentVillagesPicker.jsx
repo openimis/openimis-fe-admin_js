@@ -173,8 +173,8 @@ const EnrolmentVillagesPicker = (props) => {
         </TableHead>
         <TableBody>
           <ProgressOrError progress={fetchingDistrictMunAndVil} error={errorDistrictMunAndVil} />
-          {items.map((item) => (
-            <TableRow key={item.parent?.id}>
+          {items.map((item, idx) => (
+            <TableRow key={item.parent?.id ?? `row-${idx}`}>
               <TableCell>
                 {item.parent ? (
                   `${item.parent.code} ${item.parent.name}`
