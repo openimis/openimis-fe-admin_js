@@ -56,7 +56,6 @@ export const mapQueriesUserToStore = (u) => {
     u.email = u.email ?? u.claimAdmin.emailId;
     u.phoneNumber = u.claimAdmin.phone;
     u.birthDate = u.claimAdmin.dob;
-    u.healthFacility = u.claimAdmin.healthFacility;
   }
   if (u.officer) {
     u.hasLogin = u.hasLogin || u.officer.hasLogin;
