@@ -148,15 +148,21 @@ class UserSearcher extends Component {
       (u) => (
         <div className={this.props.classes.horizontalButtonContainer}>
           <Tooltip title={formatMessage(this.props.intl, "admin.user", "openNewTab")}>
-            <IconButton onClick={() => this.props.onDoubleClick(u, true)}>
-              <TabIcon />
-            </IconButton>
+            <div>
+              <IconButton onClick={() => this.props.onDoubleClick(u, true)}>
+                <TabIcon />
+              </IconButton>
+              {formatMessage(this.props.intl, "admin.user", "openInNewTab.buttonText")}
+            </div>
           </Tooltip>
           {this.props.rights.includes(RIGHT_USER_DELETE) && u.validityTo ? null : (
             <Tooltip title={formatMessage(this.props.intl, "admin.user", "deleteUser.tooltip")}>
-              <IconButton onClick={() => this.setState({ deleteUser: u })} disabled={u.validityTo}>
-                <DeleteIcon />
-              </IconButton>
+              <div>
+                <IconButton onClick={() => this.setState({ deleteUser: u })} disabled={u.validityTo}>
+                  <DeleteIcon />
+                </IconButton>
+                {formatMessage(this.props.intl, "admin.user", "deleteUser.buttonText")}
+              </div>
             </Tooltip>
           )}
         </div>
