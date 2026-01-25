@@ -17,7 +17,7 @@
     "prepare": "npm run build"
   },
   "peerDependencies": {
-    "react-intl": "^7.1.11"
+    "react-intl": "^5.8.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
