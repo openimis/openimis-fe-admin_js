@@ -6,7 +6,6 @@ export default defineConfig({
   plugins: [react({
     jsxRuntime: 'automatic',
     jsxImportSource: '@emotion/react',
-    jsxImportSource: '@emotion/react',
   })],
   optimizeDeps: {
     include: ['@emotion/react', '@emotion/cache'], 
