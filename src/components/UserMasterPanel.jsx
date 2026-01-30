@@ -137,7 +137,7 @@ const UserMasterPanel = (props) => {
   };
 
   const renderLastNameField = (edited, readOnly) => (
-    <Grid item xs={4} className="item">
+    <Grid size={4} className="item">
       <TextInput
         module="admin"
         label="user.lastName"
@@ -150,7 +150,7 @@ const UserMasterPanel = (props) => {
   );
 
   const renderGivenNameField = (edited, readOnly) => (
-    <Grid item xs={4} className="item">
+    <Grid size={4} className="item">
       <TextInput
         module="admin"
         label="user.givenNames"
@@ -164,7 +164,7 @@ const UserMasterPanel = (props) => {
 
   return (
     <StyledGrid container direction="row">
-      <Grid item xs={4} className="item">
+      <Grid size={4} className="item">
         <ValidatedTextInput
           itemQueryIdentifier="username"
           shouldValidate={shouldValidateUsername}
@@ -201,7 +201,7 @@ const UserMasterPanel = (props) => {
         obligatoryUserFields?.email == "H" ||
         (edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && obligatoryEOFields?.email == "H")
       ) && (
-          <Grid item xs={4} className="item">
+          <Grid size={4} className="item">
             <ValidatedTextInput
               itemQueryIdentifier="userEmail"
               shouldValidate={shouldValidateEmail}
@@ -227,7 +227,7 @@ const UserMasterPanel = (props) => {
         obligatoryUserFields?.phone == "H" ||
         (edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && obligatoryEOFields?.phone == "H")
       ) && (
-          <Grid item xs={4} className="item">
+          <Grid size={4} className="item">
             <TextInput
               module="admin"
               type="phone"
@@ -242,7 +242,7 @@ const UserMasterPanel = (props) => {
             />
           </Grid>
         )}
-      {rights.includes(RIGHT_HEALTHFACILITIES) && (<Grid item xs={4} className="item">
+      {rights.includes(RIGHT_HEALTHFACILITIES) && (<Grid size={4} className="item">
         <PublishedComponent
           pubRef="location.HealthFacilityPicker"
           value={edited?.healthFacility}
@@ -254,7 +254,7 @@ const UserMasterPanel = (props) => {
         />
       </Grid>
       )}
-      <Grid item xs={6} className="item">
+      <Grid size={6} className="item">
         <PublishedComponent
           pubRef="admin.UserRolesPicker"
           required
@@ -264,7 +264,7 @@ const UserMasterPanel = (props) => {
           onChange={(roles) => onEditedChanged({ ...edited, roles })}
         />
       </Grid>
-      <Grid item xs={2} className="item">
+      <Grid size={2} className="item">
         <PublishedComponent
           pubRef="location.LocationPicker"
           locationLevel={0}
@@ -277,7 +277,7 @@ const UserMasterPanel = (props) => {
           restrictedOptions
         />
       </Grid>
-      <Grid item xs={4} className="item">
+      <Grid size={4} className="item">
         <PublishedComponent
           pubRef="location.LocationPicker"
           locationLevel={1}
@@ -292,11 +292,11 @@ const UserMasterPanel = (props) => {
         />
       </Grid>
 
-      <Grid item xs={12} className="sectionHeader">
+      <Grid size={12} className="sectionHeader">
         <Typography className="sectionTitle">{formatMessage("UserMasterPanel.loginDetailsTitle")}</Typography>
         <Divider variant="fullWidth" />
       </Grid>
-      <Grid item xs={4} className="item">
+      <Grid size={4} className="item">
         <PublishedComponent
           pubRef="core.LanguagePicker"
           module="admin"
@@ -309,7 +309,7 @@ const UserMasterPanel = (props) => {
           onChange={(language) => onEditedChanged({ ...edited, language })}
         />
       </Grid>
-      <Grid item xs={4} className="item">
+      <Grid size={4} className="item">
         <TextInput
           module="admin"
           type={showPassword ? "text" : "password"}
@@ -336,7 +336,7 @@ const UserMasterPanel = (props) => {
           {passwordFeedback}
         </Typography>
       </Grid>
-      <Grid item xs={4} className="item">
+      <Grid size={4} className="item">
         <TextInput
           module="admin"
           type={showPassword ? "text" : "password"}
@@ -360,7 +360,7 @@ const UserMasterPanel = (props) => {
           }
         />
       </Grid>
-      <Grid item xs={4} className="item">
+      <Grid size={4} className="item">
         <Button disabled={readOnly} variant="contained" onClick={generatePassword}>
           {formatMessage("user.generatePassword")}
         </Button>
@@ -382,4 +382,5 @@ const mapStateToProps = (state) => ({
   isUserEmailFormatInvalid: state.admin.validationFields?.userEmailFormat?.isInvalid,
 });
 
+export { StyledGrid };
 export default withModulesManager(connect(mapStateToProps)(UserMasterPanel));

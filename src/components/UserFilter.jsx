@@ -175,7 +175,7 @@ class UserFilter extends Component {
       module="admin"
       id="userFilter.LastName"
       field={
-        <Grid item xs={3} className="item">
+        <Grid size={3} className="item">
           <TextInput
             module="user"
             label="admin.user.lastName"
@@ -201,7 +201,7 @@ class UserFilter extends Component {
       module="admin"
       id="userFilter.OtherNames"
       field={
-        <Grid item xs={3} className="item">
+        <Grid size={3} className="item">
           <TextInput
             module="user"
             label="admin.user.otherNames"
@@ -232,7 +232,7 @@ class UserFilter extends Component {
             module="admin"
             id="userFilter.userTypes"
             field={
-              <Grid item xs={3} className="item">
+              <Grid size={3} className="item">
                 <PublishedComponent
                   pubRef="admin.UserTypesPicker"
                   value={this.filterValue("userTypes")}
@@ -245,7 +245,7 @@ class UserFilter extends Component {
             module="admin"
             id="userFilter.userRoles"
             field={
-              <Grid item xs={3} className="item">
+              <Grid size={3} className="item">
                 <PublishedComponent
                   pubRef="admin.UserRolesPicker"
                   value={this.filterValue("roles")}
@@ -258,7 +258,7 @@ class UserFilter extends Component {
               module="admin"
               id="userFilter.healthFacility"
               field={
-                <Grid item xs={3} className="item">
+                <Grid size={3} className="item">
                   <PublishedComponent
                     pubRef="location.HealthFacilityPicker"
                     withNull={true}
@@ -280,7 +280,7 @@ class UserFilter extends Component {
           )}
         </Grid>
         <Grid container>
-          <Grid item xs={12}>
+          <Grid size={12}>
             <PublishedComponent
               pubRef="location.DetailedLocationFilter"
               withNull={true}
@@ -295,7 +295,7 @@ class UserFilter extends Component {
             module="admin"
             id="userFilter.username"
             field={
-              <Grid item xs={3} className="item">
+              <Grid size={3} className="item">
                 <TextInput
                   module="user"
                   label="admin.user.username"
@@ -329,7 +329,7 @@ class UserFilter extends Component {
             module="admin"
             id="userFilter.Email"
             field={
-              <Grid item xs={3} className="item">
+              <Grid size={3} className="item">
                 <TextInput
                   module="user"
                   label="admin.user.email"
@@ -354,7 +354,7 @@ class UserFilter extends Component {
             module="admin"
             id="userFilter.Phone"
             field={
-              <Grid item xs={3} className="item">
+              <Grid size={3} className="item">
                 <TextInput
                   module="user"
                   label="admin.user.phone"
@@ -377,9 +377,9 @@ class UserFilter extends Component {
             module="admin"
             id="UserFilter.dob"
             field={
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <Grid container>
-                  <Grid item xs={6} className="item">
+                  <Grid size={6} className="item">
                     <PublishedComponent
                       pubRef="core.DatePicker"
                       value={this.filterValue("dobFrom")}
@@ -396,7 +396,7 @@ class UserFilter extends Component {
                       }
                     />
                   </Grid>
-                  <Grid item xs={6} className="item">
+                  <Grid size={6} className="item">
                     <PublishedComponent
                       pubRef="core.DatePicker"
                       value={this.filterValue("dobTo")}
@@ -421,7 +421,7 @@ class UserFilter extends Component {
             module="policy"
             id="PolicyFilter.showDeleted"
             field={
-              <Grid item xs={2} className="item">
+              <Grid size={2} className="item">
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -446,4 +446,5 @@ const mapStateToProps = (state) => ({
   module: state.core?.savedPagination?.module,
 });
 
+export { StyledSection };
 export default withModulesManager(connect(mapStateToProps)(injectIntl(UserFilter)));

@@ -44,4 +44,5 @@ const UserPage = (props) => {
 
 const enhance = combine(withHistory, withModulesManager);
 
+export { StyledDiv };
 export default enhance(UserPage);

@@ -229,4 +229,5 @@ const EnrolmentVillagesPicker = (props) => {
   );
 };
 
+export { StyledTableContainer };
 export default withModulesManager(EnrolmentVillagesPicker);

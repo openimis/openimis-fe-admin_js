@@ -320,6 +320,8 @@ const mapDispatchToProps = (dispatch) =>
     dispatch,
   );
 
+export { StyledDiv };
+export { UserForm };
   export default withHistory(
     withModulesManager(connect(mapStateToProps, mapDispatchToProps)(injectIntl(UserForm))),
   );

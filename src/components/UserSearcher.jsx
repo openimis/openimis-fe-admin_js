@@ -224,6 +224,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({ fetchUsersSummaries, deleteUser }, dispatch);
 
+export { USER_SEARCHER_CONTRIBUTION_KEY };
+export { UserSearcher };
 export default withModulesManager(
   connect(mapStateToProps, mapDispatchToProps)(injectIntl(UserSearcher)),
 );

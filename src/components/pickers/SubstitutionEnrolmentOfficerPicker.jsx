@@ -81,4 +81,5 @@ const SubstitutionEnrolmentOfficerPicker = (props) => {
   );
 };
 
+export { SubstitutionEnrolmentOfficerPicker };
 export default withModulesManager(SubstitutionEnrolmentOfficerPicker);

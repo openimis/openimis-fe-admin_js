@@ -96,7 +96,7 @@ const UserPicker = (props) => {
       autoComplete
       value={value}
       getOptionLabel={(option) => formatSuggestion(option)}
-      getOptionSelected={(option, v) => option.id === v.id}
+      isOptionEqualToValue={(option, v) => option.id === v.id}
       onChange={handleChange}
       filterOptions={filterOptions}
       filterSelectedOptions={filterSelectedOptions}
@@ -114,4 +114,5 @@ const UserPicker = (props) => {
   );
 };
 
+export { styles };
 export default withModulesManager(UserPicker);

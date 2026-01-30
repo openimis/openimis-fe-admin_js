@@ -67,7 +67,7 @@ const EnrolmentOfficerFormPanel = (props) => {
 
   return (
     <StyledPaper>
-      <Grid item xs={12} className="title">
+      <Grid size={{ xs: 12 }} className="title">
         <Grid container justifyContent="space-between" alignItems="center">
           <Typography variant="h6">{formatMessage("title")}</Typography>
           {(edited || !isEnabled) && (
@@ -81,9 +81,9 @@ const EnrolmentOfficerFormPanel = (props) => {
         </Grid>
       </Grid>
       {isEnabled && (
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <Grid container>
-            <Grid item xs={4} className="item">
+            <Grid size={{ xs: 4 }} className="item">
               <PublishedComponent
                 pubRef="core.DatePicker"
                 value={edited?.birthDate}
@@ -94,7 +94,7 @@ const EnrolmentOfficerFormPanel = (props) => {
                 onChange={(birthDate) => onEditedChanged({ ...edited, birthDate })}
               />
             </Grid>
-            <Grid item xs={4} className="item">
+            <Grid size={{ xs: 4 }} className="item">
               <PublishedComponent
                 pubRef="admin.SubstitutionEnrolmentOfficerPicker"
                 module="admin"
@@ -106,7 +106,7 @@ const EnrolmentOfficerFormPanel = (props) => {
                 onChange={(substitutionOfficer) => onEditedChanged({ ...edited, substitutionOfficer })}
               />
             </Grid>
-            <Grid item xs={4} className="item">
+            <Grid size={{ xs: 4 }} className="item">
               <PublishedComponent
                 pubRef="core.DatePicker"
                 value={edited?.worksTo ?? ""}
@@ -116,7 +116,7 @@ const EnrolmentOfficerFormPanel = (props) => {
                 onChange={(worksTo) => onEditedChanged({ ...edited, worksTo })}
               />
             </Grid>
-            <Grid item xs={12} className="item">
+            <Grid size={{ xs: 12 }} className="item">
               <TextInput
                 module="admin"
                 label="user.address"
@@ -128,7 +128,7 @@ const EnrolmentOfficerFormPanel = (props) => {
                 onChange={(address) => onEditedChanged({ ...edited, address })}
               />
             </Grid>
-            <Grid item xs={12} className="item">
+            <Grid size={{ xs: 12 }} className="item">
               <EnrolmentVillagesPicker
                 isOfficerPanelEnabled={isEnabled}
                 readOnly={readOnly}
@@ -144,4 +144,5 @@ const EnrolmentOfficerFormPanel = (props) => {
   );
 };
 
+export { StyledPaper };
 export default withModulesManager(EnrolmentOfficerFormPanel);

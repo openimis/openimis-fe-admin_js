@@ -70,4 +70,5 @@ const EnrolmentOfficerPicker = (props) => {
   );
 };
 
+export { EnrolmentOfficerPicker };
 export default withModulesManager(EnrolmentOfficerPicker);
