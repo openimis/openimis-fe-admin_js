@@ -11,8 +11,6 @@ import {
   PinDrop,
   Tune,
 } from "@mui/icons-material";
-import { FormattedMessage } from "@openimis/fe-core";
-import AdminMainMenu from "./components/AdminMainMenu";
 import UsersPage from "./pages/UsersPage";
 import UserPage from "./pages/UserPage";
 import messagesEn from "./translations/en.json";
@@ -52,7 +50,75 @@ const DEFAULT_CONFIG = {
       component: UserPage,
     },
   ],
-  "core.MainMenu": [{ name: "AdminMainMenu", component: AdminMainMenu }],
+  "fe-core.menus": [
+    {
+      id: "admin",
+      name: "menu.mainMenu",
+      icon: "LocationCity",
+      position: 2,
+      entries: [
+        {
+          text: "menu.products",
+          icon: "Tune",
+          route: "/admin/products",
+          id: "admin.products",
+          filter: (rights) => rights.includes(RIGHT_PRODUCTS),
+        },
+        {
+          text: "menu.healthFacilities",
+          icon: "LocalHospital",
+          route: "/location/healthFacilities",
+          withDivider: true,
+          id: "admin.healthFacilities",
+          filter: (rights) => rights.includes(RIGHT_HEALTHFACILITIES),
+        },
+        {
+          text: "menu.medicalServicesPrices",
+          icon: "HealingOutlined",
+          route: "/medical/pricelists/services",
+          id: "admin.services",
+          filter: (rights) => rights.includes(RIGHT_PRICELISTMS),
+        },
+        {
+          text: "menu.medicalItemsPrices",
+          icon: "LocalPharmacyOutlined",
+          route: "/medical/pricelists/items",
+          withDivider: true,
+          id: "admin.items",
+          filter: (rights) => rights.includes(RIGHT_PRICELISTMI),
+        },
+        {
+          text: "menu.medicalServices",
+          icon: "Healing",
+          route: "/medical/medicalServices",
+          id: "admin.medicalServices",
+          filter: (rights) => rights.includes(RIGHT_MEDICALSERVICES),
+        },
+        {
+          text: "menu.medicalItems",
+          icon: "LocalPharmacy",
+          route: "/medical/medicalItems",
+          withDivider: true,
+          id: "admin.medicalItems",
+          filter: (rights) => rights.includes(RIGHT_MEDICALITEMS),
+        },
+        {
+          text: "menu.users",
+          icon: "Person",
+          route: "/admin/users",
+          id: "admin.users",
+          filter: (rights) => rights.includes(RIGHT_USERS),
+        },
+        {
+          text: "menu.locations",
+          icon: "PinDrop",
+          route: "/location/locations",
+          id: "admin.locations",
+          filter: (rights) => rights.includes(RIGHT_LOCATIONS),
+        },
+      ],
+    },
+  ],
   refs: [
     { key: "admin.UserPicker", ref: UserPicker },
     { key: "admin.EnrolmentOfficerPicker", ref: EnrolmentOfficerPicker },
@@ -73,67 +139,6 @@ const DEFAULT_CONFIG = {
       type: "user",
       picker: UserPicker,
       pickerProjection: USER_PICKER_PROJECTION,
-    },
-  ],
-  "admin.MainMenu": [
-    {
-      text: <FormattedMessage module="admin" id="menu.products" />,
-      icon: <Tune />,
-      route: "/admin/products",
-      id: "admin.products",
-      filter: (rights) => rights.includes(RIGHT_PRODUCTS),
-    },
-    {
-      text: <FormattedMessage module="admin" id="menu.healthFacilities" />,
-      icon: <LocalHospital />,
-      route: "/location/healthFacilities",
-      withDivider: true,
-      id: "admin.healthFacilities",
-      filter: (rights) => rights.includes(RIGHT_HEALTHFACILITIES),
-    },
-    {
-      text: <FormattedMessage module="admin" id="menu.medicalServicesPrices" />,
-      icon: <HealingOutlined />,
-      route: "/medical/pricelists/services",
-      id: "admin.services",
-      filter: (rights) => rights.includes(RIGHT_PRICELISTMS),
-    },
-    {
-      text: <FormattedMessage module="admin" id="menu.medicalItemsPrices" />,
-      icon: <LocalPharmacyOutlined />,
-      route: "/medical/pricelists/items",
-      withDivider: true,
-      id: "admin.items",
-      filter: (rights) => rights.includes(RIGHT_PRICELISTMI),
-    },
-    {
-      text: <FormattedMessage module="admin" id="menu.medicalServices" />,
-      icon: <Healing />,
-      route: "/medical/medicalServices",
-      id: "admin.medicalServices",
-      filter: (rights) => rights.includes(RIGHT_MEDICALSERVICES),
-    },
-    {
-      text: <FormattedMessage module="admin" id="menu.medicalItems" />,
-      icon: <LocalPharmacy />,
-      route: "/medical/medicalItems",
-      withDivider: true,
-      id: "admin.medicalItems",
-      filter: (rights) => rights.includes(RIGHT_MEDICALITEMS),
-    },
-    {
-      text: <FormattedMessage module="admin" id="menu.users" />,
-      icon: <Person />,
-      route: "/admin/users",
-      id: "admin.users",
-      filter: (rights) => rights.includes(RIGHT_USERS),
-    },
-    {
-      text: <FormattedMessage module="admin" id="menu.locations" />,
-      icon: <PinDrop />,
-      route: "/location/locations",
-      id: "admin.locations",
-      filter: (rights) => rights.includes(RIGHT_LOCATIONS),
     },
   ],
 };
