@@ -67,6 +67,8 @@ const UserMasterPanel = (props) => {
   const { formatMessage, formatMessageWithValues } = useTranslations("admin", modulesManager);
   const dispatch = useDispatch();
 
+  const isProgramAvailable = modulesManager.getConf("fe-core", "isProgramAvailable", true);
+
   useEffect(() => {
     dispatch(fetchPasswordPolicy());
   }, [dispatch]);
@@ -266,7 +268,19 @@ const UserMasterPanel = (props) => {
           onChange={(roles) => onEditedChanged({ ...edited, roles })}
         />
       </Grid>
-      <Grid item xs={2} className={classes.item}>
+      {isProgramAvailable && (
+        <Grid item xs={4} className={classes.item}>
+          <PublishedComponent
+            pubRef="program.ProgramPicker"
+            module="admin"
+            label="program.ProgramPicker.placeholder"
+            value={edited?.program}
+            readOnly={readOnly}
+            onChange={(program) => onEditedChanged({ ...edited, program })}
+          />
+        </Grid>
+      )}
+      <Grid item xs={6} className={classes.item}>
         <PublishedComponent
           pubRef="location.LocationPicker"
           locationLevel={0}

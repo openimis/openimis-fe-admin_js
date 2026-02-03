@@ -14,7 +14,7 @@ const USER_SUMMARY_PROJECTION = [
   "id",
   "username",
   "officer{id,dob,phone,lastName,otherNames,email}",
-  "iUser{id,phone,lastName,otherNames,email,roles{id,name}}",
+  "iUser{id,phone,lastName,otherNames,email,roles{id,name},programs{id,uuid,code,name,validityFrom}}",
   "claimAdmin{id,phone,lastName,otherNames,emailId,dob}",
   "validityTo",
   "clientMutationId",

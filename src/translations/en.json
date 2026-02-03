@@ -48,6 +48,7 @@
   "admin.user.newPassword": "New Password",
   "admin.user.confirmNewPassword": "Confirm Password",
   "admin.user.generatePassword": "Generate Password",
+  "program.ProgramPicker.placeholder": "Select Program",
   "admin.user.phone": "Phone",
   "admin.user.updateUser.mutationLabel": "Update user",
   "admin.user.userRoles.placeholder": "Select User Role(s)",
