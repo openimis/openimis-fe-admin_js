@@ -30,12 +30,12 @@ import {
 
 
 const StyledGrid = styled(Grid)(({ theme }) => ({
-  '& .item': theme.paper.item,
+  '& .item': theme.paper?.item ?? {},
   '& .sectionHeader': {
-    ...theme.paper.item,
+    ...theme.paper?.item ?? {},
     paddingBottom: 0,
   },
-  '& .sectionTitle': theme.typography.title,
+  '& .sectionTitle': theme.typography?.title ?? {},
   '& .passwordFeedback': {
     // Add password feedback styles if needed
   },

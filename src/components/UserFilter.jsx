@@ -24,9 +24,9 @@ const StyledSection = styled('section')(({ theme }) => ({
     padding: "0 0 10px 0",
     width: "100%",
   },
-  '& .dialogTitle': theme.dialog.title,
-  '& .dialogContent': theme.dialog.content,
-  '& .paperDivider': theme.paper.divider,
+  '& .dialogTitle': theme.dialog?.title ?? {},
+  '& .dialogContent': theme.dialog?.content ?? {},
+  '& .paperDivider': theme.paper?.divider ?? {},
 }));
 
 const extractLocations = (locations) => {

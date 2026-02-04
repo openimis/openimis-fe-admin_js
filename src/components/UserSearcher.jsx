@@ -24,7 +24,7 @@ import UserFilter from "./UserFilter";
 const USER_SEARCHER_CONTRIBUTION_KEY = "user.UserSearcher";
 
 const styles = (theme) => ({
-  horizontalButtonContainer: theme.buttonContainer.horizontal,
+  horizontalButtonContainer: theme.buttonContainer?.horizontal ?? {},
 });
 
 class UserSearcher extends Component {

@@ -15,9 +15,9 @@ import { toggleUserRoles, toggleSwitchButton } from "../utils";
 import EnrolmentVillagesPicker from "./EnrolmentVillagesPicker";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
-  ...theme.paper.paper,
-  '& .title': theme.paper.title,
-  '& .item': theme.paper.item,
+  ...theme.paper?.paper ?? {},
+  '& .title': theme.paper?.title ?? {},
+  '& .item': theme.paper?.item ?? {},
 }));
 
 const EnrolmentOfficerFormPanel = (props) => {

@@ -7,9 +7,9 @@ import { CLAIM_ADMIN_USER_TYPE, CLAIM_ADMIN_IS_SYSTEM } from "../constants";
 import { toggleUserRoles, toggleSwitchButton } from "../utils";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
-  ...theme.paper.paper,
-  '& .title': theme.paper.title,
-  '& .item': theme.paper.item,
+  ...theme.paper?.paper ?? {},
+  '& .title': theme.paper?.title ?? {},
+  '& .item': theme.paper?.item ?? {},
 }));
 
 const ClaimAdministratorFormPanel = (props) => {

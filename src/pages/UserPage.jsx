@@ -7,7 +7,7 @@ import { createUser, updateUser } from "../actions";
 import { RIGHT_USER_ADD, RIGHT_USER_EDIT } from "../constants";
 
 const StyledDiv = styled('div')(({ theme }) => ({
-  ...theme.page,
+  ...theme.page ?? {},
 }));
 
 const UserPage = (props) => {

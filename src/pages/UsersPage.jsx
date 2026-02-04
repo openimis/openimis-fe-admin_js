@@ -19,8 +19,8 @@ import { RIGHT_USER_ADD, MODULE_NAME } from "../constants";
 import UserSearcher from "../components/UserSearcher";
 
 const StyledDiv = styled('div')(({ theme }) => ({
-  ...theme.page,
-  '& .fab': theme.fab,
+  ...theme.page ?? {},
+  '& .fab': theme.fab ?? {},
 }));
 
 class UsersPage extends Component {

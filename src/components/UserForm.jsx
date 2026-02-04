@@ -43,7 +43,7 @@ import {
 import UserMasterPanel from "./UserMasterPanel";
 
 const StyledDiv = styled('div')(({ theme }) => ({
-  '&.locked': theme.page.locked,
+  '&.locked': theme.page?.locked ?? {},
 }));
 
 const USER_OVERVIEW_MUTATIONS_KEY = "user.UserOverview.mutations";
