@@ -1,16 +1,4 @@
 import React from "react";
-import {
-  LocationCity,
-  Healing,
-  HealingOutlined,
-  LocalHospital,
-  LocalPharmacy,
-  LocalPharmacyOutlined,
-  Person,
-  People,
-  PinDrop,
-  Tune,
-} from "@mui/icons-material";
 import UsersPage from "./pages/UsersPage";
 import UserPage from "./pages/UserPage";
 import messagesEn from "./translations/en.json";
@@ -34,6 +22,7 @@ import {
   RIGHT_USERS,
   RIGHT_LOCATIONS,
 } from "./constants";
+import AdminMainMenu from "./components/AdminMainMenu";
 
 const ROUTE_ADMIN_USERS = "admin/users";
 const ROUTE_ADMIN_USER_OVERVIEW = "admin/users/overview";
@@ -50,6 +39,8 @@ const DEFAULT_CONFIG = {
       component: UserPage,
     },
   ],
+  "core.MainMenu": [{ name: "AdminMainMenu", component: AdminMainMenu }],
+
   "fe-core.menus": [
     {
       id: "admin",
