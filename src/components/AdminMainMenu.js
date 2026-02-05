@@ -12,6 +12,7 @@ import {
   People,
   PinDrop,
   Tune,
+  FormatAlignLeft
 } from "@material-ui/icons";
 import { formatMessage, MainMenuContribution, withModulesManager } from "@openimis/fe-core";
 import {
@@ -21,6 +22,7 @@ import {
   RIGHT_PRICELISTMI,
   RIGHT_MEDICALSERVICES,
   RIGHT_MEDICALITEMS,
+  RIGHT_PROGRAMS,
   // RIGHT_ENROLMENTOFFICER,
   // RIGHT_CLAIMADMINISTRATOR,
   RIGHT_USERS,
@@ -34,6 +36,7 @@ class AdminMainMenu extends Component {
   constructor(props) {
     super(props);
     this.isWorker = props.modulesManager.getConf("fe-core", "isWorker", false);
+    this.isProgramAvailable = props.modulesManager.getConf("fe-core", "isProgramAvailable", false);
   }
 
   render() {
@@ -84,6 +87,15 @@ class AdminMainMenu extends Component {
         route: "/location/healthFacilities",
         withDivider: true,
         id: "admin.healthFacilities",
+      });
+    }
+    if (this.isProgramAvailable && RIGHT_PROGRAMS) {
+        entries.push({
+        text: formatMessage(this.props.intl, "admin", "menu.programs"),
+        icon: <FormatAlignLeft />,
+        route: "/program/programs",
+        id: "admin.programs",
+        withDivider: true,
       });
     }
     if (rights.includes(RIGHT_PRICELISTMS)) {

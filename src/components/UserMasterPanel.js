@@ -272,11 +272,13 @@ const UserMasterPanel = (props) => {
         <Grid item xs={4} className={classes.item}>
           <PublishedComponent
             pubRef="program.ProgramPicker"
-            module="admin"
-            label="program.ProgramPicker.placeholder"
-            value={edited?.program}
+            name="program"
+            label={formatMessage("user.programPicker.label")}
+            placeholder={formatMessage("user.programPicker.placeholder")}
+            value={edited?.programs ?? []}
+            multiple={true}
             readOnly={readOnly}
-            onChange={(program) => onEditedChanged({ ...edited, program })}
+            onChange={(programs) => onEditedChanged({ ...edited, programs })}
           />
         </Grid>
       )}

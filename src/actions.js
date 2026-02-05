@@ -14,7 +14,7 @@ const USER_SUMMARY_PROJECTION = [
   "id",
   "username",
   "officer{id,dob,phone,lastName,otherNames,email}",
-  "iUser{id,phone,lastName,otherNames,email,roles{id,name},programs{id,uuid,code,name,validityFrom}}",
+  "iUser{id,phone,lastName,otherNames,email,roles{id,name}}",
   "claimAdmin{id,phone,lastName,otherNames,emailId,dob}",
   "validityTo",
   "clientMutationId",
@@ -220,6 +220,7 @@ export function fetchUser(mm, userId, clientMutationId) {
               lastName
               otherNames
               roles { id name isSystem}
+              programSet { edges{node{id idProgram nameProgram validityDateFrom}}}
               healthFacility ${mm.getProjection("location.HealthFacilityPicker.projection")}
               validityFrom
               validityTo
