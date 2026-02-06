@@ -22,7 +22,6 @@ import {
   RIGHT_PRICELISTMI,
   RIGHT_MEDICALSERVICES,
   RIGHT_MEDICALITEMS,
-  RIGHT_PROGRAMS,
   // RIGHT_ENROLMENTOFFICER,
   // RIGHT_CLAIMADMINISTRATOR,
   RIGHT_USERS,
@@ -89,7 +88,7 @@ class AdminMainMenu extends Component {
         id: "admin.healthFacilities",
       });
     }
-    if (this.isProgramAvailable && RIGHT_PROGRAMS) {
+    if (this.isProgramAvailable) {
         entries.push({
         text: formatMessage(this.props.intl, "admin", "menu.programs"),
         icon: <FormatAlignLeft />,

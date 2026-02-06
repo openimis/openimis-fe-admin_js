@@ -9,10 +9,6 @@ export const RIGHT_CLAIMADMINISTRATOR = 121601;
 export const RIGHT_PAYERS = 121801;
 export const RIGHT_LOCATIONS = 121901;
 
-export const RIGHT_PROGRAMS = 121701;
-export const RIGHT_PROGRAM_DELETE = 121701;
-export const RIGHT_PROGRAM_ADD = 121702;
-
 export const RIGHT_USERS = 121701;
 export const RIGHT_USER_SEARCH = 121701;
 export const RIGHT_USER_ADD = 121702;
