@@ -63,7 +63,6 @@ function PaymentPointManagerPicker({
       renderInput={(inputProps) => (
         <TextField
           {...inputProps}
-          variant="standard"
           required={required}
           label={withLabel && formatMessage("PaymentPointManagerPicker.label")}
           placeholder={withPlaceholder && formatMessage("PaymentPointManagerPicker.placeholder")}

@@ -38,7 +38,6 @@ const UserTypesPicker = (props) => {
       renderInput={(params) => (
         <TextField
           {...params}
-          variant="standard"
           label={`${formatMessage(intl, "admin.user", "userTypes")}${props.required ? "*" : ""}`}
           placeholder=""
         />

@@ -104,7 +104,6 @@ const UserPicker = (props) => {
       renderInput={(inputProps) => (
         <TextField
           {...inputProps}
-          variant="standard"
           required={required}
           label={withLabel && (label || formatMessage("label"))}
           placeholder={placeholder}
