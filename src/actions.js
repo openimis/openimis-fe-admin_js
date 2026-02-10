@@ -224,8 +224,6 @@ export function fetchUser(mm, userId, clientMutationId) {
               otherNames
               roles { id name isSystem}
               healthFacility ${mm.getProjection("location.HealthFacilityPicker.projection")}
-              validityFrom
-              validityTo
               email
               districts: userdistrictSet { location { id name code uuid parent { id code uuid name }}}
             }
