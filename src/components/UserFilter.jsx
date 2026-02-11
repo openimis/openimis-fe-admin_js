@@ -13,20 +13,23 @@ import {
   ControlledField,
   TextInput,
   formatMessage,
+  GRID_RESPONSIVE_STANDARD,
+  GRID_RESPONSIVE_SMALL,
+  GRID_RESPONSIVE_HALF,
 } from "@openimis/fe-core";
 import { DEFAULT, RIGHT_HEALTHFACILITIES } from "../constants";
 
-const StyledSection = styled('section')(({ theme }) => ({
-  '& .item': {
+const StyledSection = styled("section")(({ theme }) => ({
+  "& .item": {
     padding: theme.spacing(1),
   },
-  '& .form': {
+  "& .form": {
     padding: "0 0 10px 0",
     width: "100%",
   },
-  '& .dialogTitle': theme.dialog?.title ?? {},
-  '& .dialogContent': theme.dialog?.content ?? {},
-  '& .paperDivider': theme.paper?.divider ?? {},
+  "& .dialogTitle": theme.dialog?.title ?? {},
+  "& .dialogContent": theme.dialog?.content ?? {},
+  "& .paperDivider": theme.paper?.divider ?? {},
 }));
 
 const extractLocations = (locations) => {
@@ -175,7 +178,7 @@ class UserFilter extends Component {
       module="admin"
       id="userFilter.LastName"
       field={
-        <Grid size={3} className="item">
+        <Grid size={GRID_RESPONSIVE_STANDARD} className="item">
           <TextInput
             module="user"
             label="admin.user.lastName"
@@ -201,7 +204,7 @@ class UserFilter extends Component {
       module="admin"
       id="userFilter.OtherNames"
       field={
-        <Grid size={3} className="item">
+        <Grid size={GRID_RESPONSIVE_STANDARD} className="item">
           <TextInput
             module="user"
             label="admin.user.otherNames"
@@ -232,7 +235,7 @@ class UserFilter extends Component {
             module="admin"
             id="userFilter.userTypes"
             field={
-              <Grid size={3} className="item">
+              <Grid size={GRID_RESPONSIVE_STANDARD} className="item">
                 <PublishedComponent
                   pubRef="admin.UserTypesPicker"
                   value={this.filterValue("userTypes")}
@@ -245,7 +248,7 @@ class UserFilter extends Component {
             module="admin"
             id="userFilter.userRoles"
             field={
-              <Grid size={3} className="item">
+              <Grid size={GRID_RESPONSIVE_STANDARD} className="item">
                 <PublishedComponent
                   pubRef="admin.UserRolesPicker"
                   value={this.filterValue("roles")}
@@ -254,11 +257,12 @@ class UserFilter extends Component {
               </Grid>
             }
           />
-          { rights.includes(RIGHT_HEALTHFACILITIES) && (<ControlledField
+          {rights.includes(RIGHT_HEALTHFACILITIES) && (
+            <ControlledField
               module="admin"
               id="userFilter.healthFacility"
               field={
-                <Grid size={3} className="item">
+                <Grid size={GRID_RESPONSIVE_STANDARD} className="item">
                   <PublishedComponent
                     pubRef="location.HealthFacilityPicker"
                     withNull={true}
@@ -295,7 +299,7 @@ class UserFilter extends Component {
             module="admin"
             id="userFilter.username"
             field={
-              <Grid size={3} className="item">
+              <Grid size={GRID_RESPONSIVE_STANDARD} className="item">
                 <TextInput
                   module="user"
                   label="admin.user.username"
@@ -329,7 +333,7 @@ class UserFilter extends Component {
             module="admin"
             id="userFilter.Email"
             field={
-              <Grid size={3} className="item">
+              <Grid size={GRID_RESPONSIVE_STANDARD} className="item">
                 <TextInput
                   module="user"
                   label="admin.user.email"
@@ -354,7 +358,7 @@ class UserFilter extends Component {
             module="admin"
             id="userFilter.Phone"
             field={
-              <Grid size={3} className="item">
+              <Grid size={GRID_RESPONSIVE_STANDARD} className="item">
                 <TextInput
                   module="user"
                   label="admin.user.phone"
@@ -377,9 +381,9 @@ class UserFilter extends Component {
             module="admin"
             id="UserFilter.dob"
             field={
-              <Grid size={6}>
+              <Grid size={GRID_RESPONSIVE_STANDARD}>
                 <Grid container>
-                  <Grid size={6} className="item">
+                  <Grid size={GRID_RESPONSIVE_HALF} className="item">
                     <PublishedComponent
                       pubRef="core.DatePicker"
                       value={this.filterValue("dobFrom")}
@@ -396,7 +400,7 @@ class UserFilter extends Component {
                       }
                     />
                   </Grid>
-                  <Grid size={6} className="item">
+                  <Grid size={GRID_RESPONSIVE_HALF} className="item">
                     <PublishedComponent
                       pubRef="core.DatePicker"
                       value={this.filterValue("dobTo")}
@@ -421,7 +425,7 @@ class UserFilter extends Component {
             module="policy"
             id="PolicyFilter.showDeleted"
             field={
-              <Grid size={2} className="item">
+              <Grid size={GRID_RESPONSIVE_SMALL} className="item">
                 <FormControlLabel
                   control={
                     <Checkbox
