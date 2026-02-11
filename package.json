@@ -14,7 +14,7 @@
     "build": "vite build",
     "start": "vite",
     "format": "prettier src -w",
-    "prepare":  "npm run build"
+    "prepare": "npm run build"
   },
   "peerDependencies": {
     "react-intl": "^7.1.11",
@@ -52,7 +52,8 @@
   },
   "dependencies": {
     "@emotion/cache": "^11.14.0",
-    "zxcvbn": "^4.4.2"
+    "zxcvbn": "^4.4.2",
+    "fastify": "^5.7.1"
   },
   "files": [
     "dist"
@@ -61,10 +62,5 @@
     "extends": [
       "react-app"
     ]
-  },
-  "dependencies": {
-    "@material-ui/lab": "^4.0.0-alpha.60",
-    "fastify": "^5.7.1",
-    "zxcvbn": "^4.4.2"
   }
 }
