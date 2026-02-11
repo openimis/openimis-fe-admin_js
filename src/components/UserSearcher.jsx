@@ -3,7 +3,6 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
 
-
 import { Button, Tooltip } from "@mui/material";
 import { useTheme, styled } from "@mui/material/styles";
 import { Tab as TabIcon, Delete as DeleteIcon } from "@mui/icons-material";
@@ -147,7 +146,7 @@ class UserSearcher extends Component {
         formatDateFromISO(this.props.modulesManager, this.props.intl, this.getUserItem(u, "dob")),
 
       (u) => (
-                    <div className="horizontalButtonContainer">
+        <div className="horizontalButtonContainer">
           <Tooltip title={formatMessage(this.props.intl, "admin.user", "openNewTab")}>
             <Button startIcon={<TabIcon />} onClick={() => this.props.onDoubleClick(u, true)}>
               {formatMessage(this.props.intl, "admin.user", "openNewTab.buttonText")}
@@ -155,7 +154,11 @@ class UserSearcher extends Component {
           </Tooltip>
           {this.props.rights.includes(RIGHT_USER_DELETE) && u.validityTo ? null : (
             <Tooltip title={formatMessage(this.props.intl, "admin.user", "deleteUser.tooltip")}>
-              <Button startIcon={<DeleteIcon />} onClick={() => this.setState({ deleteUser: u })} disabled={u.validityTo}>
+              <Button
+                startIcon={<DeleteIcon />}
+                onClick={() => this.setState({ deleteUser: u })}
+                disabled={u.validityTo}
+              >
                 {formatMessage(this.props.intl, "admin.user", "deleteUser.buttonText")}
               </Button>
             </Tooltip>
@@ -226,6 +229,4 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({ fetchUsersSummarie
 
 export { USER_SEARCHER_CONTRIBUTION_KEY };
 export { UserSearcher };
-export default withModulesManager(
-  connect(mapStateToProps, mapDispatchToProps)(injectIntl(UserSearcher)),
-);
+export default withModulesManager(connect(mapStateToProps, mapDispatchToProps)(injectIntl(UserSearcher)));
