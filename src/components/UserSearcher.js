@@ -152,11 +152,11 @@ class UserSearcher extends Component {
               {formatMessage(this.props.intl, "admin.user", "openNewTab.buttonText")}
             </Button>
           </Tooltip>
-          {this.props.rights.includes(RIGHT_USER_DELETE) && u.validityTo ? null : (
+          {this.props.rights.includes(RIGHT_USER_DELETE) ? null : (
             <Tooltip title={formatMessage(this.props.intl, "admin.user", "deleteUser.tooltip")}>
-              <Button startIcon={<DeleteIcon />} onClick={() => this.setState({ deleteUser: u })} disabled={u.validityTo}>
-                {formatMessage(this.props.intl, "admin.user", "deleteUser.buttonText")}
-              </Button>
+              <IconButton onClick={() => this.setState({ deleteUser: u })}>
+                <DeleteIcon />
+              </IconButton>
             </Tooltip>
           )}
         </div>
@@ -201,7 +201,7 @@ class UserSearcher extends Component {
           aligns={this.getAligns}
           itemFormatters={this.itemFormatters}
           sorts={this.getSorts}
-          rowDisabled={(_, i) => i.validityTo || i.clientMutationId}
+          rowDisabled={(_, i) => i.clientMutationId}
           rowLocked={(_, i) => i.clientMutationId}
           onDoubleClick={onDoubleClick}
         />
