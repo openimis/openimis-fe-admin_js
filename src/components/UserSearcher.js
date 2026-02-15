@@ -3,7 +3,7 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
 
-import { IconButton, Tooltip } from "@material-ui/core";
+import { Button, Tooltip } from "@material-ui/core";
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import { Tab as TabIcon, Delete as DeleteIcon } from "@material-ui/icons";
 
@@ -148,9 +148,9 @@ class UserSearcher extends Component {
       (u) => (
         <div className={this.props.classes.horizontalButtonContainer}>
           <Tooltip title={formatMessage(this.props.intl, "admin.user", "openNewTab")}>
-            <IconButton onClick={() => this.props.onDoubleClick(u, true)}>
-              <TabIcon />
-            </IconButton>
+            <Button startIcon={<TabIcon />} onClick={() => this.props.onDoubleClick(u, true)}>
+              {formatMessage(this.props.intl, "admin.user", "openNewTab.buttonText")}
+            </Button>
           </Tooltip>
           {this.props.rights.includes(RIGHT_USER_DELETE) ? null : (
             <Tooltip title={formatMessage(this.props.intl, "admin.user", "deleteUser.tooltip")}>

@@ -13,8 +13,10 @@ import {
   TextInput,
   PublishedComponent,
   ValidatedTextInput,
+  passwordGenerator,
+  validatePassword,
 } from "@openimis/fe-core";
-import { CLAIM_ADMIN_USER_TYPE, ENROLMENT_OFFICER_USER_TYPE, EMAIL_REGEX_PATTERN, DEFAULT } from "../constants";
+import { CLAIM_ADMIN_USER_TYPE, ENROLMENT_OFFICER_USER_TYPE, EMAIL_REGEX_PATTERN, DEFAULT, RIGHT_HEALTHFACILITIES } from "../constants";
 import {
   usernameValidationCheck,
   usernameValidationClear,
@@ -23,9 +25,9 @@ import {
   userEmailValidationClear,
   setUserEmailValid,
   saveEmailFormatValidity,
+  fetchPasswordPolicy,
 } from "../actions";
 
-import { passwordGenerator } from "../helpers/passwordGenerator";
 
 const styles = (theme) => ({
   tableTitle: theme.table.title,
@@ -59,9 +61,16 @@ const UserMasterPanel = (props) => {
     savedUsername,
     savedUserEmail,
     usernameLength,
+    passwordPolicy,
+    rights,
   } = props;
-  const { formatMessage } = useTranslations("admin", modulesManager);
+  const { formatMessage, formatMessageWithValues } = useTranslations("admin", modulesManager);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchPasswordPolicy());
+  }, [dispatch]);
+
   const renderLastNameFirst = modulesManager.getConf(
     "fe-insuree",
     "renderLastNameFirst",
@@ -97,23 +106,36 @@ const UserMasterPanel = (props) => {
     handleEmailChange(edited?.email);
   }, []);
 
+  const [passwordFeedback, setPasswordFeedback] = useState("");
+  const [passwordScore, setPasswordScore] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
+  const REQUIRED_SECURITY_LEVEL = 2;
+  let IS_PASSWORD_SECURED = passwordScore >= REQUIRED_SECURITY_LEVEL;
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
 
+  const handlePasswordChange = (password) => {
+    const { feedback, score } = validatePassword(password, passwordPolicy, formatMessage, formatMessageWithValues);
+    setPasswordFeedback(feedback);
+    setPasswordScore(score);
+    IS_PASSWORD_SECURED = score >= REQUIRED_SECURITY_LEVEL;
+    onEditedChanged({ ...edited, password, isPasswordValid: IS_PASSWORD_SECURED });
+  };
+
   const generatePassword = () => {
     const passwordGeneratorOptions = modulesManager.getConf("fe-admin", "passwordGeneratorOptions", {
-      length: 10,
+      length: 12,
       isNumberRequired: true,
       isLowerCaseRequired: true,
       isUpperCaseRequired: true,
       isSpecialSymbolRequired: true,
     });
     const generatedPassword = passwordGenerator(passwordGeneratorOptions);
-    onEditedChanged({ ...edited, password: generatedPassword, confirmPassword: generatedPassword });
+    IS_PASSWORD_SECURED = true;
+    onEditedChanged({ ...edited, password: generatedPassword, confirmPassword: generatedPassword, isPasswordValid: IS_PASSWORD_SECURED });
   };
 
   const renderLastNameField = (edited, classes, readOnly) => (
@@ -181,48 +203,48 @@ const UserMasterPanel = (props) => {
         obligatoryUserFields?.email == "H" ||
         (edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && obligatoryEOFields?.email == "H")
       ) && (
-        <Grid item xs={4} className={classes.item}>
-          <ValidatedTextInput
-            itemQueryIdentifier="userEmail"
-            shouldValidate={shouldValidateEmail}
-            isValid={isUserEmailValid}
-            isValidating={isUserEmailValidating}
-            validationError={emailValidationError}
-            invalidValueFormat={isUserEmailFormatInvalid}
-            action={userEmailValidationCheck}
-            clearAction={userEmailValidationClear}
-            setValidAction={setUserEmailValid}
-            readOnly={readOnly}
-            module="admin"
-            label="user.email"
-            type="email"
-            codeTakenLabel="user.emailAlreadyTaken"
-            required={true}
-            value={edited?.email ?? ""}
-            onChange={(email) => handleEmailChange(email)}
-          />
-        </Grid>
-      )}
+          <Grid item xs={4} className={classes.item}>
+            <ValidatedTextInput
+              itemQueryIdentifier="userEmail"
+              shouldValidate={shouldValidateEmail}
+              isValid={isUserEmailValid}
+              isValidating={isUserEmailValidating}
+              validationError={emailValidationError}
+              invalidValueFormat={isUserEmailFormatInvalid}
+              action={userEmailValidationCheck}
+              clearAction={userEmailValidationClear}
+              setValidAction={setUserEmailValid}
+              readOnly={readOnly}
+              module="admin"
+              label="user.email"
+              type="email"
+              codeTakenLabel="user.emailAlreadyTaken"
+              required={true}
+              value={edited?.email ?? ""}
+              onChange={(email) => handleEmailChange(email)}
+            />
+          </Grid>
+        )}
       {!(
         obligatoryUserFields?.phone == "H" ||
         (edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && obligatoryEOFields?.phone == "H")
       ) && (
-        <Grid item xs={4} className={classes.item}>
-          <TextInput
-            module="admin"
-            type="phone"
-            label="user.phone"
-            required={
-              obligatoryUserFields?.phone == "M" ||
-              (edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && obligatoryEOFields?.phone == "M")
-            }
-            readOnly={readOnly}
-            value={edited?.phoneNumber ?? ""}
-            onChange={(phoneNumber) => onEditedChanged({ ...edited, phoneNumber })}
-          />
-        </Grid>
-      )}
-      <Grid item xs={4} className={classes.item}>
+          <Grid item xs={4} className={classes.item}>
+            <TextInput
+              module="admin"
+              type="phone"
+              label="user.phone"
+              required={
+                obligatoryUserFields?.phone == "M" ||
+                (edited.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && obligatoryEOFields?.phone == "M")
+              }
+              readOnly={readOnly}
+              value={edited?.phoneNumber ?? ""}
+              onChange={(phoneNumber) => onEditedChanged({ ...edited, phoneNumber })}
+            />
+          </Grid>
+        )}
+      {rights.includes(RIGHT_HEALTHFACILITIES) && (<Grid item xs={4} className={classes.item}>
         <PublishedComponent
           pubRef="location.HealthFacilityPicker"
           value={edited?.healthFacility}
@@ -233,6 +255,7 @@ const UserMasterPanel = (props) => {
           onChange={(healthFacility) => onEditedChanged({ ...edited, healthFacility })}
         />
       </Grid>
+      )}
       <Grid item xs={6} className={classes.item}>
         <PublishedComponent
           pubRef="admin.UserRolesPicker"
@@ -295,7 +318,9 @@ const UserMasterPanel = (props) => {
           label="user.newPassword"
           readOnly={readOnly}
           value={edited.password}
-          onChange={(password) => onEditedChanged({ ...edited, password })}
+          onChange={(password) => {
+            handlePasswordChange(password);
+          }}
           endAdornment={
             <InputAdornment position="end">
               <IconButton
@@ -309,6 +334,9 @@ const UserMasterPanel = (props) => {
             </InputAdornment>
           }
         />
+        <Typography color={IS_PASSWORD_SECURED ? "primary" : "error"} className={classes.passwordFeedback}>
+          {passwordFeedback}
+        </Typography>
       </Grid>
       <Grid item xs={4} className={classes.item}>
         <TextInput
@@ -319,6 +347,7 @@ const UserMasterPanel = (props) => {
           readOnly={readOnly}
           value={edited.confirmPassword}
           onChange={(confirmPassword) => onEditedChanged({ ...edited, confirmPassword })}
+          error={edited?.password !== edited?.confirmPassword}
           endAdornment={
             <InputAdornment position="end">
               <IconButton
@@ -343,6 +372,7 @@ const UserMasterPanel = (props) => {
 };
 
 const mapStateToProps = (state) => ({
+  rights: state.core?.user?.i_user?.rights ?? [],
   isUsernameValid: state.admin.validationFields?.username?.isValid,
   isUsernameValidating: state.admin.validationFields?.username?.isValidating,
   usernameValidationError: state.admin.validationFields?.username?.validationError,

@@ -18,7 +18,14 @@ import {
   coreConfirm,
   parseData,
 } from "@openimis/fe-core";
-import { CLAIM_ADMIN_USER_TYPE, ENROLMENT_OFFICER_USER_TYPE, INTERACTIVE_USER_TYPE, RIGHT_USERS } from "../constants";
+import {
+  CLAIM_ADMIN_USER_TYPE,
+  ENROLMENT_OFFICER_USER_TYPE,
+  INTERACTIVE_USER_TYPE,
+  RIGHT_USERS,
+  RIGHT_CLAIMADMINISTRATOR,
+  RIGHT_ENROLMENTOFFICER
+} from "../constants";
 import EnrolmentOfficerFormPanel from "./EnrolmentOfficerFormPanel";
 import ClaimAdministratorFormPanel from "./ClaimAdministratorFormPanel";
 import {
@@ -30,6 +37,7 @@ import {
   fetchObligatoryUserFields,
   fetchObligatoryEnrolmentOfficerFields,
   fetchUsernameLength,
+  fetchPasswordPolicy,
 } from "../actions";
 import UserMasterPanel from "./UserMasterPanel";
 
@@ -43,8 +51,8 @@ const setupState = (props) => ({
   isLocked: false,
   user: !props?.userId
     ? {
-        userTypes: [INTERACTIVE_USER_TYPE],
-      }
+      userTypes: [INTERACTIVE_USER_TYPE],
+    }
     : props.user,
   isSaved: false,
   reset: 0,
@@ -68,6 +76,9 @@ class UserForm extends Component {
     }
     if (!this.state.usernameLength) {
       this.props.fetchUsernameLength();
+    }
+    if (!this.state.passwordPolicy) {
+      this.props.fetchPasswordPolicy();
     }
   }
 
@@ -166,7 +177,11 @@ class UserForm extends Component {
       )
     )
       return false;
+
+    if (!user.id && !user.password) return false;
     if (user.password && user.password !== user.confirmPassword) return false;
+    if (user.password && !user.isPasswordValid) return false;
+
     if (user.userTypes?.includes(CLAIM_ADMIN_USER_TYPE) && !user.healthFacility) return false;
     if (user.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && !user.officerVillages) return false;
     if (
@@ -212,6 +227,7 @@ class UserForm extends Component {
       obligatoryUserFields,
       obligatoryEoFields,
       usernameLength,
+      passwordPolicy
     } = this.props;
     const { user, isSaved, reset } = this.state;
 
@@ -246,7 +262,10 @@ class UserForm extends Component {
             readOnly={readOnly || isInMutation}
             actions={actions}
             HeadPanel={UserMasterPanel}
-            Panels={[EnrolmentOfficerFormPanel, ClaimAdministratorFormPanel]}
+            Panels={[
+              ...(rights.includes(RIGHT_ENROLMENTOFFICER) ? [EnrolmentOfficerFormPanel] : []),
+              ...(rights.includes(RIGHT_CLAIMADMINISTRATOR) ? [ClaimAdministratorFormPanel] : [])
+            ]}
             user={user}
             onEditedChanged={this.onEditedChanged}
             canSave={this.canSave}
@@ -255,6 +274,7 @@ class UserForm extends Component {
             obligatory_user_fields={obligatoryUserFields}
             obligatory_eo_fields={obligatoryEoFields}
             usernameLength={usernameLength}
+            passwordPolicy={passwordPolicy}
           />
         )}
       </div>
@@ -277,6 +297,7 @@ const mapStateToProps = (state) => ({
   isUserNameValid: state.admin.validationFields?.username?.isValid,
   isUserEmailValid: state.admin.validationFields?.userEmail?.isValid,
   usernameLength: state.admin?.usernameLength,
+  passwordPolicy: state.admin?.passwordPolicy,
   isUserEmailFormatInvalid: state.admin.validationFields?.userEmailFormat?.isInvalid,
 });
 
@@ -291,6 +312,7 @@ const mapDispatchToProps = (dispatch) =>
       fetchObligatoryUserFields,
       fetchObligatoryEnrolmentOfficerFields,
       fetchUsernameLength,
+      fetchPasswordPolicy,
       journalize,
       coreConfirm,
     },

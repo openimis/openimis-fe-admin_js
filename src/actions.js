@@ -28,7 +28,7 @@ export function fetchUsers(mm, filters = [], restrictHealthFacility = true) {
       const state = getState();
       const hf = state.loc.userHealthFacilityFullPath;
       if (hf) {
-        filters.push(`healthFacility_Uuid: "${hf.uuid}"`);
+        filters.push(`healthFacilityId: ${decodeId(hf.id)}`);
       }
     }
 
@@ -219,8 +219,6 @@ export function fetchUser(mm, userId, clientMutationId) {
               otherNames
               roles { id name isSystem}
               healthFacility ${mm.getProjection("location.HealthFacilityPicker.projection")}
-              validityFrom
-              validityTo
               email
               districts: userdistrictSet { location { id name code uuid parent { id code uuid name }}}
             }
@@ -326,6 +324,13 @@ export function usernameValidationCheck(mm, variables) {
 export function fetchUsernameLength() {
   const payload = "query {usernameLength}";
   return graphql(payload, `USERNAME_LENGTH_FIELDS`);
+}
+
+export function fetchPasswordPolicy() {
+  const payload = `query {
+    passwordPolicy
+  }`;
+  return graphql(payload, "PASSWORD_POLICY_FIELDS");
 }
 
 export function usernameValidationClear() {
