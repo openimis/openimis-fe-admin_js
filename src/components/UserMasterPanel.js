@@ -11,10 +11,12 @@ import {
   withModulesManager,
   useTranslations,
   TextInput,
+  SelectInput,
   PublishedComponent,
   ValidatedTextInput,
   passwordGenerator,
   validatePassword,
+  ROWS_PER_PAGE_OPTIONS,
 } from "@openimis/fe-core";
 import { CLAIM_ADMIN_USER_TYPE, ENROLMENT_OFFICER_USER_TYPE, EMAIL_REGEX_PATTERN, DEFAULT, RIGHT_HEALTHFACILITIES } from "../constants";
 import {
@@ -295,7 +297,7 @@ const UserMasterPanel = (props) => {
       </Grid>
 
       <Grid item xs={12} className={classes.sectionHeader}>
-        <Typography className={classes.sectionTitle}>{formatMessage("UserMasterPanel.loginDetailsTitle")}</Typography>
+        <Typography className={classes.sectionTitle}>{formatMessage("UserMasterPanel.preferencesTitle")}</Typography>
         <Divider variant="fullWidth" />
       </Grid>
       <Grid item xs={4} className={classes.item}>
@@ -310,6 +312,22 @@ const UserMasterPanel = (props) => {
           value={edited.language ?? ""}
           onChange={(language) => onEditedChanged({ ...edited, language })}
         />
+      </Grid>
+      <Grid item xs={4} className={classes.item}>
+        <SelectInput
+          module="admin"
+          label="user.defaultRowsPerPage"
+          readOnly={readOnly}
+          required
+          options={ROWS_PER_PAGE_OPTIONS.map((option) => ({ value: option, label: option }))}
+          value={edited?.defaultRowsPerPage ?? ""}
+          onChange={(defaultRowsPerPage) => onEditedChanged({ ...edited, defaultRowsPerPage })}
+        />
+      </Grid>
+
+      <Grid item xs={12} className={classes.sectionHeader}>
+        <Typography className={classes.sectionTitle}>{formatMessage("UserMasterPanel.loginDetailsTitle")}</Typography>
+        <Divider variant="fullWidth" />
       </Grid>
       <Grid item xs={4} className={classes.item}>
         <TextInput

@@ -46,6 +46,7 @@ export const mapQueriesUserToStore = (u) => {
     u.phoneNumber = u.iUser.phone;
     u.healthFacility = u.iUser.healthFacility;
     u.language = u.iUser.languageId;
+    u.defaultRowsPerPage = u.iUser.defaultRowsPerPage;
     u.roles = u.iUser.roles;
     u.districts = u.iUser.districts.map((d) => d.location);
   }
@@ -89,6 +90,7 @@ export const mapUserValuesToInput = (values) => {
     districts: values.districts.map((d) => decodeId(d.id)),
     locationId: values.location ? decodeId(values.location.id) : null,
     language: values.language,
+    defaultRowsPerPage: values.defaultRowsPerPage ? parseInt(values.defaultRowsPerPage, 10) : null,
     roles: values.roles.map((r) => decodeId(r.id)),
     birthDate: values.birthDate,
     address: values.address,
