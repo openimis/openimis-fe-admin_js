@@ -220,6 +220,7 @@ export function fetchUser(mm, userId, clientMutationId) {
               id
               phone
               languageId
+              defaultRowsPerPage
               lastName
               otherNames
               roles { id name isSystem}
