@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
+import _ from "lodash"
 
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import ReplayIcon from "@material-ui/icons/Replay";
@@ -162,6 +163,7 @@ class UserForm extends Component {
     const { user } = this.state;
 
     if (!user) return false;
+    if (_.isEqual(this.props.user, user)) return false;
     if (
       !(
         user.lastName &&
