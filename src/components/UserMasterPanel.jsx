@@ -10,11 +10,13 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import {
   withModulesManager,
   useTranslations,
+  SelectInput,
   TextInput,
   PublishedComponent,
   ValidatedTextInput,
   passwordGenerator,
   validatePassword,
+  ROWS_PER_PAGE_OPTIONS,
 } from "@openimis/fe-core";
 import { CLAIM_ADMIN_USER_TYPE, ENROLMENT_OFFICER_USER_TYPE, EMAIL_REGEX_PATTERN, DEFAULT, RIGHT_HEALTHFACILITIES } from "../constants";
 import {
@@ -307,6 +309,21 @@ const UserMasterPanel = (props) => {
           nullLabel={formatMessage("UserMasterPanel.language.null")}
           value={edited.language ?? ""}
           onChange={(language) => onEditedChanged({ ...edited, language })}
+        />
+      </Grid>
+      <Grid size={4} className="item">
+        <SelectInput
+          module="admin"
+          label="user.defaultRowsPerPage"
+          readOnly={readOnly}
+          options={ROWS_PER_PAGE_OPTIONS.map((value) => ({
+            value,
+            label: `${value}`,
+          }))}
+          value={edited?.defaultRowsPerPage ?? null}
+          onChange={(defaultRowsPerPage) =>
+            onEditedChanged({ ...edited, defaultRowsPerPage: defaultRowsPerPage || null })
+          }
         />
       </Grid>
       <Grid size={4} className="item">
