@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import _debounce from "lodash/debounce";
 import { connect } from "react-redux";
 
-import { withTheme, withStyles } from "@material-ui/core/styles";
+import { useTheme, styled } from "@mui/material/styles";
 import { injectIntl } from "react-intl";
-import { Grid, Checkbox, FormControlLabel } from "@material-ui/core";
+import { Grid, Checkbox, FormControlLabel } from "@mui/material";
 
 import {
   withModulesManager,
@@ -13,21 +13,24 @@ import {
   ControlledField,
   TextInput,
   formatMessage,
+  GRID_RESPONSIVE_STANDARD,
+  GRID_RESPONSIVE_SMALL,
+  GRID_RESPONSIVE_HALF,
 } from "@openimis/fe-core";
 import { DEFAULT, RIGHT_HEALTHFACILITIES } from "../constants";
 
-const styles = (theme) => ({
-  dialogTitle: theme.dialog.title,
-  dialogContent: theme.dialog.content,
-  form: {
+const StyledSection = styled("section")(({ theme }) => ({
+  "& .item": {
+    padding: theme.spacing(1),
+  },
+  "& .form": {
     padding: "0 0 10px 0",
     width: "100%",
   },
-  item: {
-    padding: theme.spacing(1),
-  },
-  paperDivider: theme.paper.divider,
-});
+  "& .dialogTitle": theme.dialog?.title ?? {},
+  "& .dialogContent": theme.dialog?.content ?? {},
+  "& .paperDivider": theme.paper?.divider ?? {},
+}));
 
 const extractLocations = (locations) => {
   const locationsArray = Object.values(locations).map((l) => l.value);
@@ -170,12 +173,12 @@ class UserFilter extends Component {
     onChangeFilters(filters);
   };
 
-  renderLastNameField = (classes) => (
+  renderLastNameField = () => (
     <ControlledField
       module="admin"
       id="userFilter.LastName"
       field={
-        <Grid item xs={3} className={classes.item}>
+        <Grid size={GRID_RESPONSIVE_STANDARD} className="item">
           <TextInput
             module="user"
             label="admin.user.lastName"
@@ -196,12 +199,12 @@ class UserFilter extends Component {
     />
   );
 
-  renderGivenNameField = (classes) => (
+  renderGivenNameField = () => (
     <ControlledField
       module="admin"
       id="userFilter.OtherNames"
       field={
-        <Grid item xs={3} className={classes.item}>
+        <Grid size={GRID_RESPONSIVE_STANDARD} className="item">
           <TextInput
             module="user"
             label="admin.user.otherNames"
@@ -223,16 +226,16 @@ class UserFilter extends Component {
   );
 
   render() {
-    const { classes, filters, onChangeFilters, intl, rights } = this.props;
+    const { filters, onChangeFilters, intl, rights } = this.props;
     const { locationFilters, currentUserType, currentUserRoles, selectedDistrict } = this.state;
     return (
-      <section className={classes.form}>
+      <StyledSection>
         <Grid container>
           <ControlledField
             module="admin"
             id="userFilter.userTypes"
             field={
-              <Grid item xs={3} className={classes.item}>
+              <Grid size={GRID_RESPONSIVE_STANDARD} className="item">
                 <PublishedComponent
                   pubRef="admin.UserTypesPicker"
                   value={this.filterValue("userTypes")}
@@ -245,7 +248,7 @@ class UserFilter extends Component {
             module="admin"
             id="userFilter.userRoles"
             field={
-              <Grid item xs={3} className={classes.item}>
+              <Grid size={GRID_RESPONSIVE_STANDARD} className="item">
                 <PublishedComponent
                   pubRef="admin.UserRolesPicker"
                   value={this.filterValue("roles")}
@@ -254,11 +257,12 @@ class UserFilter extends Component {
               </Grid>
             }
           />
-          { rights.includes(RIGHT_HEALTHFACILITIES) && (<ControlledField
+          {rights.includes(RIGHT_HEALTHFACILITIES) && (
+            <ControlledField
               module="admin"
               id="userFilter.healthFacility"
               field={
-                <Grid item xs={3} className={classes.item}>
+                <Grid size={GRID_RESPONSIVE_STANDARD} className="item">
                   <PublishedComponent
                     pubRef="location.HealthFacilityPicker"
                     withNull={true}
@@ -280,7 +284,7 @@ class UserFilter extends Component {
           )}
         </Grid>
         <Grid container>
-          <Grid item xs={12}>
+          <Grid size={12}>
             <PublishedComponent
               pubRef="location.DetailedLocationFilter"
               withNull={true}
@@ -295,7 +299,7 @@ class UserFilter extends Component {
             module="admin"
             id="userFilter.username"
             field={
-              <Grid item xs={3} className={classes.item}>
+              <Grid size={GRID_RESPONSIVE_STANDARD} className="item">
                 <TextInput
                   module="user"
                   label="admin.user.username"
@@ -316,20 +320,20 @@ class UserFilter extends Component {
           />
           {this.renderLastNameFirst ? (
             <>
-              {this.renderLastNameField(classes)}
-              {this.renderGivenNameField(classes)}
+              {this.renderLastNameField()}
+              {this.renderGivenNameField()}
             </>
           ) : (
             <>
-              {this.renderGivenNameField(classes)}
-              {this.renderLastNameField(classes)}
+              {this.renderGivenNameField()}
+              {this.renderLastNameField()}
             </>
           )}
           <ControlledField
             module="admin"
             id="userFilter.Email"
             field={
-              <Grid item xs={3} className={classes.item}>
+              <Grid size={GRID_RESPONSIVE_STANDARD} className="item">
                 <TextInput
                   module="user"
                   label="admin.user.email"
@@ -354,7 +358,7 @@ class UserFilter extends Component {
             module="admin"
             id="userFilter.Phone"
             field={
-              <Grid item xs={3} className={classes.item}>
+              <Grid size={GRID_RESPONSIVE_STANDARD} className="item">
                 <TextInput
                   module="user"
                   label="admin.user.phone"
@@ -377,9 +381,9 @@ class UserFilter extends Component {
             module="admin"
             id="UserFilter.dob"
             field={
-              <Grid item xs={6}>
+              <Grid size={GRID_RESPONSIVE_STANDARD}>
                 <Grid container>
-                  <Grid item xs={6} className={classes.item}>
+                  <Grid size={GRID_RESPONSIVE_HALF} className="item">
                     <PublishedComponent
                       pubRef="core.DatePicker"
                       value={this.filterValue("dobFrom")}
@@ -396,7 +400,7 @@ class UserFilter extends Component {
                       }
                     />
                   </Grid>
-                  <Grid item xs={6} className={classes.item}>
+                  <Grid size={GRID_RESPONSIVE_HALF} className="item">
                     <PublishedComponent
                       pubRef="core.DatePicker"
                       value={this.filterValue("dobTo")}
@@ -421,7 +425,7 @@ class UserFilter extends Component {
             module="policy"
             id="PolicyFilter.showDeleted"
             field={
-              <Grid item xs={2} className={classes.item}>
+              <Grid size={GRID_RESPONSIVE_SMALL} className="item">
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -436,7 +440,7 @@ class UserFilter extends Component {
             }
           />
         </Grid>
-      </section>
+      </StyledSection>
     );
   }
 }
@@ -446,4 +450,5 @@ const mapStateToProps = (state) => ({
   module: state.core?.savedPagination?.module,
 });
 
-export default withModulesManager(connect(mapStateToProps)(injectIntl(withTheme(withStyles(styles)(UserFilter)))));
+export { StyledSection };
+export default withModulesManager(connect(mapStateToProps)(injectIntl(UserFilter)));

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { TextField } from "@material-ui/core";
+import { TextField } from "@mui/material";
 
 import { useGraphqlQuery, useTranslations, Autocomplete } from "@openimis/fe-core";
 import { USER_PICKER_PROJECTION } from "../../actions";
@@ -63,7 +63,6 @@ function PaymentPointManagerPicker({
       renderInput={(inputProps) => (
         <TextField
           {...inputProps}
-          variant="standard"
           required={required}
           label={withLabel && formatMessage("PaymentPointManagerPicker.label")}
           placeholder={withPlaceholder && formatMessage("PaymentPointManagerPicker.placeholder")}

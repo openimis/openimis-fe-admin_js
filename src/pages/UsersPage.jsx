@@ -3,9 +3,9 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
 
-import { Fab } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
-import { withTheme, withStyles } from "@material-ui/core/styles";
+import { Fab } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import { useTheme, styled } from "@mui/material/styles";
 
 import {
   historyPush,
@@ -18,10 +18,10 @@ import {
 import { RIGHT_USER_ADD, MODULE_NAME } from "../constants";
 import UserSearcher from "../components/UserSearcher";
 
-const styles = (theme) => ({
-  page: theme.page,
-  fab: theme.fab,
-});
+const StyledDiv = styled('div')(({ theme }) => ({
+  ...theme.page ?? {},
+  '& .fab': theme.fab ?? {},
+}));
 
 class UsersPage extends Component {
   onDoubleClick = (u, newTab = false) => {
@@ -38,20 +38,20 @@ class UsersPage extends Component {
   };
 
   render() {
-    const { classes, rights, intl } = this.props;
+    const { rights, intl } = this.props;
     return (
-      <div className={classes.page}>
+      <StyledDiv>
         <UserSearcher cacheFiltersKey="usersPageFiltersCache" onDoubleClick={this.onDoubleClick} />
         {rights.includes(RIGHT_USER_ADD) &&
           withTooltip(
-            <div className={classes.fab}>
+            <div className="fab">
               <Fab color="primary" onClick={this.onAdd}>
                 <AddIcon />
               </Fab>
             </div>,
             formatMessage(intl, "admin.user", "addNewUser.tooltip"),
           )}
-      </div>
+      </StyledDiv>
     );
   }
 }
@@ -63,8 +63,10 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({ clearCurrentPaginationPage }, dispatch);
 
+export { StyledDiv };
+export { UsersPage };
 export default injectIntl(
   withModulesManager(
-    withHistory(connect(mapStateToProps, mapDispatchToProps)(withTheme(withStyles(styles)(UsersPage)))),
+    withHistory(connect(mapStateToProps, mapDispatchToProps)(UsersPage)),
   ),
 );

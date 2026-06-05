@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { withTheme, withStyles } from "@material-ui/core/styles";
-import { Autocomplete } from "@material-ui/lab";
-import { TextField } from "@material-ui/core";
+import { useTheme, styled } from "@mui/material/styles";
+import { Autocomplete } from "@mui/material";
+import { TextField } from "@mui/material";
 import { withModulesManager, useDebounceCb, useTranslations } from "@openimis/fe-core";
 import { fetchUsers } from "../../actions";
 import { DEFAULT } from "../../constants";
@@ -96,7 +96,7 @@ const UserPicker = (props) => {
       autoComplete
       value={value}
       getOptionLabel={(option) => formatSuggestion(option)}
-      getOptionSelected={(option, v) => option.id === v.id}
+      isOptionEqualToValue={(option, v) => option.id === v.id}
       onChange={handleChange}
       filterOptions={filterOptions}
       filterSelectedOptions={filterSelectedOptions}
@@ -104,7 +104,6 @@ const UserPicker = (props) => {
       renderInput={(inputProps) => (
         <TextField
           {...inputProps}
-          variant="standard"
           required={required}
           label={withLabel && (label || formatMessage("label"))}
           placeholder={placeholder}
@@ -114,4 +113,5 @@ const UserPicker = (props) => {
   );
 };
 
-export default withModulesManager(withTheme(withStyles(styles)(UserPicker)));
+export { styles };
+export default withModulesManager(UserPicker);

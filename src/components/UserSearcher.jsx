@@ -3,9 +3,8 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
 
-import { IconButton, Button, Tooltip } from "@material-ui/core";
-import { withTheme, withStyles } from "@material-ui/core/styles";
-import { Tab as TabIcon, Delete as DeleteIcon } from "@material-ui/icons";
+import { Button, Tooltip } from "@mui/material";
+import { Tab as TabIcon, Delete as DeleteIcon } from "@mui/icons-material";
 
 import {
   withModulesManager,
@@ -23,7 +22,7 @@ import UserFilter from "./UserFilter";
 const USER_SEARCHER_CONTRIBUTION_KEY = "user.UserSearcher";
 
 const styles = (theme) => ({
-  horizontalButtonContainer: theme.buttonContainer.horizontal,
+  horizontalButtonContainer: theme.buttonContainer?.horizontal ?? {},
 });
 
 class UserSearcher extends Component {
@@ -146,7 +145,7 @@ class UserSearcher extends Component {
         formatDateFromISO(this.props.modulesManager, this.props.intl, this.getUserItem(u, "dob")),
 
       (u) => (
-        <div className={this.props.classes.horizontalButtonContainer}>
+        <div className="horizontalButtonContainer">
           <Tooltip title={formatMessage(this.props.intl, "admin.user", "openNewTab")}>
             <Button startIcon={<TabIcon />} onClick={() => this.props.onDoubleClick(u, true)}>
               {formatMessage(this.props.intl, "admin.user", "openNewTab.buttonText")}
@@ -154,9 +153,13 @@ class UserSearcher extends Component {
           </Tooltip>
           {this.props.rights.includes(RIGHT_USER_DELETE) ? null : (
             <Tooltip title={formatMessage(this.props.intl, "admin.user", "deleteUser.tooltip")}>
-              <IconButton onClick={() => this.setState({ deleteUser: u })}>
-                <DeleteIcon />
-              </IconButton>
+              <Button
+                startIcon={<DeleteIcon />}
+                onClick={() => this.setState({ deleteUser: u })}
+                disabled={u.validityTo}
+              >
+                {formatMessage(this.props.intl, "admin.user", "deleteUser.buttonText")}
+              </Button>
             </Tooltip>
           )}
         </div>
@@ -223,6 +226,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({ fetchUsersSummaries, deleteUser }, dispatch);
 
-export default withModulesManager(
-  connect(mapStateToProps, mapDispatchToProps)(injectIntl(withTheme(withStyles(styles)(UserSearcher)))),
-);
+export { USER_SEARCHER_CONTRIBUTION_KEY };
+export { UserSearcher };
+export default withModulesManager(connect(mapStateToProps, mapDispatchToProps)(injectIntl(UserSearcher)));

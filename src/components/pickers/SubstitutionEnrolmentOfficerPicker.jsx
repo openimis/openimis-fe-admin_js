@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { TextField } from "@material-ui/core";
+import { TextField } from "@mui/material";
 
 import { withModulesManager, Autocomplete, useTranslations } from "@openimis/fe-core";
 import { fetchSubstitutionEOs } from "../../utils";
@@ -81,4 +81,5 @@ const SubstitutionEnrolmentOfficerPicker = (props) => {
   );
 };
 
+export { SubstitutionEnrolmentOfficerPicker };
 export default withModulesManager(SubstitutionEnrolmentOfficerPicker);

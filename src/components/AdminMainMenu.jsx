@@ -12,7 +12,7 @@ import {
   People,
   PinDrop,
   Tune,
-} from "@material-ui/icons";
+} from "@mui/icons-material";
 import { formatMessage, MainMenuContribution, withModulesManager } from "@openimis/fe-core";
 import {
   RIGHT_PRODUCTS,
@@ -160,4 +160,5 @@ const mapStateToProps = (state) => ({
   rights: !!state.core && !!state.core.user && !!state.core.user.i_user ? state.core.user.i_user.rights : [],
 });
 
+export { ADMIN_MAIN_MENU_CONTRIBUTION_KEY };
 export default withModulesManager(injectIntl(connect(mapStateToProps)(AdminMainMenu)));

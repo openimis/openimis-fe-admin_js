@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { withModulesManager, combine, useTranslations, PublishedComponent, ProgressOrError } from "@openimis/fe-core";
-import DeleteIcon from "@material-ui/icons/Delete";
-import { withTheme, withStyles } from "@material-ui/core/styles";
+import { withModulesManager, useTranslations, PublishedComponent, ProgressOrError } from "@openimis/fe-core";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
-import AddIcon from "@material-ui/icons/Add";
+import AddIcon from "@mui/icons-material/Add";
 import {
   TableContainer,
   TableHead,
@@ -15,20 +15,20 @@ import {
   Paper,
   Button,
   IconButton,
-} from "@material-ui/core";
+} from "@mui/material";
 import { fetchDataFromDistrict, clearDistrictData } from "../actions";
 
-const styles = (theme) => ({
-  footer: {
+const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
+  '& .footer': {
     marginInline: 16,
     marginBlock: 12,
   },
-  headerTitle: theme.table.title,
-  actionCell: {
+  '& .headerTitle': theme.table?.title ?? {},
+  '& .actionCell': {
     width: 60,
   },
-  header: theme.table.header,
-});
+  '& .header': theme.table?.header ?? {},
+}));
 
 const groupVillagesByMunicipality = (villages) => {
   const result = [];
@@ -45,7 +45,7 @@ const groupVillagesByMunicipality = (villages) => {
 };
 
 const EnrolmentVillagesPicker = (props) => {
-  const { modulesManager, readOnly, villages, onChange, classes, districts, isOfficerPanelEnabled } = props;
+  const { modulesManager, readOnly, villages, onChange, districts, isOfficerPanelEnabled } = props;
   const dispatch = useDispatch();
   const [items, setItems] = useState([]);
   const { formatMessage } = useTranslations("admin.EnrolmentZonesPicker", modulesManager);
@@ -162,10 +162,10 @@ const EnrolmentVillagesPicker = (props) => {
   }, [isOfficerPanelEnabled]);
 
   return (
-    <TableContainer component={Paper}>
+    <StyledTableContainer component={Paper}>
       <Table size="small">
-        <TableHead className={classes.header}>
-          <TableRow className={classes.headerTitle}>
+                    <TableHead className="header">
+              <TableRow className="headerTitle">
             <TableCell>{formatMessage("table.municipality")}</TableCell>
             <TableCell>{formatMessage("table.villages")}</TableCell>
             <TableCell></TableCell>
@@ -173,8 +173,8 @@ const EnrolmentVillagesPicker = (props) => {
         </TableHead>
         <TableBody>
           <ProgressOrError progress={fetchingDistrictMunAndVil} error={errorDistrictMunAndVil} />
-          {items.map((item) => (
-            <TableRow key={item.parent?.id}>
+          {items.map((item, idx) => (
+            <TableRow key={item.parent?.id ?? `row-${idx}`}>
               <TableCell>
                 {item.parent ? (
                   `${item.parent.code} ${item.parent.name}`
@@ -205,7 +205,7 @@ const EnrolmentVillagesPicker = (props) => {
                   locationLevel={3}
                 />
               </TableCell>
-              <TableCell className={classes.actionCell}>
+                                <TableCell className="actionCell">
                 <IconButton disabled={readOnly} onClick={() => onRemoveRow(item)}>
                   <DeleteIcon />
                 </IconButton>
@@ -219,16 +219,15 @@ const EnrolmentVillagesPicker = (props) => {
             variant="contained"
             onClick={onInsertRow}
             startIcon={<AddIcon />}
-            className={classes.footer}
+            className="footer"
           >
             {formatMessage("table.newRow")}
           </Button>
         </TableFooter>
       </Table>
-    </TableContainer>
+    </StyledTableContainer>
   );
 };
 
-const enhance = combine(withModulesManager, withTheme, withStyles(styles));
-
-export default enhance(EnrolmentVillagesPicker);
+export { StyledTableContainer };
+export default withModulesManager(EnrolmentVillagesPicker);
