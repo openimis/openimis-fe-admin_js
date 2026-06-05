@@ -260,7 +260,7 @@ class UserForm extends Component {
             back={back}
             add={add}
             openDirty={save}
-            readOnly={readOnly || isInMutation || user?.validityTo}
+            readOnly={readOnly || isInMutation}
             actions={actions}
             HeadPanel={UserMasterPanel}
             Panels={[
@@ -269,8 +269,8 @@ class UserForm extends Component {
             ]}
             user={user}
             onEditedChanged={this.onEditedChanged}
-            canSave={!user.validityTo && this.canSave}
-            save={save && !user.validityTo ? this.save : null}
+            canSave={this.canSave}
+            save={save ? this.save : null}
             onActionToConfirm={this.onActionToConfirm}
             obligatory_user_fields={obligatoryUserFields}
             obligatory_eo_fields={obligatoryEoFields}

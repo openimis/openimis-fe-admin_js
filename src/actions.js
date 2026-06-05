@@ -15,6 +15,7 @@ const USER_SUMMARY_PROJECTION_BASE = [
   "username",
   "officer{id,dob,phone,lastName,otherNames,email}",
   "iUser{id,phone,lastName,otherNames,email,roles{id,name}}",
+  "claimAdmin{id,phone,lastName,otherNames,emailId,dob}",
   "clientMutationId",
 ];
 const USER_SUMMARY_PROJECTION = (mm) => {

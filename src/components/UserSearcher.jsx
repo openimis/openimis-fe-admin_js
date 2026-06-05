@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
 
 import { Button, Tooltip } from "@mui/material";
-import { useTheme, styled } from "@mui/material/styles";
 import { Tab as TabIcon, Delete as DeleteIcon } from "@mui/icons-material";
 
 import {
@@ -152,7 +151,7 @@ class UserSearcher extends Component {
               {formatMessage(this.props.intl, "admin.user", "openNewTab.buttonText")}
             </Button>
           </Tooltip>
-          {this.props.rights.includes(RIGHT_USER_DELETE) && u.validityTo ? null : (
+          {this.props.rights.includes(RIGHT_USER_DELETE) ? null : (
             <Tooltip title={formatMessage(this.props.intl, "admin.user", "deleteUser.tooltip")}>
               <Button
                 startIcon={<DeleteIcon />}
@@ -205,7 +204,7 @@ class UserSearcher extends Component {
           aligns={this.getAligns}
           itemFormatters={this.itemFormatters}
           sorts={this.getSorts}
-          rowDisabled={(_, i) => i.validityTo || i.clientMutationId}
+          rowDisabled={(_, i) => i.clientMutationId}
           rowLocked={(_, i) => i.clientMutationId}
           onDoubleClick={onDoubleClick}
         />

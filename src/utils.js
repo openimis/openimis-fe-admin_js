@@ -34,7 +34,8 @@ export function checkRolesAndGetUserTypes(user) {
   return tempUser.userTypes;
 }
 
-export const mapQueriesUserToStore = (u) => {
+export const mapQueriesUserToStore = (user) => {
+  const u = user;
   // TODO: make this more generic
   u.hasLogin = false;
   u.userTypes = checkRolesAndGetUserTypes(u);
